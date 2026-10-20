@@ -86,3 +86,41 @@ html[data-theme="light"] .form-card input,html[data-theme="light"] .form-card se
 html[data-theme="light"] .tool-card{background:#fff!important;color:#172b3a!important}
 html[data-theme="light"] .tool-card b,html[data-theme="light"] .tool-card small{color:#172b3a!important}
 @media(max-width:420px){.theme-toggle{padding:9px 10px;font-size:11px}.theme-toggle span:first-child{font-size:15px}}
+
+
+/* FUN BOOST — bonne humeur, confettis et micro-interactions */
+:root{--joy-yellow:#ffe66d;--joy-coral:#ff6d73;--joy-mint:#64f5c2}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.28;background-image:radial-gradient(circle at 8% 18%,#ffe66d 0 3px,transparent 4px),radial-gradient(circle at 87% 24%,#ff65b5 0 4px,transparent 5px),radial-gradient(circle at 18% 76%,#47e6ff 0 3px,transparent 4px),radial-gradient(circle at 92% 79%,#a987ff 0 4px,transparent 5px),radial-gradient(circle at 48% 7%,#5bf0b4 0 3px,transparent 4px);background-size:190px 220px,230px 250px,210px 240px,260px 210px,240px 270px;animation:joy-drift 22s linear infinite}
+.app-shell{position:relative;z-index:1}
+@keyframes joy-drift{0%{background-position:0 0,0 0,0 0,0 0,0 0}100%{background-position:80px 180px,-90px 140px,110px -100px,-120px 90px,70px -120px}}
+.hero-card{border-radius:32px!important;overflow:hidden}
+.hero-card:after{content:"✨  😎  ✨";position:absolute;right:18px;top:14px;font-size:17px;letter-spacing:7px;opacity:.82;pointer-events:none;animation:joy-bob 3s ease-in-out infinite}
+@keyframes joy-bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-6px) rotate(2deg)}}
+.hero-copy .mini-label{display:inline-flex;align-items:center;gap:7px}
+.hero-copy .mini-label:before{content:"✦";font-size:14px;color:#ffe66d}
+.primary-btn{animation:joy-glow 3.5s ease-in-out infinite}
+@keyframes joy-glow{0%,100%{filter:saturate(1);box-shadow:0 9px 22px #316dff3d,0 0 0 #55eaff00}50%{filter:saturate(1.25);box-shadow:0 10px 25px #316dff55,0 0 18px #55eaff35}}
+.joy-strip{position:relative;display:flex;align-items:center;gap:12px;margin:16px 0 30px;padding:14px 15px;border-radius:22px;overflow:hidden;background:linear-gradient(110deg,#fff0a6 0%,#ffc8e8 46%,#c5f5ff 100%);color:#27304b;border:1px solid #ffffffa8;box-shadow:0 10px 26px #0002}
+.joy-strip:after{content:"";position:absolute;width:120px;height:120px;border-radius:50%;right:40px;top:-78px;background:#fff8}
+.joy-strip .joy-spark{font-size:27px;animation:joy-bob 2.5s ease-in-out infinite}
+.joy-strip div{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
+.joy-strip b{font-size:13px;line-height:1.25;font-weight:950}
+.joy-strip small{font-size:11px;line-height:1.35;color:#4b5670}
+.joy-sticker{flex:none;padding:7px 9px;background:#fff;border:2px dashed #6c5de7;border-radius:12px;color:#4b36b8;font-size:9px;font-weight:1000;text-align:center;transform:rotate(5deg);box-shadow:0 4px 0 #6c5de722}
+.joy-confetti{position:absolute;right:12px;top:-5px;font-size:20px;animation:joy-bob 2s ease-in-out infinite}
+.quick-card,.maintenance-tile{position:relative;isolation:isolate}
+.quick-card:after,.maintenance-tile:after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;background:linear-gradient(120deg,#ffffff45,transparent 45%);transition:opacity .2s;z-index:-1}
+.quick-card:active:after,.maintenance-tile:active:after{opacity:1}
+.quick-art{display:grid;place-items:center;font-size:30px;transition:transform .2s}
+.quick-card:active .quick-art,.maintenance-tile:active .tile-orb{transform:rotate(-8deg) scale(1.08)}
+.maintenance-tile .tile-orb{transition:transform .2s}
+.section-head h2{position:relative}
+.section-head h2:after{content:" ✨";font-size:.55em;vertical-align:top}
+.ready-banner{border-radius:22px!important}
+.ready-icon{display:grid;place-items:center;border-radius:15px;background:linear-gradient(135deg,#63f4bf,#22c9dc)!important;color:#103d4a!important;box-shadow:0 5px 14px #27dfb433}
+.theme-toggle{transition:transform .18s,filter .18s}
+.theme-toggle:active{transform:scale(.96)}
+html[data-theme="light"] .joy-strip{box-shadow:0 10px 25px #476b8a22}
+html[data-theme="light"] body:before{opacity:.35}
+@media(prefers-reduced-motion:reduce){body:before,.hero-card:after,.primary-btn,.joy-strip .joy-spark,.joy-confetti{animation:none!important}*{scroll-behavior:auto!important;transition:none!important}}
+@media(max-width:420px){.joy-strip{gap:9px;padding:12px}.joy-sticker{font-size:8px;padding:6px}.joy-strip b{font-size:12px}.joy-strip small{font-size:10px}.hero-card:after{font-size:14px;letter-spacing:3px;right:12px;top:10px}}
