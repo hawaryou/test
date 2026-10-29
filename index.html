@@ -10,6 +10,12 @@
 <title>EuroMed — Hub Technicien</title>
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="style.css?v=20261029-theme-mobile-alignment">
+<style id="tools-checkups-navigation">
+.tools-checkup-heading{margin:22px 0 4px}
+button.tool-launch{font:inherit;text-align:left;width:100%;cursor:pointer}
+.tool-checkup-truck{background:linear-gradient(120deg,#164e63,#0891b2);color:#fff!important}
+.tool-checkup-parts{background:linear-gradient(120deg,#4c1d95,#7c3aed);color:#fff!important}
+</style>
 </head>
 <body>
 <button class="theme-toggle" id="themeToggle" type="button" aria-label="Passer en mode clair" aria-pressed="false"><span aria-hidden="true">☀️</span><span id="themeToggleLabel">Mode clair</span></button>
@@ -94,8 +100,13 @@ function toolsPage(){
  <a class="tool-launch tool-reprise" href="https://hawaryou.github.io/bon-reprise-euromed/"><span class="tool-launch-icon">↩️</span><span><b>Carnet de reprise</b><small>Tracer le matériel repris</small></span><span class="tool-arrow">›</span></a>
  <a class="tool-launch tool-inventory" href="https://hawaryou.github.io/inventaire-materiel/"><span class="tool-launch-icon">📦</span><span><b>Inventaire du matériel</b><small>Consulter et gérer le parc</small></span><span class="tool-arrow">›</span></a>
  <a class="tool-launch tool-anomaly" href="signaler-anomalie.html"><span class="tool-launch-icon">⚠️</span><span><b>Signaler une anomalie</b><small>Déclarer un problème technique</small></span><span class="tool-arrow">›</span></a>
+ <div class="section-head tools-checkup-heading"><div><span class="section-kicker">SUIVI HEBDOMADAIRE</span><h2>Check-up hebdomadaires</h2></div></div>
+ <button class="tool-launch tool-checkup-truck" type="button" data-open-checkup="truck"><span class="tool-launch-icon">🚐</span><span><b>Check-up des camions</b><small>Contrôle du Crafter et du Jumper</small></span><span class="tool-arrow">›</span></button>
+ <button class="tool-launch tool-checkup-parts" type="button" data-open-checkup="parts"><span class="tool-launch-icon">🧰</span><span><b>Check-up des pièces détachées</b><small>Vérifier les pièces et consommables dans le camion</small></span><span class="tool-arrow">›</span></button>
  </section>`;
  app.querySelector('.back-btn').onclick=()=>showPage('home');
+ app.querySelector('[data-open-checkup="truck"]').onclick=()=>showPage('checkupTruck');
+ app.querySelector('[data-open-checkup="parts"]').onclick=()=>showPage('checkupParts');
 }
 function checkupTruckPage(){renderCheckup('truck')}
 function checkupPartsPage(){renderCheckup('parts')}
