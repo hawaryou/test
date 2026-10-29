@@ -722,3 +722,10 @@ html[data-theme="light"] body .nav-item.active,html[data-theme="light"] body .na
 html[data-theme="light"] body input,html[data-theme="light"] body select,html[data-theme="light"] body textarea{border:1.5px solid #789bb8!important;box-shadow:inset 0 1px 2px rgba(15,50,80,.06)!important}
 html[data-theme="light"] body label{color:#183b56!important;font-weight:650}
 html[data-theme="light"] body h1,html[data-theme="light"] body h2,html[data-theme="light"] body h3{color:#075985!important}
+
+/* Check-ups hebdomadaires : couleurs forcées dans les deux thèmes */
+.tools-directory button.tool-checkup-truck,html[data-theme="dark"] body .tools-directory button.tool-checkup-truck{background:linear-gradient(120deg,#164e63,#0891b2)!important;color:#fff!important;border:2px solid #22d3ee!important;box-shadow:0 8px 20px rgba(8,145,178,.28)!important}
+.tools-directory button.tool-checkup-parts,html[data-theme="dark"] body .tools-directory button.tool-checkup-parts{background:linear-gradient(120deg,#4c1d95,#7c3aed)!important;color:#fff!important;border:2px solid #c4b5fd!important;box-shadow:0 8px 20px rgba(124,58,237,.28)!important}
+html[data-theme="light"] body main .tools-directory button.tool-checkup-truck,html[data-theme="light"] body .tools-directory button.tool-checkup-truck{background:linear-gradient(120deg,#075985,#0891b2)!important;background-image:linear-gradient(120deg,#075985,#0891b2)!important;color:#fff!important;border:2px solid #22d3ee!important}
+html[data-theme="light"] body main .tools-directory button.tool-checkup-parts,html[data-theme="light"] body .tools-directory button.tool-checkup-parts{background:linear-gradient(120deg,#4c1d95,#7c3aed)!important;background-image:linear-gradient(120deg,#4c1d95,#7c3aed)!important;color:#fff!important;border:2px solid #c4b5fd!important}
+.tools-directory button.tool-checkup-truck *, .tools-directory button.tool-checkup-parts *{color:#fff!important;background:transparent!important;background-image:none!important}
