@@ -729,3 +729,29 @@ html[data-theme="light"] body h1,html[data-theme="light"] body h2,html[data-them
 html[data-theme="light"] body main .tools-directory button.tool-checkup-truck,html[data-theme="light"] body .tools-directory button.tool-checkup-truck{background:linear-gradient(120deg,#075985,#0891b2)!important;background-image:linear-gradient(120deg,#075985,#0891b2)!important;color:#fff!important;border:2px solid #22d3ee!important}
 html[data-theme="light"] body main .tools-directory button.tool-checkup-parts,html[data-theme="light"] body .tools-directory button.tool-checkup-parts{background:linear-gradient(120deg,#4c1d95,#7c3aed)!important;background-image:linear-gradient(120deg,#4c1d95,#7c3aed)!important;color:#fff!important;border:2px solid #c4b5fd!important}
 .tools-directory button.tool-checkup-truck *, .tools-directory button.tool-checkup-parts *{color:#fff!important;background:transparent!important;background-image:none!important}
+
+/* Conserver les couleurs propres à chaque tuile de maintenance en mode clair */
+html[data-theme="light"] body .maintenance-scroller .maintenance-tile,
+html[data-theme="light"] body main .maintenance-scroller .maintenance-tile,
+html[data-theme="light"] body .screen-home .maintenance-tile{
+ color:#fff!important;
+ border-color:#ffffff40!important;
+ box-shadow:0 14px 25px rgba(20,45,90,.22)!important;
+ background-image:initial;
+}
+html[data-theme="light"] body .maintenance-scroller .maintenance-tile.purple,
+html[data-theme="light"] body .screen-home .maintenance-tile.purple{background:linear-gradient(145deg,#9a54ff,#5a28e9 68%,#301f9d)!important}
+html[data-theme="light"] body .maintenance-scroller .maintenance-tile.green,
+html[data-theme="light"] body .screen-home .maintenance-tile.green{background:linear-gradient(145deg,#63ec58,#14bf68 67%,#087d62)!important}
+html[data-theme="light"] body .maintenance-scroller .maintenance-tile.blue,
+html[data-theme="light"] body .screen-home .maintenance-tile.blue{background:linear-gradient(145deg,#28b7ff,#1873ed 65%,#1d43bc)!important}
+html[data-theme="light"] body .maintenance-scroller .maintenance-tile.orange,
+html[data-theme="light"] body .screen-home .maintenance-tile.orange{background:linear-gradient(145deg,#ffbd22,#ff7c1f 62%,#ef3f24)!important}
+html[data-theme="light"] body .maintenance-scroller .maintenance-tile.pink,
+html[data-theme="light"] body .screen-home .maintenance-tile.pink{background:linear-gradient(145deg,#ff4cac,#ee1b86 65%,#b31c92)!important}
+html[data-theme="light"] body .maintenance-scroller .maintenance-tile span,
+html[data-theme="light"] body .maintenance-scroller .maintenance-tile small,
+html[data-theme="light"] body .maintenance-scroller .maintenance-tile .tile-orb,
+html[data-theme="light"] body .screen-home .maintenance-tile span,
+html[data-theme="light"] body .screen-home .maintenance-tile small,
+html[data-theme="light"] body .screen-home .maintenance-tile .tile-orb{color:#fff!important}
