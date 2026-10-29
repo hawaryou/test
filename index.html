@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="EuroMed">
 <title>EuroMed — Hub Technicien</title>
 <link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="style.css?v=20261029-fun-background">
+<link rel="stylesheet" href="style.css?v=20261029-animated-background-demo-scroll">
 </head>
 <body>
 <button class="theme-toggle" id="themeToggle" type="button" aria-label="Passer en mode clair" aria-pressed="false"><span aria-hidden="true">☀️</span><span id="themeToggleLabel">Mode clair</span></button>
@@ -258,6 +258,11 @@ home();
   modal.querySelector('.demo-progress i').style.width=((index+1)/slides.length*100)+'%';
   modal.querySelector('.demo-prev').disabled=index===0;
   modal.querySelector('.demo-next').textContent=index===slides.length-1?'Terminer ✓':'Suivant →';
+  /* Sur mobile, chaque étape recommence en haut : ne pas conserver le défilement de l'étape précédente. */
+  const panel=modal.querySelector('.demo-panel');
+  panel.scrollTop=0;
+  content.scrollTop=0;
+  if(typeof requestAnimationFrame==='function') requestAnimationFrame(()=>{panel.scrollTop=0;});
  }
  function open(){index=0;render();modal.hidden=false;document.body.classList.add('demo-open');modal.querySelector('.demo-next').focus();}
  function close(){modal.hidden=true;document.body.classList.remove('demo-open');}
