@@ -522,3 +522,41 @@ html[data-theme="light"] .app-content {
     animation: none !important;
   }
 }
+
+
+/* Animation visible des fonds : couche indépendante du contenu, animée par déplacement réel */
+.app-shell{isolation:isolate;position:relative;background:transparent!important}
+.app-shell::before{
+ content:"";position:absolute;z-index:-1;pointer-events:none;
+ inset:-35%;width:170%;height:170%;
+ background:
+  radial-gradient(ellipse at 18% 22%,rgba(0,214,255,.30) 0,transparent 32%),
+  radial-gradient(ellipse at 78% 25%,rgba(139,92,246,.30) 0,transparent 33%),
+  radial-gradient(ellipse at 30% 78%,rgba(236,72,153,.22) 0,transparent 31%),
+  radial-gradient(ellipse at 82% 82%,rgba(34,197,94,.20) 0,transparent 30%),
+  linear-gradient(135deg,#06152b,#102449 48%,#171438);
+ background-size:150% 150%;
+ animation:euromed-float-dark 18s ease-in-out infinite alternate;
+ will-change:transform,background-position;
+}
+.app-content{position:relative;z-index:1;background:transparent!important;background-image:none!important}
+html[data-theme="light"] .app-shell::before{
+ background:
+  radial-gradient(ellipse at 18% 22%,rgba(56,189,248,.38) 0,transparent 32%),
+  radial-gradient(ellipse at 78% 25%,rgba(196,181,253,.48) 0,transparent 33%),
+  radial-gradient(ellipse at 30% 78%,rgba(251,207,232,.48) 0,transparent 31%),
+  radial-gradient(ellipse at 82% 82%,rgba(167,243,208,.48) 0,transparent 30%),
+  linear-gradient(135deg,#e8f7ff,#ffffff 48%,#f1edff);
+ animation-name:euromed-float-light;
+}
+@keyframes euromed-float-dark{
+  0%{transform:translate3d(-3%,-2%,0) scale(1);filter:hue-rotate(0deg)}
+  50%{transform:translate3d(2%,3%,0) scale(1.06);filter:hue-rotate(18deg)}
+  100%{transform:translate3d(-1%,1%,0) scale(1.02);filter:hue-rotate(-12deg)}
+}
+@keyframes euromed-float-light{
+  0%{transform:translate3d(-3%,-2%,0) scale(1);filter:hue-rotate(0deg)}
+  50%{transform:translate3d(2%,3%,0) scale(1.06);filter:hue-rotate(12deg)}
+  100%{transform:translate3d(-1%,1%,0) scale(1.02);filter:hue-rotate(-8deg)}
+}
+@media(prefers-reduced-motion:reduce){.app-shell::before{animation:none!important}}
