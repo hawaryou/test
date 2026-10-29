@@ -218,3 +218,83 @@ html[data-theme="light"] .hero-mascot img{z-index:2!important;mix-blend-mode:mul
 .van-rear i{position:absolute;bottom:2px;width:8px;height:12px;border-radius:2px;background:#fb7185}.van-rear i:first-child{left:2px}.van-rear i:last-child{right:2px}.van-rear span{position:absolute;left:23px;right:23px;bottom:2px;height:4px;background:#34576b}
 @media(max-width:390px){.vehicle-view{min-height:118px}.van-drawing{width:125px}.checkup-category-grid .quick-card{padding:12px;gap:8px}}
 @media print{.vehicle-views{grid-template-columns:repeat(4,1fr)}.vehicle-view{background:#fff!important;border-color:#888!important}.vehicle-view b,.vehicle-view small{color:#111!important}}
+
+
+/* Affichage adaptatif : ordinateur = tableau de bord, téléphone = application tactile */
+@media (min-width: 701px) {
+  body { padding: 20px 22px 112px !important; }
+  .app-shell { max-width: 1440px !important; width: 100%; min-height: calc(100vh - 40px); border-radius: 26px !important; overflow: hidden; }
+  .app-content { min-height: calc(100vh - 40px); }
+  .screen-home { max-width: 1320px; margin: 0 auto; padding: 26px 30px 36px; }
+  .topbar { margin-bottom: 22px; }
+  .brand-box { width: 220px; height: 64px; }
+  .hero-card { min-height: 300px; padding: 30px 34px; border-radius: 30px; }
+  .hero-copy { width: 62%; }
+  .hero-copy h1 { font-size: clamp(30px, 3vw, 44px); }
+  .hero-copy p { font-size: 14px; max-width: 390px; }
+  .hero-mascot { width: 38%; height: 270px; }
+  .hero-mascot img { width: 250px; height: 250px; }
+  .quick-grid:not(.checkup-category-grid) { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+  .quick-card { min-height: 168px; padding: 18px; border-radius: 22px; }
+  .quick-card b { font-size: 18px; }
+  .quick-card small { font-size: 11px; }
+  .section-head { margin-top: 30px; }
+  .section-head h2 { font-size: 27px; }
+  .maintenance-scroller { flex-wrap: wrap; overflow: visible; margin-right: 0; gap: 14px; }
+  .maintenance-tile { flex: 1 1 180px; max-width: 240px; height: 205px; }
+  .dark-top, .documentation-wrap, .maintenance-page-section, .tools-directory, .checkup-wrap { max-width: 1200px; margin-left: auto; margin-right: auto; }
+  .bottom-nav { display: grid !important; grid-template-columns: repeat(4, minmax(0, 1fr)) !important; width: min(1120px, calc(100% - 44px)) !important; bottom: 16px !important; border: 1px solid #1b4f78; border-radius: 22px !important; padding: 8px 12px !important; }
+  .nav-item { min-height: 62px; font-size: 11px; }
+  html[data-theme="light"] .bottom-nav { background: rgba(233,247,255,.97) !important; }
+}
+@media (max-width: 700px) {
+  body { padding: 0 !important; }
+  .app-shell { width: 100%; max-width: 520px; min-height: 100vh; border-radius: 0 !important; }
+  .screen-home { padding: 12px 14px 30px; }
+  .bottom-nav {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    width: 100% !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    transform: translateY(115%);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    border-radius: 20px 20px 0 0 !important;
+    transition: transform .22s ease, opacity .22s ease, visibility .22s ease;
+  }
+  body.nav-visible .bottom-nav {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+  .nav-item { min-height: 54px; padding: 4px 1px; font-size: 8px; }
+  .nav-icon { width: 25px; height: 25px; font-size: 18px; }
+  .app-content { padding-bottom: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bottom-nav { transition: none !important; }
+}
+
+/* Le mode clair change le fond général, mais jamais les couleurs des applications */
+html[data-theme="light"] .tools-directory .tool-launch,
+html[data-theme="light"] .tools-directory .tool-launch *,
+html[data-theme="light"] .maintenance-directory .maintenance-launch,
+html[data-theme="light"] .maintenance-directory .maintenance-launch * {
+  color: #fff !important;
+  background-color: transparent;
+  text-shadow: none !important;
+}
+html[data-theme="light"] .tools-directory .tool-delivery { background: linear-gradient(120deg,#155e75,#0891b2) !important; border-color: #55c7d8 !important; }
+html[data-theme="light"] .tools-directory .tool-reprise { background: linear-gradient(120deg,#7c2d12,#ea580c) !important; border-color: #ffb078 !important; }
+html[data-theme="light"] .tools-directory .tool-inventory { background: linear-gradient(120deg,#14532d,#16a34a) !important; border-color: #79d99a !important; }
+html[data-theme="light"] .tools-directory .tool-anomaly { background: linear-gradient(120deg,#854d0e,#ca8a04) !important; border-color: #f4d36d !important; }
+html[data-theme="light"] .maintenance-directory .maintenance-launch.maint-purple { background: linear-gradient(120deg,#7c3aed,#5b21b6) !important; border-color: #c4a5ff !important; }
+html[data-theme="light"] .maintenance-directory .maintenance-launch.maint-green { background: linear-gradient(120deg,#16a34a,#047857) !important; border-color: #86efac !important; }
+html[data-theme="light"] .maintenance-directory .maintenance-launch.maint-blue { background: linear-gradient(120deg,#0284c7,#1d4ed8) !important; border-color: #93c5fd !important; }
+html[data-theme="light"] .maintenance-directory .maintenance-launch.maint-orange { background: linear-gradient(120deg,#f59e0b,#ea580c) !important; border-color: #fdba74 !important; }
+html[data-theme="light"] .maintenance-directory .maintenance-launch.maint-pink { background: linear-gradient(120deg,#ec4899,#9d174d) !important; border-color: #f9a8d4 !important; }
+html[data-theme="light"] .tools-directory .tool-launch-icon,
+html[data-theme="light"] .maintenance-directory .tool-launch-icon { background: rgba(255,255,255,.18) !important; color: #fff !important; }
