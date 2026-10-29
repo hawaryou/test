@@ -1,22 +1,11 @@
-# EuroMed — Hub Technicien — Projet de test complet
+# Hub Technicien EuroMed
 
-Version de démonstration regroupant le Hub et les futures fonctions métier :
-- Accueil / accès rapide
-- Carnet de livraison
-- Carnet de reprise
-- Inventaire
-- Mode intervention guidé
-- Scanner universel (démo navigateur)
-- Signalement d'anomalie avec photo locale
-- Mes interventions
-- Gestion du matériel
-- 5 maintenances actives + équipements futurs en démo
-- Documentation
-- Statistiques
-- Alertes
-- Profil technicien
+Version mobile sombre du Hub Technicien EuroMed.
 
-Les fonctions qui nécessitent encore un backend sont volontairement simulées pour permettre un test de l'interface avant raccordement aux services EuroMed.
+## Assets
+Les images d'origine EuroMed ont été conservées et préparées en PNG avec fond transparent : elles restent pleinement opaques et visibles, avec uniquement leur arrière-plan supprimé afin de s'intégrer naturellement au thème sombre.
 
-## Déploiement
-Publier le contenu de ce dossier sur GitHub Pages. `index.html` est la page d'entrée.
+## Déploiement GitHub Pages
+1. Décompresser le ZIP.
+2. Mettre le contenu du dossier `euromed-hub-iphone-v2` à la racine du dépôt GitHub Pages.
+3. Publier via GitHub Pages.
