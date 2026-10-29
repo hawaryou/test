@@ -666,3 +666,34 @@ html[data-theme="light"] .brand-box,html[data-theme="light"] .status-pill{backgr
 html[data-theme="light"] .bottom-nav{background:linear-gradient(110deg,#e5f7ff,#fff0f7,#eee9ff)!important}
 html[data-theme="light"] .nav-item.active{background:linear-gradient(135deg,#c8efff,#e4d9ff)!important}
 html[data-theme="light"] .ready-banner{background:linear-gradient(110deg,#e0f7ff,#e8f9ef)!important;border-color:#a8d8e8!important}
+
+
+/* Check-ups EuroMed : contraste renforcé en mode clair, surtout dans les champs à remplir */
+html[data-theme="light"] .checkup-wrap{background:linear-gradient(145deg,#dcefff 0%,#f8eaff 48%,#ddf8ef 100%)!important;border-radius:24px}
+html[data-theme="light"] .checkup-note{background:linear-gradient(135deg,#c8edff,#d9e7ff)!important;color:#123653!important;border:2px solid #6ab7e7!important;box-shadow:0 5px 14px #2c75a51c}
+html[data-theme="light"] .checkup-section{background:linear-gradient(145deg,#edf7ff 0%,#f2eaff 100%)!important;border:1.5px solid #a8c7e8!important;box-shadow:0 7px 18px rgba(53,92,145,.12)!important;color:#172b49!important}
+html[data-theme="light"] .checkup-section h2{color:#164f86!important}
+html[data-theme="light"] .checkup-fields label,html[data-theme="light"] .full-label,html[data-theme="light"] .cu-item,html[data-theme="light"] .part-name,html[data-theme="light"] .part-check{color:#233c60!important}
+html[data-theme="light"] .checkup-fields input,html[data-theme="light"] .checkup-fields select,html[data-theme="light"] .cu-detail,html[data-theme="light"] .cu-item select,html[data-theme="light"] .full-label textarea{
+ background:linear-gradient(135deg,#d9efff 0%,#e9e3ff 100%)!important;
+ color:#142e4c!important;border:2px solid #78a9d8!important;border-radius:12px!important;
+ box-shadow:inset 0 2px 4px rgba(34,77,125,.10),0 2px 0 rgba(255,255,255,.75)!important;
+ min-height:44px;font-weight:600
+}
+html[data-theme="light"] .checkup-fields input::placeholder,html[data-theme="light"] .cu-detail::placeholder,html[data-theme="light"] .full-label textarea::placeholder{color:#526e8d!important;opacity:1!important;font-weight:500}
+html[data-theme="light"] .checkup-fields input:focus,html[data-theme="light"] .checkup-fields select:focus,html[data-theme="light"] .cu-detail:focus,html[data-theme="light"] .cu-item select:focus,html[data-theme="light"] .full-label textarea:focus{outline:3px solid #38a9f5!important;outline-offset:1px;border-color:#087fc4!important;background:linear-gradient(135deg,#c9eaff,#ded7ff)!important}
+html[data-theme="light"] .cu-row{background:linear-gradient(120deg,#dcefff 0%,#e9e4ff 100%)!important;border:1.5px solid #9abce1!important;border-radius:14px!important;box-shadow:0 3px 9px rgba(48,88,143,.09)!important}
+html[data-theme="light"] .cu-row:has(.part-name){background:linear-gradient(120deg,#f0e2ff 0%,#e2e9ff 55%,#d9f4ff 100%)!important;border-color:#b19bdd!important}
+html[data-theme="light"] .cu-row.cu-ok{background:linear-gradient(120deg,#d9fbe8,#c9f4dd)!important;border-color:#48b77a!important}
+html[data-theme="light"] .cu-row.cu-problem{background:linear-gradient(120deg,#ffe0e4,#ffedd7)!important;border-color:#e77b84!important}
+html[data-theme="light"] .cu-row.cu-ok .cu-item span{color:#17643e!important}
+html[data-theme="light"] .cu-row.cu-problem .cu-item span{color:#9b2634!important}
+html[data-theme="light"] .part-name b{background:linear-gradient(135deg,#7041bd,#3f67c8)!important;color:#fff!important;border-radius:9px;padding:5px 8px;display:inline-block}
+html[data-theme="light"] .part-check{background:#d6eaff!important;border:1px solid #8ab5e0!important;border-radius:10px;padding:8px 10px}
+html[data-theme="light"] .part-check input{accent-color:#6c42c1;transform:scale(1.15)}
+html[data-theme="light"] #cuSignature{background:linear-gradient(135deg,#e1f2ff,#f0e8ff)!important;border:2px dashed #7ea8d5!important;border-radius:12px}
+html[data-theme="light"] .checkup-progress{color:#234f7a!important}
+html[data-theme="light"] .checkup-progress>div{background:#c4d8ef!important}
+html[data-theme="light"] .checkup-sub{color:#415b7b!important}
+html[data-theme="light"] .cu-history-row{background:linear-gradient(135deg,#dcefff,#eee5ff)!important;border:1px solid #a7c4e6!important;border-radius:12px;padding:10px}
+html[data-theme="light"] .cu-history-row span{color:#385a7d!important}
