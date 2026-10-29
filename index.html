@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="EuroMed">
 <title>EuroMed — Hub Technicien</title>
 <link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="style.css?v=20261029-demo-checkup">
+<link rel="stylesheet" href="style.css?v=20261029-responsive-nav">
 </head>
 <body>
 <button class="theme-toggle" id="themeToggle" type="button" aria-label="Passer en mode clair" aria-pressed="false"><span aria-hidden="true">☀️</span><span id="themeToggleLabel">Mode clair</span></button>
@@ -137,6 +137,34 @@ home();
  function update(){var pill=document.getElementById("connectivityStatus"),label=document.getElementById("connectivityLabel");if(!pill||!label)return;var online=navigator.onLine;label.textContent=online?"EN LIGNE":"HORS CONNEXION";pill.classList.toggle("offline",!online);pill.setAttribute("aria-label",online?"Connexion disponible":"Mode hors connexion");}
  window.addEventListener("online",update);window.addEventListener("offline",update);update();
  if("serviceWorker" in navigator && location.protocol==="https:"){navigator.serviceWorker.register("./service-worker.js").catch(function(e){console.warn("Mode hors connexion indisponible",e);});}
+})();
+</script>
+<script>
+/* Sur téléphone, la barre de navigation apparaît au toucher puis se replie après quelques secondes. */
+(function(){
+  var mq = window.matchMedia('(max-width: 700px)');
+  var timer = null;
+  function reveal(){
+    if (!mq.matches) { document.body.classList.remove('nav-visible'); return; }
+    document.body.classList.add('nav-visible');
+    if (timer) window.clearTimeout(timer);
+    timer = window.setTimeout(function(){
+      document.body.classList.remove('nav-visible');
+    }, 4500);
+  }
+  document.addEventListener('touchstart', reveal, {passive:true});
+  document.addEventListener('pointerdown', function(e){
+    if (e.pointerType === 'touch' || e.pointerType === 'pen') reveal();
+  }, {passive:true});
+  document.addEventListener('focusin', function(e){
+    if (mq.matches && e.target.closest && e.target.closest('.bottom-nav')) reveal();
+  });
+  window.addEventListener('resize', function(){
+    if (!mq.matches) {
+      if (timer) window.clearTimeout(timer);
+      document.body.classList.remove('nav-visible');
+    }
+  });
 })();
 </script>
 </body>
