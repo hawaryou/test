@@ -616,3 +616,23 @@ html[data-theme="light"] .demo-launch-btn:hover{background:linear-gradient(135de
  body::before,.app-shell::before{content:none!important;display:none!important;animation:none!important;background:none!important;filter:none!important;will-change:auto!important}
  body,.app-shell{background-attachment:scroll!important}
 }
+
+
+/* Démonstration : conserver son bouton orange, sans carré blanc autour en mode clair */
+html[data-theme="light"] .screen-home .hero-card .hero-copy,
+html[data-theme="light"] .screen-home .hero-card .hero-copy *:not(.demo-launch-btn) {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+html[data-theme="light"] .screen-home .hero-card .hero-copy > .demo-launch-btn,
+html[data-theme="light"] .screen-home .hero-card .demo-launch-btn {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  background: linear-gradient(135deg,#fbbf24 0%,#f97316 100%) !important;
+  color: #172033 !important;
+  border: 1px solid rgba(255,255,255,.65) !important;
+  box-shadow: 0 8px 22px rgba(249,115,22,.30) !important;
+}
+html[data-theme="light"] .screen-home .hero-card .hero-copy > .demo-launch-btn:hover {
+  background: linear-gradient(135deg,#fcd34d 0%,#fb923c 100%) !important;
+}
