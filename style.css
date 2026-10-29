@@ -609,3 +609,10 @@ html[data-theme="light"] .app-shell::before{background-image:radial-gradient(cir
 /* Conserver la couleur vive du bouton de démonstration en mode clair */
 html[data-theme="light"] .demo-launch-btn{background:linear-gradient(135deg,#fbbf24 0%,#f97316 100%)!important;color:#172033!important;border-color:rgba(255,255,255,.65)!important;box-shadow:0 8px 22px rgba(249,115,22,.30)!important}
 html[data-theme="light"] .demo-launch-btn:hover{background:linear-gradient(135deg,#fcd34d 0%,#fb923c 100%)!important;box-shadow:0 12px 28px rgba(249,115,22,.40)!important}
+
+
+/* Sur téléphone : couper les bulles animées pour préserver la fluidité */
+@media screen and (max-width: 768px), (hover: none) and (pointer: coarse){
+ body::before,.app-shell::before{content:none!important;display:none!important;animation:none!important;background:none!important;filter:none!important;will-change:auto!important}
+ body,.app-shell{background-attachment:scroll!important}
+}
