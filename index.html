@@ -58,6 +58,7 @@ function home(){
        <span class="mini-label">HUB TECHNICIEN</span>
        <h1>Bonjour 👋<br><strong>Prêt pour l'intervention ?</strong></h1>
        <p>Tous vos outils EuroMed réunis dans une seule application.</p>
+       <button class="demo-launch-btn" id="openDemoMode" type="button">▶ Lancer le mode démonstration</button>
      </div>
      <div class="hero-mascot"><div class="mascot-ring"></div><img src="chibi-euromed.png" alt="Technicien EuroMed"></div>
    </div>
@@ -165,6 +166,74 @@ home();
       document.body.classList.remove('nav-visible');
     }
   });
+})();
+</script>
+
+<script>
+/* Mode présentation EuroMed : parcours guidé du HUB et de ses applications. */
+(function(){
+ const slides=[
+  {eyebrow:'01 · LE HUB',title:'Un point d’entrée unique',text:'Le HUB rassemble les outils du technicien dans une interface adaptée au téléphone comme à l’ordinateur.',items:[
+   ['🏠','Accueil','Accès rapide aux outils, check-ups et maintenances.'],
+   ['⚙️','Navigation','Les rubriques Accueil, Maintenance, Outils et Documentation restent accessibles depuis la barre de navigation.'],
+   ['🎨','Interface','Cartes colorées, mode clair/sombre et accès pensé pour le terrain.']
+  ]},
+  {eyebrow:'02 · MAINTENANCE',title:'Cinq familles de matériel',text:'Chaque fiche de maintenance ouvre l’application dédiée au matériel concerné.',items:[
+   ['🛏️','Lit médicalisé','Contrôles, conformité, identification du matériel et certificat de maintenance.'],
+   ['♿','Fauteuil roulant','Accès à la fiche de maintenance du fauteuil roulant.'],
+   ['🛌','Matelas à air','Contrôle du système de matelas alternating.'],
+   ['🏥','Lève-personne','Contrôle du matériel de transfert et de ses éléments de sécurité.'],
+   ['🧍','Verticalisateur','Fiche de contrôle dédiée au verticalisateur.']
+  ],links:[['Ouvrir les maintenances','internal:maintenance']]},
+  {eyebrow:'03 · OUTILS TERRAIN',title:'Tracer les opérations',text:'Les outils documentent les mouvements de matériel et les interventions au quotidien.',items:[
+   ['🚚','Carnet de livraison','Préparer un bon de livraison et recueillir les signatures.'],
+   ['↩️','Carnet de reprise','Tracer le matériel récupéré et son état.'],
+   ['📦','Inventaire matériel','Consulter et gérer le parc matériel.'],
+   ['⚠️','Signaler une anomalie','Déclarer un problème nécessitant une intervention.']
+  ],links:[
+   ['Carnet de livraison','https://hawaryou.github.io/Bon-de-livraison-euromed/'],
+   ['Carnet de reprise','https://hawaryou.github.io/bon-reprise-euromed/'],
+   ['Inventaire matériel','https://hawaryou.github.io/inventaire-materiel/'],
+   ['Signalement anomalie','signaler-anomalie.html']
+  ]},
+  {eyebrow:'04 · CHECK-UPS',title:'Des contrôles hebdomadaires',text:'Les check-ups guident le technicien dans une vérification structurée et permettent de repérer les points à traiter.',items:[
+   ['🚐','Check-up des camions','Contrôles de carrosserie, pneus, feux, niveaux et équipements.'],
+   ['🧰','Check-up pièces détachées','Vérification de la présence des pièces et consommables embarqués.']
+  ],links:[['Démontrer le check-up camion','internal:checkupTruck'],['Démontrer le check-up pièces','internal:checkupParts']]},
+  {eyebrow:'05 · DOCUMENTATION',title:'Les documents à portée de main',text:'Une entrée unique donne accès aux notices, protocoles et documents PDF utiles aux équipes.',items:[
+   ['📄','Documentation EuroMed','Accès à la bibliothèque de documents et à l’outil d’envoi PDF.'],
+   ['🔐','À retenir en présentation','Ce mode est un parcours de démonstration du HUB. Les applications ouvertes ensuite restent les applications opérationnelles.']
+  ],links:[['Ouvrir la documentation','https://hawaryou.github.io/envoi_pdf_euromed/']]}
+ ];
+ let index=0;
+ const modal=document.createElement('div');modal.className='demo-modal';modal.id='demoModal';modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');modal.setAttribute('aria-label','Mode démonstration EuroMed');modal.hidden=true;
+ modal.innerHTML='<div class="demo-panel"><div class="demo-modal-top"><span class="demo-badge">▶ MODE DÉMONSTRATION</span><button class="demo-close" type="button" aria-label="Fermer la démonstration">✕</button></div><div class="demo-progress"><i></i></div><div class="demo-content"></div><div class="demo-footer"><button class="demo-prev" type="button">← Précédent</button><span class="demo-counter"></span><button class="demo-next" type="button">Suivant →</button></div><p class="demo-safety">Présentation guidée · Les liens ouvrent les applications réelles. Ne validez pas de document et n’envoyez pas de données pendant la présentation.</p></div>';
+ document.body.appendChild(modal);
+ const content=modal.querySelector('.demo-content');
+ function render(){
+  const s=slides[index];
+  content.innerHTML='<span class="demo-eyebrow">'+s.eyebrow+'</span><h2>'+s.title+'</h2><p class="demo-intro">'+s.text+'</p><div class="demo-items">'+s.items.map(x=>'<article class="demo-item"><span class="demo-item-icon">'+x[0]+'</span><div><b>'+x[1]+'</b><p>'+x[2]+'</p></div></article>').join('')+'</div>'+(s.links?'<div class="demo-links">'+s.links.map(x=>'<button type="button" class="demo-link" data-demo-link="'+x[1]+'">'+x[0]+' <span>↗</span></button>').join('')+'</div>':'');
+  modal.querySelector('.demo-counter').textContent=(index+1)+' / '+slides.length;
+  modal.querySelector('.demo-progress i').style.width=((index+1)/slides.length*100)+'%';
+  modal.querySelector('.demo-prev').disabled=index===0;
+  modal.querySelector('.demo-next').textContent=index===slides.length-1?'Terminer ✓':'Suivant →';
+ }
+ function open(){index=0;render();modal.hidden=false;document.body.classList.add('demo-open');modal.querySelector('.demo-next').focus();}
+ function close(){modal.hidden=true;document.body.classList.remove('demo-open');}
+ document.addEventListener('click',e=>{if(e.target.closest('#openDemoMode'))open();});
+ modal.querySelector('.demo-close').addEventListener('click',close);
+ modal.addEventListener('click',e=>{if(e.target===modal)close();});
+ modal.querySelector('.demo-prev').addEventListener('click',()=>{if(index>0){index--;render();}});
+ modal.querySelector('.demo-next').addEventListener('click',()=>{if(index<slides.length-1){index++;render();}else close();});
+ modal.addEventListener('click',e=>{
+  const b=e.target.closest('[data-demo-link]');if(!b)return;
+  const dest=b.dataset.demoLink;
+  if(dest==='internal:maintenance'){close();showPage('maintenance');}
+  else if(dest==='internal:checkupTruck'){close();showPage('checkupTruck');}
+  else if(dest==='internal:checkupParts'){close();showPage('checkupParts');}
+  else {close();window.open(dest,'_blank','noopener');}
+ });
+ document.addEventListener('keydown',e=>{if(modal.hidden)return;if(e.key==='Escape')close();if(e.key==='ArrowRight')modal.querySelector('.demo-next').click();if(e.key==='ArrowLeft')modal.querySelector('.demo-prev').click();});
 })();
 </script>
 </body>
