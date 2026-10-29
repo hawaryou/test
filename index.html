@@ -173,37 +173,78 @@ home();
 /* Mode présentation EuroMed : parcours guidé du HUB et de ses applications. */
 (function(){
  const slides=[
-  {eyebrow:'01 · LE HUB',title:'Un point d’entrée unique',text:'Le HUB rassemble les outils du technicien dans une interface adaptée au téléphone comme à l’ordinateur.',items:[
-   ['🏠','Accueil','Accès rapide aux outils, check-ups et maintenances.'],
-   ['⚙️','Navigation','Les rubriques Accueil, Maintenance, Outils et Documentation restent accessibles depuis la barre de navigation.'],
-   ['🎨','Interface','Cartes colorées, mode clair/sombre et accès pensé pour le terrain.']
+  {eyebrow:'01 · LE HUB EUROMED',title:'Un portail unique pour le technicien',text:'Le HUB est la porte d’entrée vers les outils terrain EuroMed. Il rassemble les applications web créées pour réduire le papier, guider les contrôles et retrouver rapidement les bons documents.',items:[
+   ['🏠','Accueil centralisé','Accès direct aux bons, à l’inventaire, au signalement d’anomalie, aux check-ups et aux maintenances.'],
+   ['📱','Pensé pour le terrain','Interface responsive, grandes zones tactiles et navigation utilisable sur smartphone comme sur ordinateur.'],
+   ['🎨','Interface personnalisable','Cartes colorées, thème clair/sombre et identité visuelle EuroMed avec logo et chibi.'],
+   ['🧭','Navigation cohérente','Les applications disposent d’un bouton Menu pour revenir au HUB, afin de garder un parcours simple.']
   ]},
-  {eyebrow:'02 · MAINTENANCE',title:'Cinq familles de matériel',text:'Chaque fiche de maintenance ouvre l’application dédiée au matériel concerné.',items:[
-   ['🛏️','Lit médicalisé','Contrôles, conformité, identification du matériel et certificat de maintenance.'],
-   ['♿','Fauteuil roulant','Accès à la fiche de maintenance du fauteuil roulant.'],
-   ['🛌','Matelas à air','Contrôle du système de matelas alternating.'],
-   ['🏥','Lève-personne','Contrôle du matériel de transfert et de ses éléments de sécurité.'],
-   ['🧍','Verticalisateur','Fiche de contrôle dédiée au verticalisateur.']
-  ],links:[['Ouvrir les maintenances','internal:maintenance']]},
-  {eyebrow:'03 · OUTILS TERRAIN',title:'Tracer les opérations',text:'Les outils documentent les mouvements de matériel et les interventions au quotidien.',items:[
-   ['🚚','Carnet de livraison','Préparer un bon de livraison et recueillir les signatures.'],
-   ['↩️','Carnet de reprise','Tracer le matériel récupéré et son état.'],
-   ['📦','Inventaire matériel','Consulter et gérer le parc matériel.'],
-   ['⚠️','Signaler une anomalie','Déclarer un problème nécessitant une intervention.']
+  {eyebrow:'02 · BON DE LIVRAISON',title:'Formaliser chaque livraison',text:'Le carnet numérique remplace le bon papier et rassemble les informations utiles à la traçabilité de la livraison.',items:[
+   ['👤','Destinataire','Établissement ou client, adresse, ville, e-mail et référence de commande.'],
+   ['📦','Matériel livré','Tableau modifiable avec nom, quantité, désignation du produit et numéro de série ou de lot ; ajout de plusieurs lignes.'],
+   ['✍️','Réception signée','Date et lieu de livraison, signature du client et signature du technicien/installateur.'],
+   ['📷','Destinataire absent','Option dédiée avec prise de photo du lieu de dépôt à joindre au bon.'],
+   ['📧','Envoi avec pièces jointes','Le bon est adressé à EuroMed et peut aussi être envoyé au client avec plusieurs notices/protocoles sélectionnés.']
+  ],links:[['Ouvrir le bon de livraison','https://hawaryou.github.io/Bon-de-livraison-euromed/']]},
+  {eyebrow:'03 · BON DE REPRISE',title:'Tracer le matériel récupéré',text:'Le carnet de reprise reprend la présentation graphique du bon de livraison mais répond au scénario inverse : un technicien récupère du matériel chez un patient ou un établissement.',items:[
+   ['🧾','Identification','Renseigner le destinataire et les informations de reprise sans champ téléphone superflu.'],
+   ['🛠️','Matériel repris','Tableau pour identifier chaque équipement et renseigner son état au moment de la récupération.'],
+   ['⚠️','Motif et anomalie','Motifs de reprise présentés clairement ; la détection d’une anomalie permet de joindre une photo.'],
+   ['✍️','Traçabilité','Document de reprise signé et envoyé par e-mail via son propre Apps Script, indépendant de celui de la livraison.']
+  ],links:[['Ouvrir le bon de reprise','https://hawaryou.github.io/bon-reprise-euromed/']]},
+  {eyebrow:'04 · INVENTAIRE DU MATÉRIEL',title:'Identifier le matériel par scan',text:'L’application d’inventaire aide à relever les numéros de série sur site, sans devoir les retaper manuellement.',items:[
+   ['📷','Scan EAN-13','La caméra du téléphone lit le code-barres du lit et récupère son numéro de série. Le code est contrôlé, y compris son chiffre de contrôle.'],
+   ['🛏️','Lit obligatoire','Le numéro de série du lit constitue l’identifiant requis pour poursuivre la saisie.'],
+   ['🧰','Équipements associés','Potence, barrières et matelas à air peuvent être scannés en complément.'],
+   ['📋','Localisation','Foyer/établissement, nom et chambre sont saisis puis préremplis dans le Google Form.'],
+   ['📊','Enregistrement','Après vérification, le formulaire est envoyé et la réponse est enregistrée dans le Google Sheet associé.']
+  ],links:[['Ouvrir l’inventaire','https://hawaryou.github.io/inventaire-materiel/']]},
+  {eyebrow:'05 · SIGNALER UNE ANOMALIE',title:'Faire remonter un problème terrain',text:'Le formulaire structure les informations nécessaires pour comprendre le défaut et préparer une intervention.',items:[
+   ['🩺','Dispositif concerné','Lit, fauteuil roulant, matelas à air, verticalisateur, soulève-personne ou autre matériel.'],
+   ['🔎','Identification rapide','Numéro de série saisi ou lu par QR, Data Matrix, code-barres ou photo, avec réglages de caméra disponibles.'],
+   ['📍','Contexte','Client/établissement, foyer si applicable et nom du technicien ayant constaté le problème.'],
+   ['📝','Description et photos','Décrire l’anomalie et les risques éventuels ; ajouter jusqu’à cinq photos.'],
+   ['📤','Brouillon et file d’attente','Les champs sont conservés localement sur l’appareil et une file d’attente permet de suivre les signalements à envoyer. Les photos ne sont pas conservées après fermeture/rechargement.']
+  ],links:[['Ouvrir le formulaire anomalie','signaler-anomalie.html']]},
+  {eyebrow:'06 · MAINTENANCES',title:'Des fiches adaptées à chaque équipement',text:'Les applications reprennent les fiches de maintenance EuroMed correspondantes. Elles guident le technicien dans les contrôles visuels et fonctionnels, puis produisent une trace documentaire.',items:[
+   ['🛏️','Lit médicalisé · ENR08-V05','Contrôles, scan QR/Data Matrix/Code 128/EAN-13, certificat PDF, résultat conforme en vert et non conforme en rouge, niveau d’obsolescence et tournée multi-lits.'],
+   ['♿','Fauteuil roulant · ENR10-V03','Contrôles visuels et fonctionnels, scan par caméra ou photo, certificat PDF, aperçu avant envoi et tournée multi-fauteuils.'],
+   ['🛌','Matelas à air · ENR09-V02','Maintenance annuelle ou périodique, contrôles du système compresseur/matelas, observations, pièces remplacées, obsolescence et PDF.'],
+   ['🏥','Lève-personne · ENR11-V02','Contrôles de sécurité, saisie des numéros de sangles et décision de maintien en service : approuvé, approuvé sous réserve ou non approuvé.'],
+   ['🧍','Verticalisateur · ENR12-V02','Fiche dédiée aux contrôles visuels et fonctionnels, identification par scan et décision de maintien en service.'],
+   ['📄','Un résultat exploitable','Les fiches génèrent un PDF comprenant les résultats, observations et signatures, avec aperçu/téléchargement et envoi par e-mail via Google Apps Script.']
   ],links:[
-   ['Carnet de livraison','https://hawaryou.github.io/Bon-de-livraison-euromed/'],
-   ['Carnet de reprise','https://hawaryou.github.io/bon-reprise-euromed/'],
-   ['Inventaire matériel','https://hawaryou.github.io/inventaire-materiel/'],
-   ['Signalement anomalie','signaler-anomalie.html']
+   ['Lit médicalisé','https://hawaryou.github.io/maintenance-lit-medical/'],
+   ['Fauteuil roulant','https://hawaryou.github.io/maintenance-fauteuil-roulant/'],
+   ['Matelas à air','https://hawaryou.github.io/maintenance-matelas-alternating/'],
+   ['Lève-personne','https://hawaryou.github.io/maintenance-leve-personne/'],
+   ['Verticalisateur','https://hawaryou.github.io/maintenance-verticalisateur/']
   ]},
-  {eyebrow:'04 · CHECK-UPS',title:'Des contrôles hebdomadaires',text:'Les check-ups guident le technicien dans une vérification structurée et permettent de repérer les points à traiter.',items:[
-   ['🚐','Check-up des camions','Contrôles de carrosserie, pneus, feux, niveaux et équipements.'],
-   ['🧰','Check-up pièces détachées','Vérification de la présence des pièces et consommables embarqués.']
-  ],links:[['Démontrer le check-up camion','internal:checkupTruck'],['Démontrer le check-up pièces','internal:checkupParts']]},
-  {eyebrow:'05 · DOCUMENTATION',title:'Les documents à portée de main',text:'Une entrée unique donne accès aux notices, protocoles et documents PDF utiles aux équipes.',items:[
-   ['📄','Documentation EuroMed','Accès à la bibliothèque de documents et à l’outil d’envoi PDF.'],
-   ['🔐','À retenir en présentation','Ce mode est un parcours de démonstration du HUB. Les applications ouvertes ensuite restent les applications opérationnelles.']
-  ],links:[['Ouvrir la documentation','https://hawaryou.github.io/envoi_pdf_euromed/']]}
+  {eyebrow:'07 · TOURNÉES MULTI-ÉQUIPEMENTS',title:'Une signature client pour toute la tournée',text:'Pour les maintenances compatibles, le mode multi-équipements permet de traiter plusieurs appareils dans une même tournée plutôt que de recommencer toute la procédure pour chacun.',items:[
+   ['1️⃣','Mode normal','Contrôler un équipement et produire son certificat individuellement.'],
+   ['➕','Mode tournée','Enregistrer chaque appareil l’un après l’autre puis passer au suivant.'],
+   ['✍️','Signature unique','À la fin de la tournée, le client signe une seule fois.'],
+   ['📚','Dossier PDF groupé','Les certificats de la tournée sont regroupés dans un seul PDF et peuvent être envoyés ensemble.'],
+   ['🟢🔴','Résultat lisible','Les statuts de conformité sont mis en évidence ; pour les fiches concernées, la propreté/aspect extérieur seule ne déclenche pas à elle seule la non-conformité globale.']
+  ]},
+  {eyebrow:'08 · CHECK-UPS & DOCUMENTATION',title:'Préparer, contrôler et retrouver les ressources',text:'Les check-ups hebdomadaires et la bibliothèque documentaire complètent les applications de maintenance et de traçabilité.',items:[
+   ['🚐','Check-up des camions','Liste de vérification du Crafter ou du Jumper : carrosserie, pneus, feux, niveaux, essuie-glaces, équipements et observations. Le formulaire comporte une progression de contrôle, une signature et une impression PDF.'],
+   ['🧰','Check-up des pièces détachées','Contrôle des quantités attendues, de la présence des pièces et consommables dans le camion, avec remarques sur les manquants.'],
+   ['📚','Notices et protocoles','Liste des PDF récupérée depuis GitHub ; actualisation, recherche, sélection multiple, lecture/aperçu, zoom et ouverture dans un nouvel onglet.'],
+   ['🎬','Vidéos utiles','Les vidéos de montage/démontage de lit sont proposées sous forme de liens dans l’e-mail, sans envoyer les vidéos comme fichiers.'],
+   ['✉️','Envoi documentaire','Saisie du destinataire, sélection des documents, confirmation avant envoi et transmission des PDF en pièces jointes via Apps Script.']
+  ],links:[
+   ['Démontrer le check-up camion','internal:checkupTruck'],
+   ['Démontrer le check-up pièces','internal:checkupParts'],
+   ['Ouvrir la documentation','https://hawaryou.github.io/envoi_pdf_euromed/']
+  ]},
+  {eyebrow:'09 · ARCHITECTURE & BONNES PRATIQUES',title:'Des applications web connectées entre elles',text:'Les interfaces sont hébergées sur GitHub Pages. Selon l’application, les données et les documents utilisent les services associés configurés pour le projet.',items:[
+   ['🌐','GitHub Pages','Hébergement des interfaces accessibles par un lien web, sans installation classique sur le poste.'],
+   ['📨','Google Apps Script','Utilisé par les formulaires concernés pour transmettre les PDF et les e-mails. Des scripts indépendants sont prévus pour les différents workflows.'],
+   ['📂','GitHub pour les notices','Les PDF documentaires sont chargés depuis le dépôt configuré ; ajouter un fichier au bon dossier permet de le faire apparaître dans la liste après actualisation.'],
+   ['🔒','Confidentialité','Avant une mise en production élargie, vérifier les destinataires, les droits d’accès, les durées de conservation et les informations de confidentialité. Ne pas placer de données patients/confidentielles dans un dépôt public.'],
+   ['🧪','Démo sans risque','Pendant la présentation, montrer les parcours et aperçus ; éviter de signer ou d’envoyer un vrai document si les données sont réelles.']
+  ]}
  ];
  let index=0;
  const modal=document.createElement('div');modal.className='demo-modal';modal.id='demoModal';modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');modal.setAttribute('aria-label','Mode démonstration EuroMed');modal.hidden=true;
