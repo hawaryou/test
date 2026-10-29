@@ -636,3 +636,15 @@ html[data-theme="light"] .screen-home .hero-card .demo-launch-btn {
 html[data-theme="light"] .screen-home .hero-card .hero-copy > .demo-launch-btn:hover {
   background: linear-gradient(135deg,#fcd34d 0%,#fb923c 100%) !important;
 }
+
+
+/* Bulles désactivées sur tous les écrans (ordinateur et téléphone) */
+body::before,
+.app-shell::before {
+  content: none !important;
+  display: none !important;
+  animation: none !important;
+  background: none !important;
+  filter: none !important;
+  will-change: auto !important;
+}
