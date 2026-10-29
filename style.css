@@ -372,3 +372,39 @@ html[data-theme="dark"] body .app-content .maintenance-directory .maintenance-la
   background: rgba(255,255,255,.18) !important;
   border: 1px solid rgba(255,255,255,.22) !important;
 }
+
+
+/* Correctif ciblé : garder les couleurs des deux cartes Check-up sur l'accueil en mode clair. */
+html[data-theme="light"] body .app-content .screen-home .checkup-category-grid .quick-card[data-page="checkupTruck"],
+html[data-theme="dark"] body .app-content .screen-home .checkup-category-grid .quick-card[data-page="checkupTruck"] {
+  background: linear-gradient(135deg,#143e68 0%,#176f9e 55%,#2586a8 100%) !important;
+  background-color: #176f9e !important;
+  color: #fff !important;
+  border: 1px solid #398ab4 !important;
+}
+html[data-theme="light"] body .app-content .screen-home .checkup-category-grid .quick-card[data-page="checkupParts"],
+html[data-theme="dark"] body .app-content .screen-home .checkup-category-grid .quick-card[data-page="checkupParts"] {
+  background: linear-gradient(135deg,#3e286c 0%,#7042a5 55%,#984fb7 100%) !important;
+  background-color: #7042a5 !important;
+  color: #fff !important;
+  border: 1px solid #9664c2 !important;
+}
+html[data-theme="light"] body .app-content .screen-home .checkup-category-grid .quick-card[data-page="checkupTruck"] *,
+html[data-theme="light"] body .app-content .screen-home .checkup-category-grid .quick-card[data-page="checkupParts"] *,
+html[data-theme="dark"] body .app-content .screen-home .checkup-category-grid .quick-card[data-page="checkupTruck"] *,
+html[data-theme="dark"] body .app-content .screen-home .checkup-category-grid .quick-card[data-page="checkupParts"] * {
+  color: #fff !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  text-shadow: none !important;
+}
+html[data-theme="light"] body .app-content .screen-home .checkup-category-grid .quick-card .quick-art,
+html[data-theme="dark"] body .app-content .screen-home .checkup-category-grid .quick-card .quick-art {
+  background: rgba(255,255,255,.16) !important;
+  border: 1px solid rgba(255,255,255,.22) !important;
+  border-radius: 14px !important;
+}
+html[data-theme="light"] body .app-content .screen-home .checkup-category-grid .quick-card:after,
+html[data-theme="dark"] body .app-content .screen-home .checkup-category-grid .quick-card:after {
+  background: rgba(255,255,255,.09) !important;
+}
