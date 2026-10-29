@@ -218,3 +218,14 @@ html[data-theme="light"] .hero-mascot img{z-index:2!important;mix-blend-mode:mul
 .van-rear i{position:absolute;bottom:2px;width:8px;height:12px;border-radius:2px;background:#fb7185}.van-rear i:first-child{left:2px}.van-rear i:last-child{right:2px}.van-rear span{position:absolute;left:23px;right:23px;bottom:2px;height:4px;background:#34576b}
 @media(max-width:390px){.vehicle-view{min-height:118px}.van-drawing{width:125px}.checkup-category-grid .quick-card{padding:12px;gap:8px}}
 @media print{.vehicle-views{grid-template-columns:repeat(4,1fr)}.vehicle-view{background:#fff!important;border-color:#888!important}.vehicle-view b,.vehicle-view small{color:#111!important}}
+
+/* Maintenance reprend la présentation graphique des outils */
+.maintenance-directory{padding-top:14px}
+.maintenance-launch{min-height:96px}
+.maintenance-launch .tool-launch-icon{font-size:27px}
+.maintenance-launch.maint-purple{background:linear-gradient(120deg,#4c1d95,#8b5cf6)}
+.maintenance-launch.maint-green{background:linear-gradient(120deg,#14532d,#22a06b)}
+.maintenance-launch.maint-blue{background:linear-gradient(120deg,#164e8a,#0891b2)}
+.maintenance-launch.maint-orange{background:linear-gradient(120deg,#9a3412,#f97316)}
+.maintenance-launch.maint-pink{background:linear-gradient(120deg,#9d174d,#ec4899)}
+.maintenance-launch.maint-purple,.maintenance-launch.maint-green,.maintenance-launch.maint-blue,.maintenance-launch.maint-orange,.maintenance-launch.maint-pink{border-color:rgba(255,255,255,.2)}
