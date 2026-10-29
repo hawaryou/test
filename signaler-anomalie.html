@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#06152b"><title>EuroMed — Signaler une anomalie</title>
+<style>
+:root{color-scheme:dark;--bg:#06152b;--panel:#102544;--line:#24476e;--cyan:#55d9ff;--muted:#a9bdd6}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 90% 0,#173a68 0,transparent 35%),var(--bg);font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#f5f8ff;padding:18px 14px 40px}.wrap{max-width:760px;margin:auto}.back{display:inline-flex;padding:12px 16px;border-radius:14px;background:linear-gradient(135deg,#1687df,#5148d9);color:white;text-decoration:none;font-weight:800;box-shadow:0 6px 18px #0005}.hero{padding:22px 4px 12px}.eyebrow{color:var(--cyan);font-size:12px;font-weight:900;letter-spacing:2px}h1{font-size:clamp(28px,6vw,40px);line-height:1.08;margin:8px 0}p{color:var(--muted);line-height:1.5}.panel{background:linear-gradient(145deg,#112b4c,#0b1c35);border:1px solid var(--line);border-radius:22px;padding:18px;margin:14px 0;box-shadow:0 14px 34px #0003}.panel h2{font-size:16px;margin:0 0 16px}.field{display:block;margin:14px 0}.field>span{display:block;font-size:13px;font-weight:750;margin-bottom:7px;color:#dbeaff}input,select,textarea{width:100%;min-height:48px;padding:12px;border:1px solid #315477;border-radius:12px;background:#07182d;color:#fff;font:inherit}textarea{min-height:120px;resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.buttons{display:flex;gap:8px;flex-wrap:wrap}.btn{border:0;border-radius:12px;padding:12px 14px;min-height:46px;background:#1c5c9e;color:white;font-weight:800;cursor:pointer}.btn.secondary{background:#263b56}.btn.submit{width:100%;background:linear-gradient(120deg,#00a9dc,#5865e9);font-size:16px;margin-top:8px}.hint{font-size:12px;color:var(--muted)}#preview{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin-top:10px}#preview img{width:100%;height:95px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}#reader{width:100%;overflow:hidden;border-radius:12px;margin-top:12px}#scanner{display:none}#status{padding:12px;border-radius:12px;margin-top:12px;display:none;white-space:pre-wrap}.notice{background:#3a2c12;border:1px solid #88672d;color:#ffe8a6;padding:12px;border-radius:12px;font-size:13px}@media(max-width:520px){.row{grid-template-columns:1fr}.panel{padding:15px}}
+[hidden]{display:none!important}#emailPreview{display:none}#emailPreview pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;color:#eaf4ff;background:#07182d;border:1px solid #315477;border-radius:12px;padding:14px}#emailPreview .preview-actions{display:flex;gap:10px;flex-wrap:wrap}#emailPreview .preview-actions .btn{flex:1}\n</style>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script>window.__zbarPolyfillReady=import('https://cdn.jsdelivr.net/npm/@undecaf/barcode-detector-polyfill@0.9.23/dist/main.js').then(m=>m.BarcodeDetectorPolyfill).catch(()=>null);</script>
+<script src="https://cdn.jsdelivr.net/npm/zxing-wasm@3.1.4/dist/iife/reader/index.js"></script>
+<style>.scan-actions,.scanner-tools{display:flex;gap:8px;flex-wrap:wrap}.scan-actions .btn,.scanner-tools .btn{flex:1;min-width:110px}.scanner{display:none;margin-top:12px;padding:10px;background:#000;border-radius:14px;overflow:hidden}.scanner-title{color:#fff;text-align:center;font-weight:800;margin:4px 0 8px}.scanner .hint{color:#ddd;text-align:center}@media(max-width:520px){.scan-actions{display:grid;grid-template-columns:1fr}.scan-actions .btn,.scanner-tools .btn{min-height:44px}}</style></head><body><div class="wrap">
+<a class="back" href="https://hawaryou.github.io/HUB-euromed/">‹ Retour au Hub EuroMed</a>
+<header class="hero"><div class="eyebrow">HUB TECHNICIEN · QUALITÉ & SÉCURITÉ</div><h1>⚠️ Signaler une anomalie</h1><p>Décrivez le problème constaté sur un dispositif médical pour préparer une demande d’intervention EuroMed.</p></header>
+<form id="form">
+<div class="notice" id="offlineDraftNotice" role="status" aria-live="polite" style="margin:12px 0">🗂️ Brouillon local activé : les champs sont conservés sur cet appareil. Les photos ne sont pas conservées après fermeture ou rechargement. Hors connexion, l’envoi sera à refaire manuellement au retour du réseau.</div>
+<div class="buttons" style="margin:0 0 14px"><button class="btn secondary" type="button" id="clearLocalDraft">Effacer le brouillon enregistré</button></div>
+<section class="panel" id="offlineQueuePanel" aria-live="polite" style="margin-top:0">
+<h2>📤 File d’attente d’envoi</h2><p class="hint" id="offlineQueueSummary">Chargement des signalements conservés sur cet appareil…</p><div id="offlineQueueList"></div>
+</section>
+<section class="panel"><h2>01 · Dispositif médical</h2>
+<label class="field"><span>Type de dispositif *</span><select id="device" required><option value="">Choisir un dispositif…</option><option>Lit médicalisé</option><option>Fauteuil roulant</option><option>Matelas à air</option><option>Verticalisateur</option><option>Soulève-personne</option><option>Autre</option></select></label>
+<label class="field" id="otherWrap" hidden><span>Préciser le dispositif (si « Autre ») *</span><input id="other" placeholder="Type / marque / modèle"></label>
+<label class="field"><span>Numéro de série *</span><input id="serial" required autocomplete="off" placeholder="Saisir ou scanner le code"></label>
+<div class="scan-actions"><button class="btn" type="button" id="qrStart">📷 QR précis</button><button class="btn secondary" type="button" id="barcodeStart">📷 Code-barres iPhone</button><button class="btn secondary" type="button" id="photoStart">🖼️ Scanner une photo</button><input id="scanPhotoInput" type="file" accept="image/*" capture="environment" hidden></div><div id="scanner" class="scanner"><div class="scanner-title" id="scannerTitle">Scanner le code</div><div id="reader"></div><p class="hint">QR : placez le code au centre. Code-barres : gardez toute la largeur visible.</p><div class="scanner-tools"><button class="btn secondary" type="button" onclick="setCameraZoom(1)">🔎 1×</button><button class="btn secondary" type="button" onclick="setCameraZoom(1.5)">🔎 1,5×</button><button class="btn secondary" type="button" onclick="setCameraZoom(2)">🔎 2×</button><button class="btn secondary" type="button" onclick="setCameraFocus()">🎯 Autofocus</button><button class="btn secondary" type="button" id="qrStop">Fermer la caméra</button></div></div><p class="hint">Même logique que la maintenance du lit médicalisé : QR / Data Matrix, code-barres renforcé pour iPhone, réglages caméra et lecture depuis une photo.</p>
+</section>
+<section class="panel"><h2>02 · Client & localisation</h2>
+<label class="field"><span>Nom du client / établissement *</span><input id="client" required autocomplete="organization" placeholder="Nom du client"></label>
+<label class="field"><span><input id="foyerToggle" type="checkbox" style="width:20px;min-height:20px;vertical-align:middle;margin:0 8px 0 0;accent-color:#55d9ff"> Foyer</span></label><label class="field" id="foyerWrap" hidden><span>Nom du foyer *</span><input id="foyer" placeholder="Nom du foyer, si applicable"></label>
+</section>
+<section class="panel"><h2>03 · Constat de l’anomalie</h2>
+<label class="field"><span>Technicien ayant fait le constat *</span><input id="technician" required placeholder="Nom et prénom du technicien"></label>
+<label class="field"><span>Description de l’anomalie *</span><textarea id="description" required placeholder="Décrivez le défaut, les circonstances et les éventuels risques…"></textarea></label>
+<label class="field"><span>Photos (facultatif, jusqu’à 5)</span><input id="photos" type="file" accept="image/*" capture="environment" multiple><div class="hint">Vous pouvez prendre une photo avec le téléphone ou joindre des images existantes.</div><div id="preview"></div></label>
+</section>
+<div class="notice">Avant l’envoi, vérifiez le numéro de série et la description. Si le dispositif présente un danger, appliquez les consignes de sécurité internes et mettez-le hors service si nécessaire.</div>
+<button class="btn submit" type="submit">✉️ Envoyer la demande d’intervention</button>
+<div id="status" role="status" aria-live="polite"></div>\n<section class="panel" id="emailPreview" aria-live="polite"><h2>Vérifier le courriel avant envoi</h2><p>Voici le contenu qui sera envoyé à <strong>valentineuromed@gmail.com</strong>.</p><pre id="emailPreviewText"></pre><div id="emailPreviewPhotos" class="hint"></div><div class="preview-actions"><button class="btn secondary" type="button" id="editReport">← Modifier le signalement</button><button class="btn submit" type="button" id="confirmSend">✉️ Confirmer et envoyer</button></div></section>
+</form>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbyXxat81l19GIXOJeJOjqQo9k9hCfSuogSV_Pxwyc77lNTrXyg-vE83TpmgDu81yayumg/exec';
+let scanner=null, pendingData=null, sending=false;
+function updateConditionalFields(){
+  const isOther=$('device').value==='Autre';
+  $('otherWrap').hidden=!isOther;
+  $('other').required=isOther;
+  if(!isOther)$('other').value='';
+  const hasFoyer=$('foyerToggle').checked;
+  $('foyerWrap').hidden=!hasFoyer;
+  $('foyer').required=hasFoyer;
+  if(!hasFoyer)$('foyer').value='';
+}
+$('device').addEventListener('change',updateConditionalFields);
+$('foyerToggle').addEventListener('change',updateConditionalFields);
+updateConditionalFields();
+
+let activeStream=null, activeVideo=null, activeTimer=null, activeMode='qr', activeTrack=null;
+function stopScan(){if(activeTimer)clearInterval(activeTimer);activeTimer=null;if(activeStream)activeStream.getTracks().forEach(t=>t.stop());activeStream=null;activeTrack=null;if(activeVideo){activeVideo.srcObject=null;activeVideo=null}$('scanner').style.display='none';$('qrStart').hidden=false;$('barcodeStart').hidden=false}
+async function setCameraZoom(v){if(!activeTrack?.getCapabilities)return;try{const c=activeTrack.getCapabilities();if(c.zoom)await activeTrack.applyConstraints({advanced:[{zoom:Math.max(c.zoom.min||1,Math.min(c.zoom.max||v,v))}]})}catch(e){}}
+async function setCameraFocus(){if(!activeTrack?.getCapabilities)return;try{const c=activeTrack.getCapabilities();if(c.focusMode)await activeTrack.applyConstraints({advanced:[{focusMode:c.focusMode.includes('continuous')?'continuous':'single-shot'}]})}catch(e){}}
+async function startScan(mode){stopScan();activeMode=mode;if(location.protocol!=='https:'&&location.hostname!=='localhost'){alert('La caméra nécessite une page HTTPS.');return}
+$('scanner').style.display='block';$('reader').innerHTML='';$('scannerTitle').textContent=mode==='qr'?'Scanner le QR Code — mode précis':'Scanner le code-barres — mode renforcé iPhone';$('qrStart').hidden=true;$('barcodeStart').hidden=true;
+const video=document.createElement('video');video.autoplay=true;video.muted=true;video.playsInline=true;video.setAttribute('playsinline','');video.style.cssText='width:100%;display:block;object-fit:cover;aspect-ratio:4/3';$('reader').append(video);activeVideo=video;
+try{activeStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1440}},audio:false});video.srcObject=activeStream;activeTrack=activeStream.getVideoTracks()[0];await video.play();await new Promise(r=>setTimeout(r,500));
+let last='',hits=0,busy=false;const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d',{willReadFrequently:true});
+activeTimer=setInterval(async()=>{if(busy||!video.videoWidth)return;busy=true;try{let text='',fmt='';if(mode==='barcode'){const P=await window.__zbarPolyfillReady;if(P){const det=new P({formats:['code_128','ean_13']});const w=video.videoWidth,h=video.videoHeight,ch=Math.round(h*.3);canvas.width=w;canvas.height=ch;ctx.drawImage(video,0,Math.round((h-ch)/2),w,ch,0,0,w,ch);const found=await det.detect(canvas);if(found?.length){text=found[0].rawValue;fmt=found[0].format}}}else if(window.ZXingWASM?.readBarcodes){canvas.width=video.videoWidth;canvas.height=video.videoHeight;ctx.drawImage(video,0,0,canvas.width,canvas.height);const data=ctx.getImageData(0,0,canvas.width,canvas.height);const found=await window.ZXingWASM.readBarcodes(data,{tryHarder:true,formats:['QRCode','DataMatrix'],maxNumberOfSymbols:1});if(found?.length){text=found[0].text;fmt=found[0].format}}if(text){if(text===last)hits++;else{last=text;hits=1}if(hits>=2){$('serial').value=text;stopScan();$('status').style.display='block';$('status').textContent='Code détecté ('+fmt+') : '+text}}}catch(e){}finally{busy=false}},140);
+}catch(e){alert('Impossible de démarrer le scanner. Vérifiez l’autorisation caméra et réessayez.');stopScan()}}
+$('qrStart').addEventListener('click',()=>startScan('qr'));$('barcodeStart').addEventListener('click',()=>startScan('barcode'));$('qrStop').addEventListener('click',stopScan);$('photoStart').addEventListener('click',()=>$('scanPhotoInput').click());
+$('scanPhotoInput').addEventListener('change',async e=>{const f=e.target.files?.[0];if(!f)return;try{const scanner=new Html5Qrcode('reader');const text=await scanner.scanFile(f,true);$('serial').value=text;$('status').style.display='block';$('status').textContent='Code détecté sur la photo : '+text;await scanner.clear()}catch(err){alert('Aucun code lisible sur la photo.')}finally{e.target.value=''}});
+$('photos').addEventListener('change',()=>{
+  const files=[...$('photos').files];$('preview').innerHTML='';
+  if(files.length>5){alert('Sélectionnez au maximum 5 photos.');$('photos').value='';return}
+  files.forEach(f=>{if(!f.type.startsWith('image/'))return;const img=document.createElement('img');img.alt=f.name;img.src=URL.createObjectURL(f);$('preview').append(img)})
+});
+function fileToBase64(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve({nom:file.name,type:file.type,base64:String(reader.result).split(',')[1]});reader.onerror=reject;reader.readAsDataURL(file)})}
+function buildReport(){
+ return {
+  dispositif:$('device').value,
+  autre:$('device').value==='Autre'?$('other').value.trim():'',
+  numeroSerie:$('serial').value.trim(),
+  client:$('client').value.trim(),
+  foyer:$('foyerToggle').checked?$('foyer').value.trim():'',
+  technicien:$('technician').value.trim(),
+  description:$('description').value.trim(),
+  dateConstat:new Date().toLocaleString('fr-FR'),
+  destinataire:'valentineuromed@gmail.com',
+  photos:[...$('photos').files]
+ };
+}
+function reportText(d){
+ return 'À : '+d.destinataire+'\nObjet : Signalement d’anomalie — '+d.dispositif+' — Série '+d.numeroSerie+'\n\n'+
+ 'Date du constat : '+d.dateConstat+'\nDispositif : '+d.dispositif+(d.autre?' — '+d.autre:'')+
+ '\nNuméro de série : '+d.numeroSerie+'\nClient / établissement : '+d.client+
+ (d.foyer?'\nFoyer : '+d.foyer:'')+'\nTechnicien : '+d.technicien+
+ '\n\nDescription de l’anomalie :\n'+d.description+
+ '\n\nPhotos jointes : '+(d.photos.length?d.photos.map(f=>f.name).join(', '):'Aucune');
+}
+$('form').addEventListener('submit',e=>{
+ e.preventDefault();
+ updateConditionalFields();
+ if(!$('form').reportValidity())return;
+ const files=[...$('photos').files];
+ if(files.length>5){alert('Sélectionnez au maximum 5 photos.');return}
+ if(files.some(f=>f.size>4*1024*1024)){alert('Chaque photo doit faire 4 Mo maximum.');return}
+ const total=files.reduce((sum,f)=>sum+f.size,0);
+ if(total>8*1024*1024){alert('Le total des photos ne doit pas dépasser 8 Mo.');return}
+ pendingData=buildReport();
+ $('emailPreviewText').textContent=reportText(pendingData);
+ $('emailPreviewPhotos').textContent=files.length?'Pièces jointes : '+files.length+' photo(s), '+(total/1024/1024).toFixed(2)+' Mo au total.':'Aucune photo jointe.';
+ $('emailPreview').style.display='block';
+ $('status').style.display='none';
+ $('emailPreview').scrollIntoView({behavior:'smooth',block:'start'});
+});
+$('editReport').addEventListener('click',()=>{$('emailPreview').style.display='none';$('form').scrollIntoView({behavior:'smooth',block:'start'})});
+const QUEUE_DB='euromed-anomalies-db', QUEUE_STORE='outbox';
+function openQueueDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(QUEUE_DB,1);req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(QUEUE_STORE))db.createObjectStore(QUEUE_STORE,{keyPath:'id'})};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)})}
+async function queuePut(item){const db=await openQueueDB();return new Promise((resolve,reject)=>{const tx=db.transaction(QUEUE_STORE,'readwrite');tx.objectStore(QUEUE_STORE).put(item);tx.oncomplete=()=>{db.close();resolve()};tx.onerror=()=>{db.close();reject(tx.error)}})}
+async function queueAll(){const db=await openQueueDB();return new Promise((resolve,reject)=>{const tx=db.transaction(QUEUE_STORE,'readonly'),req=tx.objectStore(QUEUE_STORE).getAll();req.onsuccess=()=>{db.close();resolve(req.result||[])};req.onerror=()=>{db.close();reject(req.error)}})}
+async function queueDelete(id){const db=await openQueueDB();return new Promise((resolve,reject)=>{const tx=db.transaction(QUEUE_STORE,'readwrite');tx.objectStore(QUEUE_STORE).delete(id);tx.oncomplete=()=>{db.close();resolve()};tx.onerror=()=>{db.close();reject(tx.error)}})}
+async function queueRefresh(){
+ const list=$('offlineQueueList'),summary=$('offlineQueueSummary');if(!list||!summary)return;
+ try{const items=await queueAll();for(const item of items){if(item.state==='sending'){item.state='sent-unconfirmed';item.lastError='Page fermée pendant une tentative : vérifiez la réception avant toute nouvelle tentative.';await queuePut(item)}}summary.textContent=items.length?items.length+' signalement(s) conservé(s) sur cet appareil. Les éléments « transmis à vérifier » ne sont pas renvoyés automatiquement pour éviter les doublons.':'Aucun signalement en attente.';
+ list.innerHTML='';
+ items.forEach(item=>{const row=document.createElement('div');row.style.cssText='border:1px solid #315477;border-radius:12px;padding:12px;margin:8px 0;background:#07182d';
+ const title=document.createElement('strong');title.textContent=(item.payload.dispositif||'Dispositif')+' — Série '+(item.payload.numeroSerie||'non renseignée');
+ const info=document.createElement('p');info.className='hint';info.textContent=(item.state==='sent-unconfirmed'?'Requête transmise, livraison à vérifier dans la boîte mail.':item.state==='sending'?'Transmission en cours…':'En attente d’envoi')+' · '+new Date(item.createdAt).toLocaleString('fr-FR');
+ row.append(title,info);
+ if(item.state==='sent-unconfirmed'){const b=document.createElement('button');b.type='button';b.className='btn secondary';b.textContent='✓ J’ai vérifié la réception — retirer de la file';b.addEventListener('click',async()=>{if(confirm('Retirer ce signalement de la file locale ? Vérifie d’abord que le courriel est bien reçu.')){await queueDelete(item.id);queueRefresh()}});row.append(b)}
+ else {const b=document.createElement('button');b.type='button';b.className='btn';b.textContent='↻ Réessayer l’envoi';b.addEventListener('click',()=>sendQueued(item.id));row.append(b)}
+ list.append(row)});
+ }catch(e){summary.textContent='Le stockage de la file d’attente est indisponible dans ce navigateur. Ne ferme pas la page et réessaie après reconnexion.'}
+}
+async function sendQueued(id){
+ if(!navigator.onLine){$('status').style.display='block';$('status').textContent='Toujours hors connexion : le signalement reste dans la file locale.';return}
+ const items=await queueAll(),item=items.find(x=>x.id===id);if(!item||item.state==='sent-unconfirmed'||sending)return;
+ if(!APPS_SCRIPT_URL.startsWith('https://script.google.com/macros/s/')){alert('URL Apps Script incorrecte.');return}
+ sending=true;item.state='sending';await queuePut(item);queueRefresh();
+ try{
+   await fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(item.payload)});
+   item.state='sent-unconfirmed';item.lastAttemptAt=new Date().toISOString();await queuePut(item);
+   $('status').style.display='block';$('status').style.background='#173b2b';$('status').textContent='Requête transmise. Le navigateur ne peut pas confirmer la livraison du courriel (endpoint no-cors). Vérifie la boîte de réception et les indésirables avant de retirer cet élément de la file.';
+ }catch(err){item.state='pending';item.lastError=String(err&&err.message||err);await queuePut(item);$('status').style.display='block';$('status').style.background='#4b2028';$('status').textContent='Échec réseau : le signalement est conservé dans la file et pourra être renvoyé.'}
+ finally{sending=false;queueRefresh()}
+}
+$('confirmSend').addEventListener('click',async()=>{
+ if(sending||!pendingData)return;
+ if(!APPS_SCRIPT_URL.startsWith('https://script.google.com/macros/s/')){alert('URL Apps Script incorrecte.');return}
+ sending=true;const btn=$('confirmSend');btn.disabled=true;btn.textContent='⏳ Préparation du signalement…';
+ try{
+  const photos=await Promise.all(pendingData.photos.map(fileToBase64));
+  const payload={...pendingData,photos};
+  const item={id:(crypto.randomUUID?crypto.randomUUID():'anomaly-'+Date.now()+'-'+Math.random().toString(36).slice(2)),createdAt:new Date().toISOString(),state:'pending',payload};
+  if(!navigator.onLine){
+    await queuePut(item);$('status').style.display='block';$('status').style.background='#3a2c12';$('status').textContent='📴 Signalement enregistré dans la file locale avec ses photos. Il sera proposé à l’envoi lorsque la connexion reviendra. Garde cet appareil et ce navigateur : la file est locale.';
+    btn.textContent='✓ Enregistré hors connexion';await queueRefresh();return;
+  }
+  await queuePut(item);btn.textContent='✓ Mis en file d’envoi';await queueRefresh();await sendQueued(item.id);
+ }catch(err){
+  $('status').style.display='block';$('status').style.background='#4b2028';$('status').textContent='Impossible d’enregistrer le signalement localement : '+String(err&&err.message||err)+'. Ne ferme pas la page ; réessaie avec moins de photos.';
+  btn.disabled=false;btn.textContent='↻ Réessayer';
+ }finally{sending=false;queueRefresh()}
+});
+window.addEventListener('online',async()=>{try{const items=await queueAll();for(const item of items){if(item.state==='pending')await sendQueued(item.id)}}catch(e){}});
+queueRefresh();
+</script>
+<script>
+/* Brouillon local du signalement. Les fichiers photo restent volontairement hors du stockage local. */
+(function(){
+ const key="euromed-anomalie-draft-v1";
+ const ids=["device","other","serial","client","foyer","technician","description"];
+ const notice=document.getElementById("offlineDraftNotice");
+ let restoring=false;
+ function readFields(){
+   const data={savedAt:new Date().toISOString(),fields:{},foyerToggle:!!document.getElementById("foyerToggle")?.checked};
+   ids.forEach(id=>{const el=document.getElementById(id);if(el)data.fields[id]=el.value;});
+   return data;
+ }
+ function saveDraft(){
+   if(restoring)return;
+   try{localStorage.setItem(key,JSON.stringify(readFields()));if(notice){notice.textContent=navigator.onLine?"🗂️ Brouillon enregistré sur cet appareil. Les photos devront être sélectionnées à nouveau si la page est rechargée.":"📴 Hors connexion : brouillon conservé sur cet appareil. Les photos ne sont pas sauvegardées et l’envoi devra être relancé manuellement quand le réseau revient.";}}
+   catch(e){if(notice)notice.textContent="⚠️ Le navigateur n’a pas pu enregistrer le brouillon. Vérifiez l’espace disponible sur l’appareil.";}
+ }
+ function restoreDraft(){
+   let raw;try{raw=localStorage.getItem(key)}catch(e){return}
+   if(!raw)return;
+   try{
+     const data=JSON.parse(raw);if(!data||!data.fields)return;
+     restoring=true;
+     ids.forEach(id=>{const el=document.getElementById(id);if(el&&typeof data.fields[id]==="string")el.value=data.fields[id];});
+     const toggle=document.getElementById("foyerToggle");if(toggle&&typeof data.foyerToggle==="boolean")toggle.checked=data.foyerToggle;
+     restoring=false;
+     if(notice)notice.textContent="↩️ Brouillon précédent restauré depuis cet appareil. Vérifiez les informations et sélectionnez à nouveau les photos si nécessaire.";
+     if(typeof updateConditionalFields==="function")updateConditionalFields();
+   }catch(e){restoring=false;}
+ }
+ const form=document.getElementById("form");
+ if(form){form.addEventListener("input",saveDraft);form.addEventListener("change",saveDraft);}
+ const clear=document.getElementById("clearLocalDraft");
+ if(clear)clear.addEventListener("click",()=>{try{localStorage.removeItem(key)}catch(e){};if(notice)notice.textContent="Brouillon local effacé. Les champs actuellement affichés n’ont pas été vidés.";});
+ window.addEventListener("offline",saveDraft);
+ window.addEventListener("online",()=>{if(notice)notice.textContent="🌐 Connexion retrouvée. Vérifiez le brouillon, sélectionnez à nouveau les photos puis appuyez sur « Confirmer et envoyer ». L’envoi n’est pas automatique.";});
+ restoreDraft();
+})();
+</script>
+</body></html>
