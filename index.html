@@ -40,7 +40,7 @@ const MAINTENANCE = [
 ];
 const app=document.getElementById('app');
 const navItems=[...document.querySelectorAll('.nav-item')];
-const logo=()=>`<img class="logo" src="euromed-logo.png" alt="EuroMed">`;
+const logo=()=>`<img class="logo" src="https://raw.githubusercontent.com/hawaryou/HUB-euromed/main/assets/euromed-logo.png" alt="EuroMed">`;
 const arrow=()=>'<span class="arrow">›</span>';
 function setNav(page){navItems.forEach(x=>x.classList.toggle('active',x.dataset.page===page));}
 function showPage(page){setNav(page);window.scrollTo({top:0,behavior:'smooth'}); if(page==='maintenance')maintenancePage(); else if(page==='documentation')documentationPage(); else if(page==='tools')toolsPage(); else if(page==='checkupTruck')checkupTruckPage(); else if(page==='checkupParts')checkupPartsPage(); else home();}
@@ -82,21 +82,11 @@ function home(){
  app.querySelectorAll('[data-maint]').forEach(b=>b.addEventListener('click',()=>{const x=MAINTENANCE.find(m=>m.id===b.dataset.maint);location.href=x.url;}));
 }
 function maintenancePage(){
- app.innerHTML=`
- <section class="page-top dark-top">
-   <div class="topbar"><button class="back-btn" data-page="home">‹</button><div class="page-title">⚙️ <span>Maintenance</span></div><div class="top-spacer"></div></div>
-   <p>Sélectionnez la maintenance souhaitée.</p>
- </section>
- <section class="maintenance-page-section">
-   <div class="tab-scroller" role="tablist">${MAINTENANCE.map((x,i)=>`<button class="maint-tab ${i===0?'active':''}" data-id="${x.id}" role="tab" type="button">${x.short}</button>`).join('')}</div>
-   <div id="maintenance-panel"></div>
-   <div class="dots" id="dots">${MAINTENANCE.map((_,i)=>`<span class="${i===0?'active':''}"></span>`).join('')}</div>
+ app.innerHTML=`<section class="page-top dark-top"><div class="topbar"><button class="back-btn" data-page="home">‹</button><div class="page-title">⚙️ <span>Nos maintenances</span></div><div class="top-spacer"></div></div><p>Choisissez le matériel à contrôler ou à entretenir.</p></section><section class="tools-directory maintenance-directory">
+ ${MAINTENANCE.map((x,i)=>`<a class="tool-launch maintenance-launch maint-${x.cls}" href="${x.url}"><span class="tool-launch-icon">${x.icon}</span><span><b>${x.title}</b><small>${x.subtitle}</small></span><span class="tool-arrow">›</span></a>`).join('')}
  </section>`;
- const panel=app.querySelector('#maintenance-panel');
- function select(id){const item=MAINTENANCE.find(x=>x.id===id); const idx=MAINTENANCE.indexOf(item); app.querySelectorAll('.maint-tab').forEach(t=>t.classList.toggle('active',t.dataset.id===id)); app.querySelectorAll('.dots span').forEach((d,i)=>d.classList.toggle('active',i===idx)); panel.innerHTML=`<article class="selected-maint ${item.cls}"><div class="selected-art">${item.icon}</div><span class="selected-kicker">MAINTENANCE</span><h2>${item.title}</h2><p>${item.subtitle}</p><a class="big-open" href="${item.url}">Ouvrir la maintenance ${arrow()}</a><div class="direct-link">↗ Lien direct</div></article>`;}
- app.querySelectorAll('.maint-tab').forEach(t=>t.addEventListener('click',()=>select(t.dataset.id))); app.querySelector('.back-btn').addEventListener('click',()=>showPage('home')); select('lit');
+ app.querySelector('.back-btn').onclick=()=>showPage('home');
 }
-
 function toolsPage(){
  app.innerHTML=`<section class="page-top dark-top"><div class="topbar"><button class="back-btn" data-page="home">‹</button><div class="page-title">🧰 <span>Vos outils</span></div><div class="top-spacer"></div></div><p>Tous les outils quotidiens du technicien EuroMed, réunis ici.</p></section><section class="tools-directory">
  <a class="tool-launch tool-delivery" href="https://hawaryou.github.io/Bon-de-livraison-euromed/"><span class="tool-launch-icon">🚚</span><span><b>Carnet de livraison</b><small>Créer et signer un bon de livraison</small></span><span class="tool-arrow">›</span></a>
@@ -139,7 +129,7 @@ function documentationPage(){
  app.querySelector('.back-btn').addEventListener('click',()=>showPage('home'));
 }
 navItems.forEach(item=>item.addEventListener('click',()=>showPage(item.dataset.page)));
-document.addEventListener('click',e=>{const b=e.target.closest('[data-page]');if(b&&b.classList.contains('view-all'))showPage(b.dataset.page);});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-page]');if(!b||b.classList.contains('nav-item')||b.classList.contains('view-all'))return;if(b.tagName==='BUTTON'&&b.dataset.page)showPage(b.dataset.page);});
 home();
 </script>
 <script>
