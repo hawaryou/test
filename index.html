@@ -267,7 +267,7 @@ home();
   const shortTitle=s.eyebrow.replace(/^\d+\s*[·.-]\s*/,'');
   const dots=slides.map((item,i)=>'<button type="button" class="demo-step-dot'+(i===index?' is-active':'')+(i<index?' is-done':'')+'" data-demo-step="'+i+'" aria-label="Étape '+(i+1)+' : '+item.title.replace(/"/g,'&quot;')+'" title="'+item.title.replace(/"/g,'&quot;')+'"><span>'+(i<index?'✓':i+1)+'</span></button>').join('');
   content.innerHTML=
-   '<div class="demo-slide-heading"><div class="demo-slide-icon">'+(s.items[0]?s.items[0][0]:'✨')+'</div><div class="demo-heading-copy"><span class="demo-eyebrow">'+shortTitle+'</span><h2>'+s.title+'</h2></div></div>'+
+   '<div class="demo-slide-heading"><div class="demo-heading-copy"><span class="demo-eyebrow">'+shortTitle+'</span><h2>'+s.title+'</h2></div></div>'+
    '<p class="demo-intro">'+s.text+'</p>'+
    '<div class="demo-highlights"><span>📱 Adapté au mobile</span><span>🧭 Parcours guidé</span><span>🛠️ Outils EuroMed</span></div>'+
    '<div class="demo-items">'+s.items.map((x,i)=>'<article class="demo-item" style="--demo-card-index:'+i+'"><span class="demo-item-icon">'+x[0]+'</span><div><b>'+x[1]+'</b><p>'+x[2]+'</p></div></article>').join('')+'</div>'+
