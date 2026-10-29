@@ -791,3 +791,32 @@ html[data-theme="light"] body .screen-home .maintenance-scroller button.maintena
 html[data-theme="light"] body .screen-home .maintenance-scroller button.maintenance-tile span,
 html[data-theme="light"] body .screen-home .maintenance-scroller button.maintenance-tile small,
 html[data-theme="light"] body .screen-home .maintenance-scroller button.maintenance-tile i{color:#fff!important;background-color:transparent!important;}
+
+
+/* Correctif ciblé 2026-10-29 : centrer la fenêtre de démonstration sur le fond sur mobile */
+@media (max-width: 600px) {
+  html body .demo-modal {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 8px !important;
+    overflow: hidden !important;
+  }
+  html body .demo-modal .demo-panel {
+    flex: 0 1 auto !important;
+    width: 100% !important;
+    max-width: 820px !important;
+    max-height: calc(100vh - 16px) !important;
+    max-height: calc(100dvh - 16px) !important;
+    margin: auto !important;
+    box-sizing: border-box !important;
+    transform: none !important;
+    border-radius: 20px !important;
+  }
+}
