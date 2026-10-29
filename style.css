@@ -486,3 +486,39 @@ html[data-theme="light"] .app-content{
  background-image:radial-gradient(circle at 5% 12%,rgba(14,165,233,.16) 0 2px,transparent 3px),radial-gradient(circle at 95% 29%,rgba(139,92,246,.16) 0 3px,transparent 4px),radial-gradient(circle at 8% 60%,rgba(236,72,153,.12) 0 2px,transparent 3px),radial-gradient(ellipse at 88% 4%,rgba(125,211,252,.24),transparent 29%),radial-gradient(ellipse at 10% 84%,rgba(221,214,254,.26),transparent 30%),linear-gradient(180deg,rgba(240,249,255,.22),rgba(255,255,255,.18))!important;
 }
 html[data-theme="light"] .screen-home{background:transparent!important}
+
+
+/* Fonds dynamiques : halos colorés qui se déplacent lentement sans gêner la lecture */
+@keyframes euromed-dark-aurora {
+  0% { background-position: 0% 0%, 100% 15%, 0% 75%, 100% 100%, 0% 0%; }
+  50% { background-position: 28% 18%, 72% 35%, 22% 55%, 75% 72%, 100% 100%; }
+  100% { background-position: 0% 0%, 100% 15%, 0% 75%, 100% 100%, 0% 0%; }
+}
+@keyframes euromed-light-aurora {
+  0% { background-position: 0% 0%, 100% 15%, 0% 75%, 100% 100%, 0% 0%; }
+  50% { background-position: 25% 22%, 75% 40%, 18% 58%, 78% 70%, 100% 100%; }
+  100% { background-position: 0% 0%, 100% 15%, 0% 75%, 100% 100%, 0% 0%; }
+}
+html[data-theme="dark"] body {
+  background-size: 160% 160%, 160% 160%, 160% 160%, 160% 160%, 100% 100% !important;
+  animation: euromed-dark-aurora 28s ease-in-out infinite !important;
+  background-attachment: fixed !important;
+}
+html[data-theme="light"] body {
+  background-size: 160% 160%, 160% 160%, 160% 160%, 160% 160%, 100% 100% !important;
+  animation: euromed-light-aurora 32s ease-in-out infinite !important;
+  background-attachment: fixed !important;
+}
+html[data-theme="dark"] .app-content,
+html[data-theme="light"] .app-content {
+  background-size: 180% 180%, 180% 180%, 180% 180%, 180% 180%, 180% 180%, 100% 100% !important;
+  animation: euromed-dark-aurora 38s ease-in-out infinite !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme="dark"] body,
+  html[data-theme="light"] body,
+  html[data-theme="dark"] .app-content,
+  html[data-theme="light"] .app-content {
+    animation: none !important;
+  }
+}
