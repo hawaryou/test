@@ -3,6 +3,17 @@
 P.labels.plus="Tous les outils avancés";
 P.register("plus",a=>{
 const items=[
+["gameguides","🎮","Assistants par jeu","Z-A, Écarlate/Violet, Poké Radar, Safari, SOS et Dynamax."],
+["livingforms","🧬","Shiny Living Form Dex","Variantes conservables, mâles et femelles."],
+["consistency","🔎","Contrôle des captures","Avertissements sur jeux, méthodes et formes."],
+["expertstats","📊","Statistiques expertes","Full Odds, chance, Poké Balls, consoles et rendement."],
+["quests","⚑","Défis & niveaux","Pokémon du jour, missions et expérience virtuelle."],
+["museum","🏛️","Musée shiny","Expose tes Pokémon préférés."],
+["timeline","🕰️","Chronologie","Revis toutes les captures datées."],
+["bingo","▦","Bingo","Crée une grille 3×3 ou 5×5."],
+["yearreview","🏆","Rétrospective annuelle","Ton année shiny en statistiques."],
+["sync","☁","Synchronisation","Contrôle des envois et modifications en attente."],
+["video","📹","Atelier vidéo","Caméra locale et compteur manuel expérimental."],
 ["boxes","▦","Boîtes Pokémon HOME","Ranger les "+a.stock+" exemplaires, boîte par boîte."],
 ["regions","🗺️","Régions & DLC","Neuf générations et collections d'extensions."],
 ["collectionplus","✨","Collection enrichie","Barons shiny, rubans, photos, parties et transferts."],
