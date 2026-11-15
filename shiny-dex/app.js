@@ -151,6 +151,10 @@ selectField('Sexe','gender',['','Mâle','Femelle','Sans sexe'],meta.gender||'')+
 selectField('Possession','ownership',['Possédé','Évolué','Échangé','Perdu'],meta.ownership||'Possédé')+selectField('Full Odds','fullOdds',['','Oui','Non'],meta.fullOdds||'')+
 field('URL de photo / Google Drive','photo',meta.photo||'','url','placeholder="URL publique de l’image"')+
 field('Tags','tags',meta.tags||'')+
+field('Taux utilisé : 1 chance sur (facultatif)','odds',meta.odds||'','number','min="2" step="1"')+
+field('Source ou conditions du taux','oddsConditions',meta.oddsConditions||'')+
+field('Heure de capture','captureTime',meta.captureTime||'','time')+
+field('Méthode de chasse précise','methodDetail',meta.methodDetail||'')+
 selectField('Taille spéciale','size',['','Mini','Normal','Grand','Géant','Autre'],meta.size||'')+
 field('Marques','marks',meta.marks||'')+
 field('Rubans','ribbons',meta.ribbons||'')+
@@ -185,7 +189,7 @@ function onSubmit(e){const form=e.target;if(!form.id)return;e.preventDefault();c
 if(form.id==='capture-form'){const dex=Number(v.dex);if(!dex||!v.game||!v.method){toast('Choisis Pokémon, jeu et méthode.',true);return}
 if(v.attempts!==''&&(!Number.isInteger(Number(v.attempts))||Number(v.attempts)<0)){toast('Nombre de tentatives invalide.',true);return}
 const existing=String(form.dataset.existing||'');const old=S.captures.find(c=>c.id===existing);
-const x=D.saveCapture({...old,...v,id:existing||undefined,dex,meta:{...D.getMeta(existing),nickname:v.nickname,ball:v.ball,gender:v.gender,nature:v.nature,location:v.location,ownership:v.ownership,fullOdds:v.fullOdds,photo:v.photo,favorite:!!form.querySelector('[name=favorite]:checked'),tags:v.tags,shalpha:!!form.querySelector('[name=shalpha]:checked'),marks:v.marks,ribbons:v.ribbons,size:v.size,console:v.console,saveFile:v.saveFile,origin:v.origin,level:v.level,transferred:v.transferred,details:v.details}});
+const x=D.saveCapture({...old,...v,id:existing||undefined,dex,meta:{...D.getMeta(existing),nickname:v.nickname,ball:v.ball,gender:v.gender,nature:v.nature,location:v.location,ownership:v.ownership,fullOdds:v.fullOdds,photo:v.photo,favorite:!!form.querySelector('[name=favorite]:checked'),tags:v.tags,shalpha:!!form.querySelector('[name=shalpha]:checked'),marks:v.marks,ribbons:v.ribbons,size:v.size,console:v.console,saveFile:v.saveFile,origin:v.origin,level:v.level,transferred:v.transferred,details:v.details,odds:v.odds,oddsConditions:v.oddsConditions,captureTime:v.captureTime,methodDetail:v.methodDetail}});
 D.settings({currentGame:v.game,currentMethod:v.method});const next=e.submitter?.dataset.next==='yes';modalClose();toast('Capture '+x.name+' enregistrée localement. Synchronisation en cours…');if(next)captureForm();return}
 if(form.id==='hunt-form'){if(!v.dex||!v.game){toast('Choisis Pokémon et jeu.',true);return}const h=D.saveHunt(v);D.logEvent('Début chasse',{refId:h.id,pokemon:D.speciesName(h.dex),value:h.count,game:h.game,method:h.method});modalClose();toast('Compteur de chasse créé');go('hunts');return}
 if(form.id==='goal-form'){D.saveGoal({...v,id:form.dataset.id||undefined});modalClose();toast('Objectif enregistré');go('goals');return}
@@ -237,7 +241,7 @@ $('#menu-toggle').addEventListener('click',()=>{$('#sidebar').classList.toggle('
 $('#overlay').addEventListener('click',()=>{$('#sidebar').classList.remove('open');$('#overlay').hidden=true});
 $('#import-file').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{const content=await file.text();const n=D.importFile(content);toast(n+' capture(s) importée(s) localement. Pour éviter les doublons, l’import n’est pas envoyé automatiquement dans Google Sheets.');render()}catch(e){toast('Import impossible : '+e.message,true)}e.target.value=''});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){modalClose();$('#sidebar').classList.remove('open');$('#overlay').hidden=true}if(e.key==='n'&&!e.target.matches('input,textarea,select')&&(e.ctrlKey||e.metaKey)){e.preventDefault();captureForm()}});
-window.ShinyDexUI={go,render,modalOpen,modalClose,toast,captureForm,huntForm,setGeneration:n=>{ui.gen=Number(n);go('pokedex')},globalCard:shareCard};
+window.ShinyDexUI={go,render,modalOpen,modalClose,toast,captureForm,huntForm,setGeneration:n=>{ui.gen=Number(n);go('pokedex')},globalCard:shareCard,speciesDetail};
 D.subscribe(()=>render());
 const initial=location.hash.slice(1);ui.view=views[initial]?initial:'dashboard';render();
 if(S.settings.token)D.connect().then(ok=>{if(ok)toast('✨ Google Sheets synchronisé');else toast('Connexion Google Sheets à vérifier.',true)});
