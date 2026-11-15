@@ -12,7 +12,7 @@ const species=BASE.species.map(([id,name,gen,region])=>({id:Number(id),name:Stri
 const speciesById=new Map(species.map(p=>[p.id,p]));
 const forms=BASE.forms.map(([id,name,form,family,nature,notes],i)=>({id:Number(id),name,form,family,nature,notes,key:`${id}-${String(form).toLowerCase()}`,index:i}));
 const games=BASE.games.map(([name,gen,year,category,availability])=>({name,gen,year,category,availability}));
-const blank=()=>({captures:[],hunts:[],goals:[],events:[],meta:[],wishlist:[],settings:{...defaultSettings},queue:[],connected:false,lastSync:"",lastError:"",origin:"local"});
+const blank=()=>({captures:[],hunts:[],goals:[],events:[],meta:[],wishlist:[],settings:{...defaultSettings},queue:[],extras:{},connected:false,lastSync:"",lastError:"",origin:"local"});
 let state=blank();try{const raw=JSON.parse(localStorage.getItem(KEY)||"null");if(raw&&typeof raw==="object"){state={...state,...raw,settings:{...defaultSettings,...(raw.settings||{})}}}}catch(e){}
 /* Première ouverture sans Apps Script : recopie de la collection du Google Sheets dans le cache local.
    Ces entrées ne sont JAMAIS mises en file d'écriture; elles existent déjà dans le journal. */
@@ -35,6 +35,7 @@ function initShinySnapshot(){
   try{localStorage.setItem(KEY,JSON.stringify({...state,connected:false}))}catch(err){console.warn("Impossible de conserver la copie locale",err)}
 }
 initShinySnapshot();
+state.extras=state.extras&&typeof state.extras==="object"?state.extras:{};
 const listeners=new Set(),bus={};let inflight=false,lastFetch=0;
 function emit(topic="update"){for(const fn of listeners){try{fn(topic,state)}catch(e){console.error(e)}}}
 function persist(){try{localStorage.setItem(KEY,JSON.stringify({...state,connected:false}))}catch(e){console.warn("Local storage full",e)}emit()}
@@ -74,6 +75,7 @@ const pending=state.queue.filter(x=>x.type==="capture").map(x=>x.data);
 const remote= data.captures.map(x=>({...x,qty:Number(x.qty)||1,dex:Number(x.dex)||0}));
 state.captures=remote;
 for(const p of [...pending,...localCaptures]){if(!state.captures.find(c=>c.id===p.id)){const duplicate=state.captures.some(c=>c.dex===p.dex&&c.date===p.date&&c.game===p.game&&c.method===p.method);if(!duplicate)state.captures.push({...p,unsynced:true})}}
+if(data.extras&&typeof data.extras==="object"){const queued=state.queue.filter(x=>x.type==="extra");state.extras={...state.extras,...data.extras};for(const q of queued)state.extras[q.data.key]=q.data.value}
 for(const part of ["hunts","goals","events","meta","wishlist"]){if(Array.isArray(data[part])){const localPending=state.queue.filter(q=>({hunt:'hunts',goal:'goals',event:'events',meta:'meta',wish:'wishlist'})[q.type]===part).map(q=>q.data);state[part]=data[part];for(const item of localPending){const key=part==='wishlist'?'dex':'id';const idx=state[part].findIndex(x=>String(x[key])===String(item[key]));if(idx>=0)state[part][idx]={...state[part][idx],...item};else state[part].push(item)}}}
 state.connected=true;state.origin="Google Sheets";state.lastSync=new Date().toISOString();state.lastError="";persist()}
 function jsonp(action,params={}){return new Promise((resolve,reject)=>{const cb="__sdx_"+uid("cb").replace(/-/g,"_");const script=document.createElement("script");const timer=setTimeout(()=>finish(Error("Google Apps Script n’a pas répondu.")),17000);function finish(err,data){clearTimeout(timer);script.remove();delete window[cb];err?reject(err):resolve(data)}window[cb]=data=>{if(data&&data.ok===false&&action!=="status")finish(Error(data.error||"Accès refusé."));else finish(null,data)};script.onerror=()=>finish(Error("Impossible de joindre le déploiement Apps Script."));script.referrerPolicy="no-referrer";const url=state.settings.scriptUrl||SCRIPT_URL;script.src=url+(url.includes("?")?"&":"?")+new URLSearchParams({api:"1",action,callback:cb,token:state.settings.token,...params});document.head.appendChild(script)})}
@@ -89,6 +91,7 @@ else if(type==="hunt"){const i=state.hunts.findIndex(x=>x.id===data.id);i>=0?sta
 else if(type==="goal"){const i=state.goals.findIndex(x=>x.id===data.id);i>=0?state.goals[i]={...state.goals[i],...data}:state.goals.push(data)}
 else if(type==="wish"){const i=state.wishlist.findIndex(x=>Number(x.dex)===Number(data.dex));i>=0?state.wishlist[i]={...state.wishlist[i],...data}:state.wishlist.push(data)}
 else if(type==="event")state.events.unshift(data);
+else if(type==="extra"){state.extras[data.key]=data.value;}
 persist();if(state.settings.token&&navigator.onLine)flushQueue();return action.actionId}
 function postForm(action){return new Promise(resolve=>{const iframe=document.createElement("iframe");iframe.style.display="none";iframe.name="shiny_post_"+uid();const form=document.createElement("form");form.method="POST";form.target=iframe.name;form.action=state.settings.scriptUrl||SCRIPT_URL;form.style.display="none";const f=document.createElement("input");f.name="payload";f.value=JSON.stringify({...action,token:state.settings.token});form.appendChild(f);document.body.append(iframe,form);form.submit();setTimeout(()=>{iframe.remove();form.remove()},18000);resolve()})}
 async function send(action){if(inGoogle())return gasRun("dexAction",{...action,token:state.settings.token});
@@ -100,7 +103,7 @@ function latestCounter(id){return state.hunts.find(h=>h.id===id)}
 function saveCapture(data){const id=data.id||uid("SH");const x={id,dex:Number(data.dex),name:speciesName(data.dex),game:safeStr(data.game),method:safeStr(data.method),attempts:data.attempts===""||data.attempts==null?"":Number(data.attempts),qty:Math.max(1,Number(data.qty)||1),charm:data.charm||"Inconnu",date:data.date||today(),form:data.form||"Standard",notes:data.notes||""};recordLocal("capture",x);
 if(data.meta){const extra={id,...data.meta,updated:today()};recordLocal("meta",extra)}
 return x}
-function saveHunt(hunt){const h={id:hunt.id||uid("hunt"),dex:Number(hunt.dex),game:hunt.game||"",method:hunt.method||"Rencontres libres",count:Math.max(0,Number(hunt.count)||0),multiplier:Math.max(1,Number(hunt.multiplier)||1),started:hunt.started||new Date().toISOString(),status:hunt.status||"En cours",notes:hunt.notes||"",form:hunt.form||"Standard",rate:hunt.rate||"",updated:new Date().toISOString()};recordLocal("hunt",h);return h}
+function saveHunt(hunt){const h={...hunt,id:hunt.id||uid("hunt"),dex:Number(hunt.dex),game:hunt.game||"",method:hunt.method||"Rencontres libres",count:Math.max(0,Number(hunt.count)||0),multiplier:Math.max(1,Number(hunt.multiplier)||1),started:hunt.started||new Date().toISOString(),status:hunt.status||"En cours",notes:hunt.notes||"",form:hunt.form||"Standard",rate:hunt.rate||"",updated:new Date().toISOString()};recordLocal("hunt",h);return h}
 function saveGoal(x){const g={id:x.id||uid("goal"),title:x.title||"Objectif",type:x.type||"custom",target:Math.max(1,Number(x.target)||1),current:Math.max(0,Number(x.current)||0),deadline:x.deadline||"",status:x.status||"En cours",notes:x.notes||"",updated:new Date().toISOString()};recordLocal("goal",g);return g}
 function saveWish(x){recordLocal("wish",{dex:Number(x.dex),priority:x.priority||"Normal",game:x.game||"",method:x.method||"",notes:x.notes||"",date:today()})}
 function logEvent(category,detail={}){recordLocal("event",{id:uid("event"),date:new Date().toISOString(),category,...detail})}
@@ -117,5 +120,13 @@ const existing=new Set(state.captures.map(x=>x.id));let added=0;for(const x of i
 state.origin="Import local";persist();return added}
 function download(name,text,type="text/plain"){const blob=new Blob([text],{type});const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 window.addEventListener("online",()=>{emit("online");if(state.settings.token)connect()});
-window.DexCore={state,species,speciesById,forms,games,GEN_NAMES,METHODS,POKEBALLS,NATURES,saveCapture,saveHunt,saveGoal,saveWish,logEvent,settings,setLocal,subscribe,emit,persist,connect,refresh,flushQueue,aggregate,getMeta,achievements,randMissing,speciesName,generation,sprite,imageFallback,fmt,pct,today,dateOnly,esc,uid,exportCaptureCSV,exportElementCSV,importFile,download,KEY,SCRIPT_URL,jsonp,inGoogle};
+function saveMeta(data){const x={...data,id:String(data.id||"")};if(!x.id)throw Error("Capture manquante");recordLocal("meta",x);return x}
+function saveExtra(key,value){const data={key:String(key),value,updated:new Date().toISOString()};recordLocal("extra",data);return value}
+function setExtraLocal(key,value){state.extras[key]=value;persist();return value}
+function rawBackup(){return {captures:state.captures,meta:state.meta,hunts:state.hunts,goals:state.goals,wishlist:state.wishlist,events:state.events,extras:state.extras,exported:new Date().toISOString()}}
+const BACKUP_KEY="hawaryou.shinydex.backups.v1";
+function listBackups(){try{return JSON.parse(localStorage.getItem(BACKUP_KEY)||"[]")}catch(e){return []}}
+function createBackup(label="Sauvegarde manuelle"){const x={id:uid("backup"),label,date:new Date().toISOString(),captureCount:state.captures.length,data:rawBackup()};const all=[x,...listBackups()].slice(0,8);localStorage.setItem(BACKUP_KEY,JSON.stringify(all));return {id:x.id,date:x.date,label:x.label,captureCount:x.captureCount}}
+function restoreBackup(id){const x=listBackups().find(b=>b.id===id);if(!x)throw Error("Sauvegarde introuvable");createBackup("Avant restauration "+new Date().toLocaleString("fr-FR"));for(const part of ["captures","meta","hunts","goals","wishlist","events","extras"])if(x.data[part])state[part]=JSON.parse(JSON.stringify(x.data[part]));state.connected=false;state.origin="Restauration locale "+x.date;state.queue=[];persist();return x}
+window.DexCore={state,species,speciesById,forms,games,GEN_NAMES,METHODS,POKEBALLS,NATURES,saveCapture,saveHunt,saveGoal,saveWish,logEvent,settings,setLocal,saveMeta,saveExtra,setExtraLocal,rawBackup,listBackups,createBackup,restoreBackup,subscribe,emit,persist,connect,refresh,flushQueue,aggregate,getMeta,achievements,randMissing,speciesName,generation,sprite,imageFallback,fmt,pct,today,dateOnly,esc,uid,exportCaptureCSV,exportElementCSV,importFile,download,KEY,SCRIPT_URL,jsonp,inGoogle};
 })();
