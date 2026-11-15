@@ -47,14 +47,14 @@ Ouvre le lien dans **Safari** → bouton **Partager** → **Sur l'écran d'accue
 | 3 | Pokémon manquants en gris | ✅ |
 | 4 | Décors différents par génération | ◐ accents et pastilles uniquement |
 | 5 | Thèmes clair / sombre / galaxie | ✅ |
-| 6 | Progression circulaire par génération | ◐ anneau global + barres par génération |
+| 6 | Progression circulaire par génération | ✅ anneau global + mini-anneaux par région |
 | 7 | Familles évolutives | ✅ chargement à la demande depuis PokéAPI |
 | 8 | Filtres génération, type, statut | ✅ (type : connexion PokéAPI) |
 | 9 | Recherche prédictive | ◐ recherche instantanée ; sélection de capture par liste |
-| 10 | Cartes de légendaires et fabuleux | ☐ |
+| 10 | Cartes de légendaires et fabuleux | ◐ effet distinctif sur une sélection vérifiée de numéros nationaux |
 | 11 | Ajout rapide accessible partout | ✅ |
 | 12 | Recherche par nom ou n° national | ✅ |
-| 13 | Image dynamique lors de la saisie | ◐ dans la galerie/fiches ; pas encore dans le formulaire |
+| 13 | Image dynamique lors de la saisie | ✅ aperçu shiny lors de la sélection |
 | 14 | Jeu et méthode mémorisés | ✅ |
 | 15 | Enregistrer puis saisir le suivant | ✅ |
 | 16 | Photo personnelle | ◐ lien d'image stocké, transfert d'un fichier non implémenté |
@@ -63,19 +63,19 @@ Ouvre le lien dans **Safari** → bouton **Partager** → **Sur l'écran d'accue
 | 19 | Shinies par méthode | ✅ |
 | 20 | Tentatives par méthode | ✅ |
 | 21 | Moyennes et médianes | ✅ |
-| 22 | Records de chasse | ◐ maximum, minimum à étoffer |
+| 22 | Records de chasse | ✅ minimum, médiane, maximum, record personnel |
 | 23 | Statistiques par jeu | ✅ |
 | 24 | Générations comparées | ✅ |
-| 25 | Stats hebdo / mensuelles / annuelles | ◐ annuel + export mensuel |
+| 25 | Stats hebdo / mensuelles / annuelles | ✅ vues hebdo / mensuelles / annuelles et export mensuel |
 | 26 | Évolution de la collection depuis 2016 | ✅ année par année |
-| 27 | Comparer avec/sans Charme Chroma | ◐ données conservées, vue dédiée à créer |
+| 27 | Comparer avec/sans Charme Chroma | ✅ tableau des chasses, tentatives et moyennes par statut du charme |
 | 28 | Probabilités théoriques | ◐ calculateur avec taux réglable |
 | 29 | Formes Alola / Galar / Hisui | ✅ catalogue de variantes |
 | 30 | Distinction mâle / femelle | ✅ via métadonnées |
 | 31 | Formes alternatives | ✅ catalogue |
 | 32 | Méga-Évolutions et formes spéciales | ◐ dépend du catalogue des 288 variantes |
 | 33 | Shiny-lock | ◐ notes disponibles ; liste vérifiée non complète |
-| 34 | Besoin d'exemplaires pour évolutions | ◐ famille affichée, calcul à compléter |
+| 34 | Besoin d'exemplaires pour évolutions | ◐ famille affichée + nombre d'espèces encore absentes |
 | 35 | Boîte Pokémon HOME | ✅ champ par capture |
 | 36 | Possédé / évolué / échangé / perdu | ✅ |
 | 37 | Compteur +1 / +5 / +10 | ✅ |
