@@ -115,11 +115,14 @@ Ouvre le lien dans **Safari** → bouton **Partager** → **Sur l'écran d'accue
 - `manifest.webmanifest`, `sw.js`, `icon.svg` : installation PWA / service worker
 
 
-## Fonctions 49 à 88 — ShinyDex Plus
+## Fonctions 49 à 88 — ShinyDex Plus v7
+
+Depuis la version v7, l’onglet **Plus** de la barre de navigation iPhone ouvre une page d’accueil dédiée aux huit nouveaux outils. Les scripts sont préchargés pour que l’interface soit utilisable hors ligne après une première ouverture en ligne.
+
 
 Les nouvelles pages sont disponibles dans le menu **Collection avancée** et **Outils avancés**. Les paramètres modifiés avant la connexion au serveur sont conservés sur cet appareil puis synchronisés avec le nouvel onglet **14 App · Organisation** lorsque la nouvelle API est installée.
 
-| # | Fonction | État en v6 |
+| # | Fonction | État en v7 |
 |---:|---|---|
 | 49 | Boîtes Pokémon HOME de 30 cases, copies séparées et glisser-déposer | ✅ |
 | 50 | Cartes retournables shiny / photo | ◐ (visuel normal à consolider) |
