@@ -45,9 +45,11 @@ P.actions["focus-inc"]=e=>plusCount(e.dataset.id,Number(e.dataset.n));
 P.actions["focus-close"]=()=>{document.getElementById("sdx-focus")?.remove();if(document.fullscreenElement&&document.exitFullscreen)document.exitFullscreen().catch(()=>{})};
 document.addEventListener("fullscreenchange",()=>{if(!document.fullscreenElement)document.getElementById("sdx-focus")?.remove()});
 P.decorators.push((view,root)=>{if(view!=="hunts")return;const cards=[...root.querySelectorAll(".hunt-card")],hunts=active();for(let i=0;i<cards.length;i++){const h=hunts[i];if(!h)continue;const block=document.createElement("div");block.className="chip-row mt-12";block.innerHTML=P.btn("↶ Annuler","undo",'data-id="'+esc(h.id)+'"',"btn-small")+P.btn("◱ Plein écran","focus-open",'data-id="'+esc(h.id)+'"',"btn-small")+(h.method==="Masuda"||h.method==="Œufs"?P.btn("＋30 œufs","focus-inc",'data-id="'+esc(h.id)+'" data-n="30"',"btn-small"):"");cards[i].appendChild(block)}});
-P.actions["conflict-resolve"]=()=>{
- const op=S.queue.find(x=>x.type==="hunt"),remote=S.remoteHunts?.find(h=>h.id===op?.data?.id);
- if(!op||!remote)return P.toast("Recharge les données du serveur pour résoudre ce conflit.",true);
+P.actions["conflict-resolve"]=async()=>{
+ const op=S.queue.find(x=>x.type==="hunt");if(!op)return P.toast("Aucune opération conflictuelle.",true);
+ let remote=S.remoteHunts?.find(h=>h.id===op?.data?.id);
+ try{const latest=await D.jsonp("bootstrap");const found=latest.hunts?.find(h=>h.id===op.data.id);if(found)remote=found}catch(e){P.toast("Vérification serveur impossible : "+e.message,true);return}
+ if(!remote)return P.toast("La chasse est absente de Google Sheets ; vérifie le journal.",true);
  const local=S.hunts.find(h=>h.id===op.data.id),answer=prompt("CONFLIT : "+D.speciesName(op.data.dex)+"\nSur ce téléphone : "+(local?.count||op.data.count)+" rencontres.\nDans Google Sheets : "+remote.count+" rencontres.\nTape LOCAL pour envoyer le compteur de ce téléphone ou SERVEUR pour conserver Google Sheets.","SERVEUR");
  if(!answer)return;
  if(answer.toUpperCase()==="SERVEUR"){S.queue=S.queue.filter(x=>x.actionId!==op.actionId);const i=S.hunts.findIndex(x=>x.id===remote.id);if(i>=0)S.hunts[i]=remote;S.lastError="";D.persist();P.toast("Version serveur conservée.")}
