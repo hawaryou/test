@@ -33,11 +33,11 @@ function syncUI(){
     banner.innerHTML='<strong>'+intro+'</strong> · '+detail+' '+btn('Paramètres','settings','btn-small btn-ghost');
   } else {banner.className='status-banner';banner.innerHTML=''}
 }
-const views={dashboard:'Tableau de bord',pokedex:'Pokédex national',captures:'Mes shinies',forms:'Formes et variantes',hunts:'Chasses actives',analytics:'Statistiques',goals:'Objectifs et souhaits',achievements:'Succès et records',share:'Partager et exporter',settings:'Paramètres'};
+const views={dashboard:'Tableau de bord',pokedex:'Pokédex national',captures:'Mes shinies',forms:'Formes et variantes',hunts:'Chasses actives',analytics:'Statistiques',goals:'Objectifs et souhaits',achievements:'Succès et records',share:'Partager et exporter',settings:'Paramètres',...window.ShinyPlus.labels};
 function render(){const a=D.aggregate();document.body.dataset.theme=S.settings.theme||'dark';$('#breadcrumb-title').textContent=views[ui.view]||'Tableau de bord';$('#theme-toggle').textContent=S.settings.theme==='light'?'☀':'☾';
 document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===ui.view));
-const funcs={dashboard:dashboard,pokedex:pokedex,captures:captures,forms:forms,hunts:hunts,analytics:analytics,goals:goals,achievements:achievements,share:share,settings:settings};
-root.innerHTML=(funcs[ui.view]||dashboard)(a);syncUI();
+const funcs={dashboard:dashboard,pokedex:pokedex,captures:captures,forms:forms,hunts:hunts,analytics:analytics,goals:goals,achievements:achievements,share:share,settings:settings,...window.ShinyPlus.views};
+root.innerHTML=(funcs[ui.view]||dashboard)(a);window.ShinyPlus.enhance(ui.view,root);syncUI();
 }
 function dashboard(a){const recent=[...S.captures].sort((x,y)=>String(y.date||'').localeCompare(String(x.date||''))).slice(0,5);
 const active=S.hunts.filter(h=>h.status==='En cours');
@@ -183,6 +183,7 @@ if(form.id==='wish-form'){D.saveWish(v);modalClose();toast('Pokémon ajouté à 
 function handleAction(el){const action=el.dataset.action,id=el.dataset.id;const val=el.dataset.value;
 if(action&&action.startsWith('counter-')){counter(id,Math.max(1,Number(action.slice(8))||1));return}
 if(action==='modal-close'){modalClose();return}
+if(action&&action.startsWith('xp-')){window.ShinyPlus.action(action,el);return}
 if(views[action]){go(action);return}
 switch(action){
 case'add':{const found=S.captures.find(x=>x.id===id);captureForm(id?Number(id):0,found||null);break}
@@ -215,9 +216,9 @@ case'copy-link':navigator.clipboard?.writeText(location.href).then(()=>toast('Li
 }}
 document.addEventListener('click',e=>{const a=e.target.closest('[data-action]');if(a){e.preventDefault();handleAction(a)}});
 document.addEventListener('submit',onSubmit);
-document.addEventListener('change',e=>{const t=e.target;if(t.name==='dex'&&t.closest('#capture-form')){const p=D.speciesById.get(Number(t.value));const box=$('#capture-preview');if(box){box.innerHTML=p?imageTag(p.id,true)+'<div><strong>'+esc(p.name)+'</strong><p class="tiny no-margin">Sprite shiny de référence</p></div>':'<span class="preview-unknown">✦</span><div><strong>Sélectionne ton Pokémon</strong></div>'}}else if(t.id==='dex-gen'){ui.gen=Number(t.value);ui.page=1;render()}else if(t.id==='dex-type'){ui.type=t.value;ui.page=1;ui.typeIds=null;typeFilter(ui.type)}else if(t.id==='method-filter'){ui.method=t.value;ui.capturePage=1;render()}else if(t.id==='game-filter'){ui.game=t.value;ui.capturePage=1;render()}else if(t.id==='forms-filter'){ui.forms=t.value;render()}else if(t.id==='sprite-style'){D.settings({spriteStyle:t.value})}else if(t.id==='animated-toggle'){D.settings({animated:t.checked})}});
+document.addEventListener('change',e=>{if(window.ShinyPlus.change(e))return;const t=e.target;if(t.name==='dex'&&t.closest('#capture-form')){const p=D.speciesById.get(Number(t.value));const box=$('#capture-preview');if(box){box.innerHTML=p?imageTag(p.id,true)+'<div><strong>'+esc(p.name)+'</strong><p class="tiny no-margin">Sprite shiny de référence</p></div>':'<span class="preview-unknown">✦</span><div><strong>Sélectionne ton Pokémon</strong></div>'}}else if(t.id==='dex-gen'){ui.gen=Number(t.value);ui.page=1;render()}else if(t.id==='dex-type'){ui.type=t.value;ui.page=1;ui.typeIds=null;typeFilter(ui.type)}else if(t.id==='method-filter'){ui.method=t.value;ui.capturePage=1;render()}else if(t.id==='game-filter'){ui.game=t.value;ui.capturePage=1;render()}else if(t.id==='forms-filter'){ui.forms=t.value;render()}else if(t.id==='sprite-style'){D.settings({spriteStyle:t.value})}else if(t.id==='animated-toggle'){D.settings({animated:t.checked})}});
 let qTimer=null;
-document.addEventListener('input',e=>{const id=e.target.id;if(!['dex-search','capture-search','forms-search'].includes(id))return;const el=e.target,position=el.selectionStart;clearTimeout(qTimer);qTimer=setTimeout(()=>{ui.search=el.value;ui.page=1;ui.capturePage=1;render();const x=document.getElementById(id);if(x){x.focus();try{x.setSelectionRange(position,position)}catch(e){}}},165)});
+document.addEventListener('input',e=>{if(window.ShinyPlus.input(e))return;const id=e.target.id;if(!['dex-search','capture-search','forms-search'].includes(id))return;const el=e.target,position=el.selectionStart;clearTimeout(qTimer);qTimer=setTimeout(()=>{ui.search=el.value;ui.page=1;ui.capturePage=1;render();const x=document.getElementById(id);if(x){x.focus();try{x.setSelectionRange(position,position)}catch(e){}}},165)});
 document.querySelectorAll('[data-view]').forEach(x=>x.addEventListener('click',()=>go(x.dataset.view)));
 $('#quick-add').addEventListener('click',()=>captureForm());
 $('#profile-button').addEventListener('click',()=>go('settings'));
@@ -226,6 +227,7 @@ $('#menu-toggle').addEventListener('click',()=>{$('#sidebar').classList.toggle('
 $('#overlay').addEventListener('click',()=>{$('#sidebar').classList.remove('open');$('#overlay').hidden=true});
 $('#import-file').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{const content=await file.text();const n=D.importFile(content);toast(n+' capture(s) importée(s) localement. Pour éviter les doublons, l’import n’est pas envoyé automatiquement dans Google Sheets.');render()}catch(e){toast('Import impossible : '+e.message,true)}e.target.value=''});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){modalClose();$('#sidebar').classList.remove('open');$('#overlay').hidden=true}if(e.key==='n'&&!e.target.matches('input,textarea,select')&&(e.ctrlKey||e.metaKey)){e.preventDefault();captureForm()}});
+window.ShinyDexUI={go,render,modalOpen,modalClose,toast,captureForm,huntForm,setGeneration:n=>{ui.gen=Number(n);go('pokedex')},globalCard:shareCard};
 D.subscribe(()=>render());
 const initial=location.hash.slice(1);ui.view=views[initial]?initial:'dashboard';render();
 if(S.settings.token)D.connect().then(ok=>{if(ok)toast('✨ Google Sheets synchronisé');else toast('Connexion Google Sheets à vérifier.',true)});
