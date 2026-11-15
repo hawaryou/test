@@ -41,7 +41,7 @@ if(valid){hasAttempts++;attempts+=value;if(!record||value>record.attempts)record
 if(Number(c.dex)){let index=generation(c.dex)-1;if(index>=0&&index<9){gen[index].captures++;if(valid)gen[index].attempts+=value}}
 let y=(c.date||"").slice(0,4);if(/^\d{4}$/.test(y)){let d=year.get(y)||{year:y,catches:0,qty:0,attempts:0};d.catches++;d.qty+=q;if(valid)d.attempts+=value;year.set(y,d)}}
 function finish(m){return Array.from(m.values()).map(v=>{const sorted=[...v.values].sort((a,b)=>a-b);const med=sorted.length?(sorted.length%2?sorted[(sorted.length-1)/2]:(sorted[sorted.length/2-1]+sorted[sorted.length/2])/2):null;return {...v,avg:v.withCount?v.attempts/v.withCount:null,median:med,max:sorted.length?sorted.at(-1):null}}).sort((a,b)=>b.catches-a.catches)}
-return {total,obtained,possessed,stock,duplicated,missing:total-obtained,percentage:obtained/total,attempts,hasAttempts,missingAttempts:state.captures.length-hasAttempts,average:hasAttempts?attempts/hasAttempts:null,record,by,method:finish(method),game:finish(game),year:Array.from(year.values()).sort((a,b)=>a.year.localeCompare(b.year)),gen}};
+return {total,obtained,possessed,stock,duplicated,missing:total-obtained,percentage:obtained/total,attempts,hasAttempts,missingAttempts:state.captures.length-hasAttempts,average:hasAttempts?attempts/hasAttempts:null,record,by,method:finish(method),game:finish(game),year:Array.from(year.values()).sort((a,b)=>a.year.localeCompare(b.year)),gen};
 }
 function getMeta(id){return state.meta.find(x=>String(x.id)===String(id))||{}}
 function isConnected(){return !!state.connected}
