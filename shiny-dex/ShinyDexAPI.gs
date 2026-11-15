@@ -189,6 +189,12 @@ function shinyAction_(type,data){
   }
   if(type==='hunt'){
     const id=String(data.id||'');if(!id)throw new Error('ID chasse requis.');
+    const hunting=ss.getSheetByName(SHINY_API.hunts);
+    const found=hunting.getRange(2,1,Math.max(1,hunting.getLastRow()-1),1).createTextFinder(id).matchEntireCell(true).findNext();
+    const previousRevision=found?(Number(hunting.getRange(found.getRow(),16).getValue())||0):0;
+    const expected=Number(data.revision)||0;
+    if(found&&expected!==previousRevision)throw new Error('CONFLIT_VERSIONS: une autre session a modifié cette chasse. Recharge et réconcilie les compteurs.');
+    const nextRevision=previousRevision+1;
     const row=shinyWrite_(SHINY_API.hunts,1,id,[
       id,Number(data.dex)||0,String(data.game||''),String(data.method||''),
       Math.max(0,Number(data.count)||0),Math.max(1,Number(data.multiplier)||1),
@@ -196,9 +202,9 @@ function shinyAction_(type,data){
       String(data.notes||''),now,String(data.form||'Standard'),
       String(data.result||''),String(data.rate||''),
       Math.max(0,Number(data.chain)||0),Math.max(0,Number(data.bestChain)||0),
-      Math.max(1,Number(data.revision)||0)+1,String(data.saveFile||'')
+      nextRevision,String(data.saveFile||'')
     ]);
-    return {id,sheetRow:row,revision:Math.max(1,Number(data.revision)||0)+1};
+    return {id,sheetRow:row,revision:nextRevision};
   }
   if(type==='goal'){
     const id=String(data.id||'');if(!id)throw new Error('ID objectif requis.');
