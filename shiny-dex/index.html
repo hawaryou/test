@@ -11,7 +11,7 @@
   <link rel="manifest" href="./manifest.webmanifest"/>
   <link rel="icon" href="./icon.svg" type="image/svg+xml"/>
   <link rel="apple-touch-icon" href="./icon.svg"/>
-  <link rel="stylesheet" href="./styles.css?v=6"/>
+  <link rel="stylesheet" href="./styles.css?v=7"/>
   <title>ShinyDex Hawaryou ✨</title>
 </head>
 <body data-theme="dark">
@@ -35,6 +35,7 @@
       <p class="nav-group-label sub">OUTILS</p>
       <button class="nav-link" data-view="share"><span>↗</span> Partager & exporter</button>
       <p class="nav-group-label sub">COLLECTION AVANCÉE</p>
+      <button class="nav-link" data-view="plus"><span>✦</span> Tous les outils</button>
       <button class="nav-link" data-view="boxes"><span>▦</span> Boîtes Pokémon HOME</button>
       <button class="nav-link" data-view="regions"><span>🗺</span> Régions & DLC</button>
       <button class="nav-link" data-view="collectionplus"><span>✧</span> Collection enrichie</button>
@@ -75,22 +76,23 @@
     <button data-view="pokedex" class="mobile-link"><span>◈</span><small>Pokédex</small></button>
     <button data-view="hunts" class="mobile-link"><span>◎</span><small>Chasses</small></button>
     <button data-view="analytics" class="mobile-link"><span>▥</span><small>Stats</small></button>
-    <button data-view="settings" class="mobile-link"><span>⚙</span><small>Réglages</small></button>
+    <button data-view="plus" class="mobile-link"><span>✦</span><small>Plus</small></button>
   </nav>
   <div class="overlay" id="overlay" hidden></div>
   <div class="modal-holder" id="modal-holder"></div>
   <div class="toast-host" id="toast-host" aria-live="polite"></div>
   <input id="import-file" type="file" accept=".csv,.json,application/json,text/csv" hidden/>
-  <script src="./catalog.js?v=6" defer></script>
-  <script src="./snapshot.js?v=6" defer></script>
-  <script src="./core.js?v=6" defer></script>
-  <script src="./plus-core.js?v=6" defer></script>
-  <script src="./plus-home.js?v=6" defer></script>
-  <script src="./plus-hunt.js?v=6" defer></script>
-  <script src="./plus-insights.js?v=6" defer></script>
-  <script src="./plus-design.js?v=6" defer></script>
-  <script src="./plus-studio.js?v=6" defer></script>
-  <script src="./plus-backup.js?v=6" defer></script>
-  <script src="./app.js?v=6" defer></script>
+  <script src="./catalog.js?v=7" defer></script>
+  <script src="./snapshot.js?v=7" defer></script>
+  <script src="./core.js?v=7" defer></script>
+  <script src="./plus-core.js?v=7" defer></script>
+  <script src="./plus-home.js?v=7" defer></script>
+  <script src="./plus-hunt.js?v=7" defer></script>
+  <script src="./plus-insights.js?v=7" defer></script>
+  <script src="./plus-design.js?v=7" defer></script>
+  <script src="./plus-studio.js?v=7" defer></script>
+  <script src="./plus-backup.js?v=7" defer></script>
+  <script src="./plus-directory.js?v=7" defer></script>
+  <script src="./app.js?v=7" defer></script>
 </body>
 </html>
