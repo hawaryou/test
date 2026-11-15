@@ -1,0 +1,56 @@
+/* Plus HOME and regions: independent from Google authentication */
+(()=>{'use strict';
+const P=window.ShinyPlus,D=window.DexCore,S=D.state;
+let box=1,picked=null,onlyPhotos=false,flipped={};
+const esc=P.esc;
+const getPositions=c=>String(D.getMeta(c.id).homeBox||"").split(",").filter(Boolean);
+function used(){const out=new Map();for(const c of S.captures)for(const x of getPositions(c)){const pair=x.split("@");out.set(pair[0],{c,unit:Number(pair[1])||0})}return out}
+function free(){const r=[];for(const c of S.captures){const occupied=new Set(getPositions(c).map(x=>Number(x.split("@")[1])||0));for(let u=0;u<Math.min(99,Math.max(1,Number(c.qty)||1));u++)if(!occupied.has(u))r.push({c,u})}return r}
+function place(c,unit,slot){if(!c)return;const map=used(),other=map.get(slot),mine=getPositions(c),old=mine.find(x=>Number(x.split("@")[1])===unit);
+if(old)mine.splice(mine.indexOf(old),1);
+if(other&&!(other.c.id===c.id&&other.unit===unit)){const xs=getPositions(other.c),prev=xs.find(x=>x.split("@")[0]===slot);if(prev)xs.splice(xs.indexOf(prev),1);if(old)xs.push(old);D.saveMeta({...D.getMeta(other.c.id),id:other.c.id,homeBox:xs.join(",")})}
+mine.push(slot+"@"+unit);D.saveMeta({...D.getMeta(c.id),id:c.id,homeBox:mine.join(",")});picked=null}
+P.register("boxes",a=>{
+const cfg=P.get("boxes",{count:10,names:{}}),max=Math.max(1,Math.min(200,Number(cfg.count)||10));box=Math.min(box,max);const present=used(),unfiled=free();
+let cells=[];for(let n=1;n<=30;n++){const key="B"+box+":"+String(n).padStart(2,"0"),found=present.get(key);cells.push('<button class="home-slot '+(found?'used':'empty-slot')+'" data-action="xp-home-slot" data-slot="'+key+'"><span class="home-slot-no">'+String(n).padStart(2,"0")+'</span>'+(found?P.sprite(found.c.dex):'<span class="slot-placeholder">＋</span>')+'<span class="slot-name">'+(found?esc(D.speciesName(found.c.dex)):'')+'</span></button>')}
+const select='<select id="xp-home-box">'+P.opts(Array.from({length:max},(_,i)=>[i+1,cfg.names?.[i+1]||"Boîte "+(i+1)]),box)+'</select>';
+const loose=unfiled.slice(0,220).map(x=>'<button draggable="true" data-drag-id="'+esc(x.c.id)+'" data-drag-unit="'+x.u+'" data-action="xp-home-pick" data-id="'+esc(x.c.id)+'" data-unit="'+x.u+'" class="box-select '+(picked?.id===x.c.id&&picked.unit===x.u?'active':'')+'">'+P.sprite(x.c.dex)+'<b>'+esc(D.speciesName(x.c.dex))+'</b><small>Copie '+(x.u+1)+'</small></button>').join('');
+return P.head("Boîtes Pokémon HOME","30 emplacements par boîte. Sélectionne une copie puis un emplacement, ou utilise le glisser-déposer.",P.btn("＋ Boîte","home-add","","btn-primary"))+
+'<div class="stat-grid">'+[['Rangés',present.size],['À classer',unfiled.length],['Boîtes',max],['Total shiny',a.stock]].map(([t,n])=>'<div class="stat-card"><div class="stat-top">'+t+'</div><div class="stat-value">'+n+'</div></div>').join('')+'</div>'+
+'<div class="home-shell">'+P.card("🗃️ "+esc(cfg.names?.[box]||"Boîte "+box),'<div class="toolbar">'+P.btn("‹","home-prev","","btn-small")+select+P.btn("›","home-next","","btn-small")+P.btn("Renommer","home-rename","","btn-small")+'</div><div class="home-grid">'+cells.join('')+'</div><div class="helper mt-18">Les copies d’une même ligne peuvent avoir des emplacements différents. Le code Apps Script permettra de sauvegarder ces positions dans Google Sheets.</div>')+
+P.card("✨ Exemplaires sans emplacement",'<div class="box-unfiled">'+loose+'</div>'+(unfiled.length>220?'<p class="tiny">Les 220 premières copies non rangées sont affichées.</p>':''))+'</div>'});
+P.actions["home-pick"]=el=>{picked={id:el.dataset.id,unit:Number(el.dataset.unit)||0};P.render()};
+P.actions["home-slot"]=el=>{const o=used().get(el.dataset.slot);if(!picked){if(o){picked={id:o.c.id,unit:o.unit};P.render()}else P.toast("Choisis un shiny à ranger.");return}place(P.capture(picked.id),picked.unit,el.dataset.slot);P.render()};
+P.actions["home-prev"]=()=>{box=Math.max(1,box-1);P.render()};
+P.actions["home-next"]=()=>{box=Math.min(P.get("boxes",{count:10}).count,box+1);P.render()};
+P.actions["home-add"]=()=>{const c={...P.get("boxes",{count:10,names:{}})};c.count=Math.min(200,(Number(c.count)||10)+1);box=c.count;P.save("boxes",c)};
+P.actions["home-rename"]=()=>{const c={...P.get("boxes",{count:10,names:{}}),names:{...P.get("boxes",{names:{}}).names}},name=prompt("Nom de la boîte",c.names[box]||"Boîte "+box);if(name){c.names[box]=name.slice(0,50);P.save("boxes",c)}};
+P.changes.home=e=>{if(e.target.id==="xp-home-box"){box=Number(e.target.value);P.render();return true}return false};
+document.addEventListener("dragstart",e=>{const b=e.target.closest("[data-drag-id]");if(b&&e.dataTransfer)e.dataTransfer.setData("text/plain",b.dataset.dragId+"#"+b.dataset.dragUnit)});
+document.addEventListener("dragover",e=>{if(e.target.closest(".home-slot"))e.preventDefault()});
+document.addEventListener("drop",e=>{const b=e.target.closest(".home-slot");if(!b)return;e.preventDefault();const [id,unit]=(e.dataTransfer?.getData("text/plain")||"").split("#");if(id){place(P.capture(id),Number(unit)||0,b.dataset.slot);P.render()}});
+P.register("regions",a=>{
+const colors=["#B27B3A","#C4A33E","#31917E","#8269C4","#427AC5","#BD6A9B","#A35C9C","#6C8CAA","#BA765D"];
+const tiles=a.gen.map((g,i)=>'<button class="region-tile" style="--region-color:'+colors[i]+'" data-action="xp-region-go" data-gen="'+g.gen+'"><div class="region-icon">'+["🌿","🌸","🌊","⛰️","🌆","🌺","☀️","🛡️","🍇"][i]+'</div><h3>G'+g.gen+' · '+esc(g.name)+'</h3><p>'+g.owned+' / '+g.total+' Pokémon</p><div class="progress"><span style="width:'+(g.owned/g.total*100)+'%"></span></div><small>Explorer la région ↗</small></button>').join('');
+const dlc=P.get("dlc",[]).map(c=>'<div class="goal-card"><div class="grow"><b>'+esc(c.name)+'</b><p>'+esc(c.game)+' — '+c.dex.length+' Pokémon</p><div class="progress"><span style="width:'+(c.dex.filter(n=>a.by.get(Number(n))?.count).length/Math.max(1,c.dex.length)*100)+'%"></span></div></div>'+P.btn("Éditer","dlc-edit",'data-id="'+esc(c.id)+'"',"btn-small")+'</div>').join('');
+return P.head("Régions, DLC et collections","Neuf régions illustrées et des Pokédex de DLC personnalisables.")+'<div class="region-grid">'+tiles+'</div><div class="split mt-24">'+P.card("🗺️ Mes Pokédex de DLC",P.btn("＋ Créer une extension","dlc-new","","btn-primary btn-small")+ (dlc||'<p class="tiny">Colle une liste de numéros nationaux depuis ton Pokédex de DLC pour suivre sa progression sans inventer ses entrées.</p>'))+
+P.card("🧬 Grandes familles de formes",Object.entries(D.forms.reduce((out,f)=>{if(["Zarbi","Prismillon","Charmilly","Motisma","Deoxys","Plumeline"].includes(f.name))out[f.name]=(out[f.name]||0)+1;return out},{})).map(([name,n])=>'<div class="goal-card"><div><b>'+esc(name)+'</b><p>'+n+' formes référencées</p></div>'+P.btn("Explorer","form-go","","btn-small")+'</div>').join(''))+'</div>'});
+P.actions["region-go"]=e=>window.ShinyDexUI?.setGeneration(Number(e.dataset.gen));
+P.actions["form-go"]=()=>P.goto("forms");
+function editDlc(id){const current=P.get("dlc",[]).find(x=>x.id===id),name=prompt("Nom du Pokédex DLC",current?.name||"Masque Turquoise");if(!name)return;const game=prompt("Jeu / extension",current?.game||"Pokémon Écarlate / Violet")||"",raw=prompt("Numéros nationaux séparés par virgules",current?.dex.join(",")||"");if(raw===null)return;const dex=[...new Set(raw.split(/[,;\s]+/).map(Number).filter(n=>n>=1&&n<=1025))],v={id:current?.id||D.uid("dlc"),name,game,dex};P.save("dlc",[...P.get("dlc",[]).filter(x=>x.id!==v.id),v])}
+P.actions["dlc-new"]=()=>editDlc();
+P.actions["dlc-edit"]=e=>editDlc(e.dataset.id);
+P.register("collectionplus",()=>{
+ const photos=S.meta.filter(x=>/^https?:\/\//.test(String(x.photo||""))),barons=S.meta.filter(x=>x.shalpha===true||x.shalpha==="true"),saves=P.get("savefiles",[]),transfers=P.get("transfers",[]);
+ const photoTiles=S.captures.slice(0,100).filter(c=>!onlyPhotos||photos.some(m=>m.id===c.id)).map(c=>{const m=D.getMeta(c.id),photo=/^https?:\/\//.test(String(m.photo||""))?m.photo:D.sprite(c.dex,true);return '<button class="pokemon-card owned" data-action="xp-gallery-flip" data-id="'+esc(c.id)+'"><div class="sprite-wrap"><img loading="lazy" src="'+esc(flipped[c.id]?photo:D.sprite(c.dex,true))+'"></div><strong>'+esc(m.nickname||D.speciesName(c.dex))+'</strong><div class="foot">'+esc(flipped[c.id]?(c.game||""):"Retourner ↻")+'</div></button>'}).join('');
+ return P.head("Collection enrichie","Baron shiny, marques, rubans, album photo, parties et historique des transferts.",P.btn("＋ Ajouter une partie","file-new","","btn-primary"))+
+ '<div class="stat-grid">'+[['Barons shiny',barons.length],['Photos',photos.length],['Parties',saves.length],['Transferts',transfers.length]].map(([t,n])=>'<div class="stat-card"><div class="stat-top">'+t+'</div><div class="stat-value">'+n+'</div></div>').join('')+'</div>'+
+ '<div class="split">'+P.card("🎮 Parties et consoles",P.btn("＋ Partie","file-new","","btn-small")+(saves.map(f=>'<div class="goal-card"><div class="grow"><b>'+esc(f.name)+'</b><p>'+esc(f.game)+' · '+esc(f.console)+'</p></div>'+P.btn("Modifier","file-edit",'data-id="'+esc(f.id)+'"',"btn-small")+'</div>').join('')||'<p class="tiny">Ajoute une partie pour distinguer les Pokémon de chaque sauvegarde.</p>'))+
+ P.card("🔄 Transferts vers HOME / jeux",P.btn("＋ Transfert","transfer-new","","btn-small")+(transfers.slice().reverse().slice(0,30).map(t=>'<div class="goal-card"><b>'+esc(D.speciesName(t.dex))+'</b><p>'+esc(t.from)+' → '+esc(t.to)+'</p></div>').join('')||'<p class="tiny">Aucun transfert enregistré.</p>'))+'</div><div class="subheading"><h2>📸 Galerie de mes shinies</h2>'+P.btn(onlyPhotos?"Tous":"Avec photo seulement","gallery-filter","","btn-small")+'</div><div class="pokemon-grid">'+photoTiles+'</div>';
+});
+P.actions["gallery-filter"]=()=>{onlyPhotos=!onlyPhotos;P.render()};
+P.actions["gallery-flip"]=e=>{flipped[e.dataset.id]=!flipped[e.dataset.id];P.render()};
+function editFile(id){const cur=P.get("savefiles",[]).find(x=>x.id===id),name=prompt("Nom de la sauvegarde",cur?.name||"Ma partie principale");if(!name)return;const game=prompt("Jeu",cur?.game||"Pokémon Épée")||"",consoleName=prompt("Console / profil",cur?.console||"Nintendo Switch")||"";const entry={id:cur?.id||D.uid("file"),name,game,console:consoleName};P.save("savefiles",[...P.get("savefiles",[]).filter(x=>x.id!==entry.id),entry])}
+P.actions["file-new"]=()=>editFile();P.actions["file-edit"]=e=>editFile(e.dataset.id);
+P.actions["transfer-new"]=()=>{const input=prompt("ID de capture ou numéro national");if(!input)return;const c=P.capture(input)||S.captures.find(x=>Number(x.dex)===Number(input));if(!c)return P.toast("Capture inconnue.",true);const from=prompt("Depuis",c.game)||"",to=prompt("Vers","Pokémon HOME")||"";P.save("transfers",[...P.get("transfers",[]),{id:D.uid("transfer"),captureId:c.id,dex:c.dex,from,to,date:D.today()}]);D.logEvent("Transfert",{refId:c.id,pokemon:D.speciesName(c.dex),description:from+" → "+to,game:to})};
+})();
