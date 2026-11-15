@@ -14,6 +14,27 @@ const forms=BASE.forms.map(([id,name,form,family,nature,notes],i)=>({id:Number(i
 const games=BASE.games.map(([name,gen,year,category,availability])=>({name,gen,year,category,availability}));
 const blank=()=>({captures:[],hunts:[],goals:[],events:[],meta:[],wishlist:[],settings:{...defaultSettings},queue:[],connected:false,lastSync:"",lastError:"",origin:"local"});
 let state=blank();try{const raw=JSON.parse(localStorage.getItem(KEY)||"null");if(raw&&typeof raw==="object"){state={...state,...raw,settings:{...defaultSettings,...(raw.settings||{})}}}}catch(e){}
+/* Première ouverture sans Apps Script : recopie de la collection du Google Sheets dans le cache local.
+   Ces entrées ne sont JAMAIS mises en file d'écriture; elles existent déjà dans le journal. */
+const SNAPSHOT=window.DEX_SNAPSHOT||null;
+function initShinySnapshot(){
+  if(!SNAPSHOT||!Array.isArray(SNAPSHOT.captures)||state.lastSync||state.snapshotVersion===SNAPSHOT.version)return;
+  const ids=new Set(state.captures.map(x=>String(x.id||"")));
+  const fingerprint=x=>[x.dex,x.game,x.method,x.attempts,x.qty,x.date,x.form].map(v=>String(v??"")).join("|");
+  const fingerprints=new Set(state.captures.map(fingerprint));
+  let imported=0;
+  for(const row of SNAPSHOT.captures){
+    if(!Array.isArray(row)||row.length<9)continue;
+    const entry={id:String(row[0]),dex:Number(row[1]),name:speciesName(Number(row[1])),game:String(row[2]||""),method:String(row[3]||""),attempts:row[4]===""?"":Number(row[4]),qty:Number(row[5]||1),charm:String(row[6]||"Inconnu"),date:String(row[7]||""),form:String(row[8]||"Standard"),notes:""};
+    if(ids.has(entry.id)||fingerprints.has(fingerprint(entry)))continue;
+    state.captures.push(entry);ids.add(entry.id);fingerprints.add(fingerprint(entry));imported++;
+  }
+  state.snapshotVersion=SNAPSHOT.version;
+  state.snapshotImported=imported;
+  state.origin=state.origin==="local"?"Google Sheets — instantané public":state.origin;
+  try{localStorage.setItem(KEY,JSON.stringify({...state,connected:false}))}catch(err){console.warn("Impossible de conserver la copie locale",err)}
+}
+initShinySnapshot();
 const listeners=new Set(),bus={};let inflight=false,lastFetch=0;
 function emit(topic="update"){for(const fn of listeners){try{fn(topic,state)}catch(e){console.error(e)}}}
 function persist(){try{localStorage.setItem(KEY,JSON.stringify({...state,connected:false}))}catch(e){console.warn("Local storage full",e)}emit()}
