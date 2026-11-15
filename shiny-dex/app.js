@@ -21,9 +21,18 @@ function bars(items,key,maxRows=8,mode='bar'){let vals=items.slice(0,maxRows),m=
 function imageTag(id,shiny,css=''){return'<img class="'+css+'" src="'+D.sprite(id,shiny,S.settings.animated)+'" loading="lazy" decoding="async" alt="'+esc(D.speciesName(id))+'" onerror="DexCore.imageFallback(this,'+Number(id)+','+(shiny?'true':'false')+')" />'}
 function speciesCard(p,a){const v=a.by.get(p.id),own=v&&v.count>0;const meta=v&&v.list.some(x=>D.getMeta(x.id).favorite);return'<button style="--gen-color:'+genColors[p.gen]+'" class="pokemon-card '+(own?'owned':'')+(specialDex.has(p.id)?' special':'')+'" data-action="detail" data-id="'+p.id+'" aria-label="'+esc(p.name)+' '+(own?'obtenu':'manquant')+'"><span class="id">#'+String(p.id).padStart(4,'0')+'</span><span class="mark">'+(specialDex.has(p.id)?'♛':(own?'✦':'○'))+'</span><div class="sprite-wrap">'+imageTag(p.id,own)+'</div><strong>'+esc(p.name)+'</strong><div class="foot">'+(own?('✓ '+v.count+' shiny'+(v.count>1?'s':'')):'À chasser')+'</div>'+(meta?'<span class="fav">★</span>':'')+'</button>'}
 function empty(emoji,msg,detail,action){return'<div class="empty"><span class="icon">'+emoji+'</span><strong>'+msg+'</strong><p>'+detail+'</p>'+(action||'')+'</div>'}
-function syncUI(){const connected=!!S.connected,chip=$('#sync-chip'),pill=$('#connection-pill');chip?.classList.toggle('connected',connected);pill?.classList.toggle('connected',connected);$('#sync-label').textContent=connected?'Google Sheets connecté':S.queue.length?'En attente : '+S.queue.length:'Connexion à configurer';$('#conn-text').textContent=connected?'Google Sheets':'Mode local';
-if(S.queue.length||S.lastError||!connected){banner.className='status-banner show'+(S.lastError?' error':'');banner.innerHTML='<strong>'+(S.lastError?'⚠️ Connexion : '+esc(S.lastError):S.queue.length?'⏳ '+S.queue.length+' opération(s) en attente de synchronisation':'⚠️ Mode local : connecte ton Apps Script dans les paramètres')+'</strong> · '+(connected?'Les données en attente restent sur cet appareil.':'Les captures visibles ici ne remplacent pas ta sauvegarde Google Sheets tant que la connexion n’est pas activée.')+' '+btn('Paramètres','settings','btn-small btn-ghost');}
-else{banner.className='status-banner';banner.innerHTML='';}}
+function syncUI(){
+  const connected=!!S.connected,snapshot=!!S.snapshotVersion,chip=$('#sync-chip'),pill=$('#connection-pill');
+  chip?.classList.toggle('connected',connected);pill?.classList.toggle('connected',connected);
+  $('#sync-label').textContent=connected?'Google Sheets connecté':S.queue.length?'En attente : '+S.queue.length:snapshot?'Collection importée · 15/11/2026':'Connexion à configurer';
+  $('#conn-text').textContent=connected?'Google Sheets':snapshot?'Copie du 15/11/2026':'Mode local';
+  if(S.queue.length||S.lastError||!connected){
+    banner.className='status-banner show'+(S.lastError?' error':'');
+    const intro=S.lastError?'⚠️ Connexion : '+esc(S.lastError):S.queue.length?'⏳ '+S.queue.length+' opération(s) en attente de synchronisation':snapshot?'✨ Ta collection Google Sheets est déjà chargée':'⚠️ Mode local : connecte ton Apps Script dans les paramètres';
+    const detail=connected?'Les changements en attente sont stockés sur cet appareil.':snapshot?'Instantané du '+esc(S.snapshotVersion)+' : les captures historiques sont visibles sans le script. Les nouvelles captures restent locales jusqu’à l’activation de Google Apps Script.':'Les captures visibles ici ne remplacent pas ta sauvegarde Google Sheets tant que la connexion n’est pas activée.';
+    banner.innerHTML='<strong>'+intro+'</strong> · '+detail+' '+btn('Paramètres','settings','btn-small btn-ghost');
+  } else {banner.className='status-banner';banner.innerHTML=''}
+}
 const views={dashboard:'Tableau de bord',pokedex:'Pokédex national',captures:'Mes shinies',forms:'Formes et variantes',hunts:'Chasses actives',analytics:'Statistiques',goals:'Objectifs et souhaits',achievements:'Succès et records',share:'Partager et exporter',settings:'Paramètres'};
 function render(){const a=D.aggregate();document.body.dataset.theme=S.settings.theme||'dark';$('#breadcrumb-title').textContent=views[ui.view]||'Tableau de bord';$('#theme-toggle').textContent=S.settings.theme==='light'?'☀':'☾';
 document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===ui.view));
