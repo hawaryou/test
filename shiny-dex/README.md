@@ -6,6 +6,17 @@
 
 Application personnelle développée pour le Shiny Living Dex de **hawaryou**, à partir d'un catalogue de **1 025 espèces**, **288 entrées de formes** et **53 références de jeux**. Le classeur conserve les **285 lignes historiques et 347 exemplaires** existants. Ces données **ne sont pas placées dans le dépôt public** : elles ne sont chargées qu'après connexion sécurisée à Apps Script.
 
+## Copie de collection préchargée (sans Apps Script)
+
+Depuis le **15 novembre 2026**, `snapshot.js` charge directement **285 entrées historiques**, représentant **347 exemplaires** et **124 997 tentatives renseignées**. Cette copie a été générée depuis l'onglet `02 Journal de chasse` du Google Sheets existant.
+
+- Elle est **publique**, car le dépôt GitHub Pages est public ; les données incluses se limitent aux numéros, jeux, méthodes, tentatives, quantités, statut du Charme Chroma, dates et formes. Aucun identifiant d'authentification, token ou note personnelle n'est inclus.
+- Elle est chargée automatiquement en mémoire locale lors de la première ouverture, même sans Apps Script.
+- L'historique intégré n'est **jamais mis en file d'écriture**, car il se trouve déjà dans Google Sheets.
+- Les nouveaux shiny ou compteurs ajoutés avant la configuration de l'API sont enregistrés **localement**. Le transfert dans Google Sheets attend la connexion et la confirmation du déploiement.
+- Quand l'API sera installée et connectée, Google Sheets devient la source principale ; les identifiants `SH-0001` à `SH-0285` sont conservés pour éviter les doublons lors du rapprochement.
+- L'instantané n'est pas une synchronisation automatique : les mises à jour du classeur faites en dehors de l'application n'y apparaîtront qu'après activation de l'API ou publication d'un nouvel instantané.
+
 ## Démarrage — connexion à Google Sheets (nécessaire)
 
 Le Google Apps Script actuellement déployé ne possède pas encore automatiquement les nouveaux points d'accès de l'application. Le fichier `ShinyDexAPI.gs` doit être ajouté manuellement au projet Apps Script.
