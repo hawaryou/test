@@ -16,6 +16,7 @@ const SHINY_API = Object.freeze({
   events: '11 App · Événements',
   ops: '12 App · Opérations',
   wishes: '13 App · Souhaits',
+  extras: '14 App · Organisation',
   maxRows: 2500
 });
 function shinySheet_(){
@@ -31,12 +32,13 @@ function installerShinyDex(){
   }
   const ss=shinySheet_();
   const heads={
-    [SHINY_API.meta]:['ID capture','Surnom','Poké Ball','Sexe','Nature','Lieu','Boîte HOME','État de possession','Photo Drive','Full Odds','Favori','Début chasse','Fin chasse','Tags','Notes complémentaires','Dernière modification'],
-    [SHINY_API.hunts]:['ID chasse','N° Dex','Jeu','Méthode','Compteur','Multiplicateur','Début','Statut','Notes','Dernière modification','Forme','Résultat','Taux saisi'],
+    [SHINY_API.meta]:['ID capture','Surnom','Poké Ball','Sexe','Nature','Lieu','Boîte HOME','État de possession','Photo Drive','Full Odds','Favori','Début chasse','Fin chasse','Tags','Notes complémentaires','Dernière modification','Baron shiny','Marques','Rubans','Taille','Jeu de sauvegarde','Console','Origine','Niveau','Date transfert','Détails complémentaires'],
+    [SHINY_API.hunts]:['ID chasse','N° Dex','Jeu','Méthode','Compteur','Multiplicateur','Début','Statut','Notes','Dernière modification','Forme','Résultat','Taux saisi','Chaîne actuelle','Meilleure chaîne','Révision','Partie de jeu'],
     [SHINY_API.goals]:['ID objectif','Titre','Catégorie','Cible','Actuel','Échéance','Statut','Notes','Dernière modification'],
     [SHINY_API.events]:['ID événement','Date','Catégorie','ID référence','Pokémon','Valeur','Description','Jeu','Méthode'],
     [SHINY_API.ops]:['ID opération','Date','Action','Statut','Message','Résultat'],
-    [SHINY_API.wishes]:['N° Dex','Priorité','Jeu cible','Méthode envisagée','Notes','Date ajout']
+    [SHINY_API.wishes]:['N° Dex','Priorité','Jeu cible','Méthode envisagée','Notes','Date ajout'],
+    [SHINY_API.extras]:['Clé','Contenu JSON','Dernière mise à jour','Révision']
   };
   for(const name of Object.keys(heads)){
     let sh=ss.getSheetByName(name);
@@ -103,16 +105,17 @@ function dexBootstrap(token){
     form:String(r[9]||'Standard'),notes:String(r[10]||'')
   }));
   const meta=shinyObjRows_(shinyRows_(ss.getSheetByName(SHINY_API.meta)),
-    ['id','nickname','ball','gender','nature','location','homeBox','ownership','photo','fullOdds','favorite','huntStart','huntEnd','tags','notes','updated'],['huntStart','huntEnd','updated']);
+    ['id','nickname','ball','gender','nature','location','homeBox','ownership','photo','fullOdds','favorite','huntStart','huntEnd','tags','notes','updated','shalpha','marks','ribbons','size','saveFile','console','origin','level','transferred','details'],['huntStart','huntEnd','updated','transferred']);
   const hunts=shinyObjRows_(shinyRows_(ss.getSheetByName(SHINY_API.hunts)),
-    ['id','dex','game','method','count','multiplier','started','status','notes','updated','form','result','rate'],['started','updated']);
+    ['id','dex','game','method','count','multiplier','started','status','notes','updated','form','result','rate','chain','bestChain','revision','saveFile'],['started','updated']);
   const goals=shinyObjRows_(shinyRows_(ss.getSheetByName(SHINY_API.goals)),
     ['id','title','type','target','current','deadline','status','notes','updated'],['deadline','updated']);
   const events=shinyObjRows_(shinyRows_(ss.getSheetByName(SHINY_API.events),700),
     ['id','date','category','refId','pokemon','value','description','game','method'],['date']);
   const wishlist=shinyObjRows_(shinyRows_(ss.getSheetByName(SHINY_API.wishes)),
     ['dex','priority','game','method','notes','date'],['date']);
-  return {ok:true,captures,meta,hunts,goals,events,wishlist,generated:new Date().toISOString(),source:'Google Sheets'};
+  const extras={};for(const row of shinyRows_(ss.getSheetByName(SHINY_API.extras))){try{extras[String(row[0])]=JSON.parse(String(row[1]||'null'))}catch(err){Logger.log('JSON incorrect en données avancées '+row[0])}}
+  return {ok:true,captures,meta,hunts,goals,events,wishlist,extras,generated:new Date().toISOString(),source:'Google Sheets'};
 }
 function shinyStatus_(actionId){
   const id=String(actionId||'');
@@ -177,7 +180,10 @@ function shinyAction_(type,data){
       String(data.nature||''),String(data.location||''),String(data.homeBox||''),
       String(data.ownership||'Possédé'),String(data.photo||''),String(data.fullOdds||''),
       data.favorite===true||data.favorite==='true',String(data.huntStart||''),String(data.huntEnd||''),
-      String(data.tags||''),String(data.notes||''),now
+      String(data.tags||''),String(data.notes||''),now,
+      data.shalpha===true||data.shalpha==='true',String(data.marks||''),String(data.ribbons||''),String(data.size||''),
+      String(data.saveFile||''),String(data.console||''),String(data.origin||''),Number(data.level)||'',
+      String(data.transferred||''),String(data.details||'').slice(0,6000)
     ]);
     return {id,sheetRow:row};
   }
@@ -188,9 +194,11 @@ function shinyAction_(type,data){
       Math.max(0,Number(data.count)||0),Math.max(1,Number(data.multiplier)||1),
       data.started?new Date(data.started):now,String(data.status||'En cours'),
       String(data.notes||''),now,String(data.form||'Standard'),
-      String(data.result||''),String(data.rate||'')
+      String(data.result||''),String(data.rate||''),
+      Math.max(0,Number(data.chain)||0),Math.max(0,Number(data.bestChain)||0),
+      Math.max(1,Number(data.revision)||0)+1,String(data.saveFile||'')
     ]);
-    return {id,sheetRow:row};
+    return {id,sheetRow:row,revision:Math.max(1,Number(data.revision)||0)+1};
   }
   if(type==='goal'){
     const id=String(data.id||'');if(!id)throw new Error('ID objectif requis.');
@@ -206,6 +214,13 @@ function shinyAction_(type,data){
     const row=shinyWrite_(SHINY_API.wishes,1,dex,[dex,String(data.priority||'Normal'),
       String(data.game||''),String(data.method||''),String(data.notes||''),now]);
     return {dex,sheetRow:row};
+  }
+  if(type==='extra'){
+    const key=String(data.key||'');if(!/^[a-zA-Z0-9._:-]{1,100}$/.test(key))throw new Error('Clé avancée invalide');
+    const json=JSON.stringify(data.value);
+    if(json.length>45000)throw new Error('Données trop volumineuses pour une cellule Sheets (45 000 caractères)');
+    const sh=ss.getSheetByName(SHINY_API.extras);
+    const row=shinyWrite_(SHINY_API.extras,1,key,[key,json,now,1]);return {key,sheetRow:row};
   }
   if(type==='event'){
     const sh=ss.getSheetByName(SHINY_API.events);const row=shinyFirstFree_(sh);
