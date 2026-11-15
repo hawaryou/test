@@ -13,7 +13,7 @@ function sandwichHtml(){const v=P.get("sandwich",null),left=v?.end?Math.max(0,ne
 P.register("huntlab",a=>{
 const running=active(),phase=phases(),s=sessions(),total=Object.values(s).reduce((sum,v)=>sum+elapsed(v),0);
 const maxChain=Math.max(0,...S.hunts.map(h=>Number(h.bestChain)||0));
-return P.head("Laboratoire de chasse","Chronomètres, undo, phases, chaînes SOS, lots d’œufs, sandwichs et chasses simultanées.",P.btn("◎ Nouvelle chasse","hunt-new","","btn-primary"))+
+return P.head("Laboratoire de chasse","Chronomètres, undo, phases, chaînes SOS, lots d’œufs, sandwichs et chasses simultanées.",P.btn("◎ Nouvelle chasse","hunt-new","","btn-primary"))+(String(S.lastError||'').includes('CONFLIT_VERSIONS')?'<div class="helper warning mb-18">Une chasse a changé sur un autre appareil. '+P.btn('Résoudre le conflit','conflict-resolve','','btn-primary btn-small')+'</div>':'')+
 '<div class="stat-grid">'+[['Chasses actives',running.length],['Phases',phase.length],['Meilleure chaîne',maxChain],['Temps suivi',time(total)]].map(([k,v])=>'<div class="stat-card"><div class="stat-top">'+k+'</div><div class="stat-value">'+v+'</div></div>').join('')+'</div>'+
 '<div class="plus-grid">'+
 P.card("🥚 Éclosions Masuda / œufs",selector("egg")+'<div class="chip-row mt-12">'+P.btn("＋5 œufs","egg-batch",'data-n="5"',"btn-primary")+P.btn("＋30 œufs","egg-batch",'data-n="30"')+'</div>')+
@@ -45,5 +45,14 @@ P.actions["focus-inc"]=e=>plusCount(e.dataset.id,Number(e.dataset.n));
 P.actions["focus-close"]=()=>{document.getElementById("sdx-focus")?.remove();if(document.fullscreenElement&&document.exitFullscreen)document.exitFullscreen().catch(()=>{})};
 document.addEventListener("fullscreenchange",()=>{if(!document.fullscreenElement)document.getElementById("sdx-focus")?.remove()});
 P.decorators.push((view,root)=>{if(view!=="hunts")return;const cards=[...root.querySelectorAll(".hunt-card")],hunts=active();for(let i=0;i<cards.length;i++){const h=hunts[i];if(!h)continue;const block=document.createElement("div");block.className="chip-row mt-12";block.innerHTML=P.btn("↶ Annuler","undo",'data-id="'+esc(h.id)+'"',"btn-small")+P.btn("◱ Plein écran","focus-open",'data-id="'+esc(h.id)+'"',"btn-small")+(h.method==="Masuda"||h.method==="Œufs"?P.btn("＋30 œufs","focus-inc",'data-id="'+esc(h.id)+'" data-n="30"',"btn-small"):"");cards[i].appendChild(block)}});
+P.actions["conflict-resolve"]=()=>{
+ const op=S.queue.find(x=>x.type==="hunt"),remote=S.remoteHunts?.find(h=>h.id===op?.data?.id);
+ if(!op||!remote)return P.toast("Recharge les données du serveur pour résoudre ce conflit.",true);
+ const local=S.hunts.find(h=>h.id===op.data.id),answer=prompt("CONFLIT : "+D.speciesName(op.data.dex)+"\nSur ce téléphone : "+(local?.count||op.data.count)+" rencontres.\nDans Google Sheets : "+remote.count+" rencontres.\nTape LOCAL pour envoyer le compteur de ce téléphone ou SERVEUR pour conserver Google Sheets.","SERVEUR");
+ if(!answer)return;
+ if(answer.toUpperCase()==="SERVEUR"){S.queue=S.queue.filter(x=>x.actionId!==op.actionId);const i=S.hunts.findIndex(x=>x.id===remote.id);if(i>=0)S.hunts[i]=remote;S.lastError="";D.persist();P.toast("Version serveur conservée.")}
+ else if(answer.toUpperCase()==="LOCAL"){op.data.revision=Number(remote.revision)||0;if(local)local.revision=op.data.revision;S.lastError="";D.persist();P.toast("Nouvelle tentative de synchronisation…");D.flushQueue()}
+ else P.toast("Réponse non reconnue : LOCAL ou SERVEUR.",true);
+};
 P.presets=presets;
 })();
