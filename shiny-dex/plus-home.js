@@ -1,7 +1,7 @@
 /* Plus HOME and regions: independent from Google authentication */
 (()=>{'use strict';
 const P=window.ShinyPlus,D=window.DexCore,S=D.state;
-let box=1,picked=null,onlyPhotos=false,flipped={};
+let box=1,picked=null,onlyPhotos=false,flipped={},search="";
 const esc=P.esc;
 const getPositions=c=>String(D.getMeta(c.id).homeBox||"").split(",").filter(Boolean);
 function used(){const out=new Map();for(const c of S.captures)for(const x of getPositions(c)){const pair=x.split("@");out.set(pair[0],{c,unit:Number(pair[1])||0})}return out}
@@ -14,17 +14,18 @@ P.register("boxes",a=>{
 const cfg=P.get("boxes",{count:10,names:{}}),max=Math.max(1,Math.min(200,Number(cfg.count)||10));box=Math.min(box,max);const present=used(),unfiled=free();
 let cells=[];for(let n=1;n<=30;n++){const key="B"+box+":"+String(n).padStart(2,"0"),found=present.get(key);cells.push('<button class="home-slot '+(found?'used':'empty-slot')+'" data-action="xp-home-slot" data-slot="'+key+'"><span class="home-slot-no">'+String(n).padStart(2,"0")+'</span>'+(found?P.sprite(found.c.dex):'<span class="slot-placeholder">＋</span>')+'<span class="slot-name">'+(found?esc(D.speciesName(found.c.dex)):'')+'</span></button>')}
 const select='<select id="xp-home-box">'+P.opts(Array.from({length:max},(_,i)=>[i+1,cfg.names?.[i+1]||"Boîte "+(i+1)]),box)+'</select>';
-const loose=unfiled.slice(0,220).map(x=>'<button draggable="true" data-drag-id="'+esc(x.c.id)+'" data-drag-unit="'+x.u+'" data-action="xp-home-pick" data-id="'+esc(x.c.id)+'" data-unit="'+x.u+'" class="box-select '+(picked?.id===x.c.id&&picked.unit===x.u?'active':'')+'">'+P.sprite(x.c.dex)+'<b>'+esc(D.speciesName(x.c.dex))+'</b><small>Copie '+(x.u+1)+'</small></button>').join('');
+const filtered=unfiled.filter(x=>!search||D.speciesName(x.c.dex).toLowerCase().includes(search.toLowerCase())||String(x.c.dex)===search);const loose=filtered.slice(0,220).map(x=>'<button draggable="true" data-drag-id="'+esc(x.c.id)+'" data-drag-unit="'+x.u+'" data-action="xp-home-pick" data-id="'+esc(x.c.id)+'" data-unit="'+x.u+'" class="box-select '+(picked?.id===x.c.id&&picked.unit===x.u?'active':'')+'">'+P.sprite(x.c.dex)+'<b>'+esc(D.speciesName(x.c.dex))+'</b><small>Copie '+(x.u+1)+'</small></button>').join('');
 return P.head("Boîtes Pokémon HOME","30 emplacements par boîte. Sélectionne une copie puis un emplacement, ou utilise le glisser-déposer.",P.btn("＋ Boîte","home-add","","btn-primary"))+
 '<div class="stat-grid">'+[['Rangés',present.size],['À classer',unfiled.length],['Boîtes',max],['Total shiny',a.stock]].map(([t,n])=>'<div class="stat-card"><div class="stat-top">'+t+'</div><div class="stat-value">'+n+'</div></div>').join('')+'</div>'+
 '<div class="home-shell">'+P.card("🗃️ "+esc(cfg.names?.[box]||"Boîte "+box),'<div class="toolbar">'+P.btn("‹","home-prev","","btn-small")+select+P.btn("›","home-next","","btn-small")+P.btn("Renommer","home-rename","","btn-small")+'</div><div class="home-grid">'+cells.join('')+'</div><div class="helper mt-18">Les copies d’une même ligne peuvent avoir des emplacements différents. Le code Apps Script permettra de sauvegarder ces positions dans Google Sheets.</div>')+
-P.card("✨ Exemplaires sans emplacement",'<div class="box-unfiled">'+loose+'</div>'+(unfiled.length>220?'<p class="tiny">Les 220 premières copies non rangées sont affichées.</p>':''))+'</div>'});
+P.card("✨ Exemplaires sans emplacement",'<input id="xp-home-filter" value="'+esc(search)+'" placeholder="Rechercher un shiny à ranger" /><div class="box-unfiled">'+loose+'</div>'+(filtered.length>220?'<p class="tiny">Les 220 premières copies non rangées sont affichées.</p>':''))+'</div>'});
 P.actions["home-pick"]=el=>{picked={id:el.dataset.id,unit:Number(el.dataset.unit)||0};P.render()};
 P.actions["home-slot"]=el=>{const o=used().get(el.dataset.slot);if(!picked){if(o){picked={id:o.c.id,unit:o.unit};P.render()}else P.toast("Choisis un shiny à ranger.");return}place(P.capture(picked.id),picked.unit,el.dataset.slot);P.render()};
 P.actions["home-prev"]=()=>{box=Math.max(1,box-1);P.render()};
 P.actions["home-next"]=()=>{box=Math.min(P.get("boxes",{count:10}).count,box+1);P.render()};
 P.actions["home-add"]=()=>{const c={...P.get("boxes",{count:10,names:{}})};c.count=Math.min(200,(Number(c.count)||10)+1);box=c.count;P.save("boxes",c)};
 P.actions["home-rename"]=()=>{const c={...P.get("boxes",{count:10,names:{}}),names:{...P.get("boxes",{names:{}}).names}},name=prompt("Nom de la boîte",c.names[box]||"Boîte "+box);if(name){c.names[box]=name.slice(0,50);P.save("boxes",c)}};
+P.inputs.home=e=>{if(e.target.id==="xp-home-filter"){search=e.target.value;P.render();const el=document.getElementById("xp-home-filter");if(el){el.focus();el.setSelectionRange(search.length,search.length)}return true}return false};
 P.changes.home=e=>{if(e.target.id==="xp-home-box"){box=Number(e.target.value);P.render();return true}return false};
 document.addEventListener("dragstart",e=>{const b=e.target.closest("[data-drag-id]");if(b&&e.dataTransfer)e.dataTransfer.setData("text/plain",b.dataset.dragId+"#"+b.dataset.dragUnit)});
 document.addEventListener("dragover",e=>{if(e.target.closest(".home-slot"))e.preventDefault()});
