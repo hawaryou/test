@@ -1,6 +1,6 @@
 /* ShinyDex: cache only public same-origin application assets; never cache authenticated API responses. */
-const CACHE='hawaryou-shinydex-v4';
-const ASSETS=['./','./index.html','./styles.css?v=4','./catalog.js?v=4','./core.js?v=4','./app.js?v=4','./manifest.webmanifest','./icon.svg'];
+const CACHE='hawaryou-shinydex-v5';
+const ASSETS=['./','./index.html','./styles.css?v=5','./catalog.js?v=5','./snapshot.js?v=5','./core.js?v=5','./app.js?v=5','./manifest.webmanifest','./icon.svg'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)));self.skipWaiting()});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});
 self.addEventListener('fetch',event=>{
