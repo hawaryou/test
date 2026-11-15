@@ -48,11 +48,12 @@ function isConnected(){return !!state.connected}
 function settings(patch){state.settings={...state.settings,...patch};persist()}
 function setLocal(part,data){state[part]=data;persist()}
 function listFromServer(data){if(!data||!Array.isArray(data.captures))throw Error("Réponse Google Sheets invalide.");
+const localCaptures=state.captures.filter(x=>x.unsynced);
 const pending=state.queue.filter(x=>x.type==="capture").map(x=>x.data);
 const remote= data.captures.map(x=>({...x,qty:Number(x.qty)||1,dex:Number(x.dex)||0}));
 state.captures=remote;
-for(const p of pending){if(!state.captures.find(c=>c.id===p.id))state.captures.push(p)}
-for(const part of ["hunts","goals","events","meta","wishlist"]){if(Array.isArray(data[part]))state[part]=data[part]}
+for(const p of [...pending,...localCaptures]){if(!state.captures.find(c=>c.id===p.id)){const duplicate=state.captures.some(c=>c.dex===p.dex&&c.date===p.date&&c.game===p.game&&c.method===p.method);if(!duplicate)state.captures.push({...p,unsynced:true})}}
+for(const part of ["hunts","goals","events","meta","wishlist"]){if(Array.isArray(data[part])){const localPending=state.queue.filter(q=>({hunt:'hunts',goal:'goals',event:'events',meta:'meta',wish:'wishlist'})[q.type]===part).map(q=>q.data);state[part]=data[part];for(const item of localPending){const key=part==='wishlist'?'dex':'id';const idx=state[part].findIndex(x=>String(x[key])===String(item[key]));if(idx>=0)state[part][idx]={...state[part][idx],...item};else state[part].push(item)}}}
 state.connected=true;state.origin="Google Sheets";state.lastSync=new Date().toISOString();state.lastError="";persist()}
 function jsonp(action,params={}){return new Promise((resolve,reject)=>{const cb="__sdx_"+uid("cb").replace(/-/g,"_");const script=document.createElement("script");const timer=setTimeout(()=>finish(Error("Google Apps Script n’a pas répondu.")),17000);function finish(err,data){clearTimeout(timer);script.remove();delete window[cb];err?reject(err):resolve(data)}window[cb]=data=>{if(data&&data.ok===false)finish(Error(data.error||"Accès refusé."));else finish(null,data)};script.onerror=()=>finish(Error("Impossible de joindre le déploiement Apps Script."));script.referrerPolicy="no-referrer";const url=state.settings.scriptUrl||SCRIPT_URL;script.src=url+(url.includes("?")?"&":"?")+new URLSearchParams({api:"1",action,callback:cb,token:state.settings.token,...params});document.head.appendChild(script)})}
 function inGoogle(){return typeof google!=="undefined"&&google.script&&google.script.run}
