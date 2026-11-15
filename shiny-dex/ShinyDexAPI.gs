@@ -32,7 +32,7 @@ function installerShinyDex(){
   }
   const ss=shinySheet_();
   const heads={
-    [SHINY_API.meta]:['ID capture','Surnom','Poké Ball','Sexe','Nature','Lieu','Boîte HOME','État de possession','Photo Drive','Full Odds','Favori','Début chasse','Fin chasse','Tags','Notes complémentaires','Dernière modification','Baron shiny','Marques','Rubans','Taille','Jeu de sauvegarde','Console','Origine','Niveau','Date transfert','Détails complémentaires'],
+    [SHINY_API.meta]:['ID capture','Surnom','Poké Ball','Sexe','Nature','Lieu','Boîte HOME','État de possession','Photo Drive','Full Odds','Favori','Début chasse','Fin chasse','Tags','Notes complémentaires','Dernière modification','Baron shiny','Marques','Rubans','Taille','Jeu de sauvegarde','Console','Origine','Niveau','Date transfert','Détails complémentaires','Probabilité 1 sur','Source / conditions du taux','Heure de capture','Méthode de chasse précise'],
     [SHINY_API.hunts]:['ID chasse','N° Dex','Jeu','Méthode','Compteur','Multiplicateur','Début','Statut','Notes','Dernière modification','Forme','Résultat','Taux saisi','Chaîne actuelle','Meilleure chaîne','Révision','Partie de jeu'],
     [SHINY_API.goals]:['ID objectif','Titre','Catégorie','Cible','Actuel','Échéance','Statut','Notes','Dernière modification'],
     [SHINY_API.events]:['ID événement','Date','Catégorie','ID référence','Pokémon','Valeur','Description','Jeu','Méthode'],
@@ -105,7 +105,7 @@ function dexBootstrap(token){
     form:String(r[9]||'Standard'),notes:String(r[10]||'')
   }));
   const meta=shinyObjRows_(shinyRows_(ss.getSheetByName(SHINY_API.meta)),
-    ['id','nickname','ball','gender','nature','location','homeBox','ownership','photo','fullOdds','favorite','huntStart','huntEnd','tags','notes','updated','shalpha','marks','ribbons','size','saveFile','console','origin','level','transferred','details'],['huntStart','huntEnd','updated','transferred']);
+    ['id','nickname','ball','gender','nature','location','homeBox','ownership','photo','fullOdds','favorite','huntStart','huntEnd','tags','notes','updated','shalpha','marks','ribbons','size','saveFile','console','origin','level','transferred','details','odds','oddsConditions','captureTime','methodDetail'],['huntStart','huntEnd','updated','transferred']);
   const hunts=shinyObjRows_(shinyRows_(ss.getSheetByName(SHINY_API.hunts)),
     ['id','dex','game','method','count','multiplier','started','status','notes','updated','form','result','rate','chain','bestChain','revision','saveFile'],['started','updated']);
   const goals=shinyObjRows_(shinyRows_(ss.getSheetByName(SHINY_API.goals)),
@@ -183,7 +183,8 @@ function shinyAction_(type,data){
       String(data.tags||''),String(data.notes||''),now,
       data.shalpha===true||data.shalpha==='true',String(data.marks||''),String(data.ribbons||''),String(data.size||''),
       String(data.saveFile||''),String(data.console||''),String(data.origin||''),Number(data.level)||'',
-      String(data.transferred||''),String(data.details||'').slice(0,6000)
+      String(data.transferred||''),String(data.details||'').slice(0,6000),
+      Number(data.odds)||'',String(data.oddsConditions||'').slice(0,800),String(data.captureTime||''),String(data.methodDetail||'').slice(0,240)
     ]);
     return {id,sheetRow:row};
   }
