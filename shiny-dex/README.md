@@ -114,6 +114,62 @@ Ouvre le lien dans **Safari** → bouton **Partager** → **Sur l'écran d'accue
 - `ShinyDexAPI.gs` : API Apps Script à installer dans ton projet, écritures Google Sheets
 - `manifest.webmanifest`, `sw.js`, `icon.svg` : installation PWA / service worker
 
+
+## Fonctions 49 à 88 — ShinyDex Plus
+
+Les nouvelles pages sont disponibles dans le menu **Collection avancée** et **Outils avancés**. Les paramètres modifiés avant la connexion au serveur sont conservés sur cet appareil puis synchronisés avec le nouvel onglet **14 App · Organisation** lorsque la nouvelle API est installée.
+
+| # | Fonction | État en v6 |
+|---:|---|---|
+| 49 | Boîtes Pokémon HOME de 30 cases, copies séparées et glisser-déposer | ✅ |
+| 50 | Cartes retournables shiny / photo | ◐ (visuel normal à consolider) |
+| 51 | Carte des régions | ◐ neuf tuiles régionales interactives, pas de carte géographique réelle |
+| 52 | Effets lumineux shiny | ◐ scintillement discret des indicateurs |
+| 53 | Tableau de bord personnalisable | ✅ quatre compteurs réordonnables et masquables |
+| 54 | Formats compact, standard et grand | ✅ |
+| 55 | Couleurs de thème | ◐ palette manuelle, sans lecture automatique du favori |
+| 56 | Contraste, taille de texte, animations réduites | ✅ |
+| 57 | Annuler une rencontre de compteur | ✅ historique limité aux dernières actions locales |
+| 58 | Vibration et bip originaux | ✅ si le navigateur le permet |
+| 59 | Compteur plein écran | ✅ sur appareils compatibles, overlay sinon |
+| 60 | Sessions chronométrées avec pause / reprise | ✅ |
+| 61 | Gestion des phases | ✅ |
+| 62 | Chaînes SOS / Poké Radar et ruptures | ✅ compteur de chaîne générique |
+| 63 | Lots d’œufs +5 / +30 | ✅ |
+| 64 | Minuteur sandwich de 30 minutes | ✅ |
+| 65 | Résolution des conflits multi-appareils | ◐ révision serveur pour les compteurs, les autres actions restent à consolider |
+| 66 | Préréglages de chasse | ✅ pas de taux garantis : vérifier le jeu et les bonus |
+| 67 | Baron shiny / Shalpha | ✅ |
+| 68 | Marques, rubans, tailles | ✅ |
+| 69 | Historique des transferts | ✅ |
+| 70 | Parties distinctes par jeu / console | ✅ |
+| 71 | Pokédex de DLC indépendants | ◐ listes personnalisées par numéros nationaux, pas de catalogue officiel prérempli |
+| 72 | Collections de formes complexes | ◐ groupes ciblés depuis les formes déjà référencées |
+| 73 | Besoin d'espèces pour une famille évolutive | ◐ suivi par espèce, copies par évolution à perfectionner |
+| 74 | Album de photos | ◐ photos via URL, pas de transfert de fichiers intégré |
+| 75 | Recherche par boîte et partie | ◐ vue par boîte, fiches de partie ; recherche globale à étendre |
+| 76 | Shiny-lock par jeu et rencontre | ◐ quelques règles sourcées, liste non exhaustive |
+| 77 | Carte thermique de 365 jours | ✅ |
+| 78 | Probabilité cumulée indicative | ✅ selon un taux saisi manuellement |
+| 79 | Tentatives par heure | ✅ sur tentatives et sessions chronométrées compatibles uniquement |
+| 80 | Phases de malchance | ◐ phase maximum suivie |
+| 81 | Shinies par type Pokémon | ✅ après chargement manuel des données PokéAPI |
+| 82 | Moyenne mobile de capture | ✅ basé sur dates enregistrées |
+| 83 | Projection d'achèvement | ✅ indicative, masquée sans données récentes |
+| 84 | Qualité du journal, champs incomplets | ✅ |
+| 85 | Livre illustré PDF | ✅ via la fonction Imprimer / Enregistrer en PDF du navigateur |
+| 86 | Profil partageable avec confidentialité | ◐ export HTML sélectif, sans hébergement public automatique |
+| 87 | Carte Story Instagram 1080 × 1920 | ✅ |
+| 88 | Historique de versions et restauration | ✅ en local (jusqu’à 8 sauvegardes) ; aucune restauration destructive dans Sheets |
+
+⚠️ **Important** : les fonctionnalités ✅ correspondent au comportement implémenté côté application et contrôlé par analyse de code/rendu simulé. La synchronisation réelle Google Sheets n'est pas encore validée car l'utilisateur doit toujours ajouter le fichier Apps Script serveur et autoriser le déploiement. Pour toute opération enregistrée hors ligne, attendre la confirmation d'envoi et ne pas vider les données locales.
+
+### Remarques sur les données enrichies
+
+Les champs Baron shiny, marques, rubans, taille, console et partie de jeu sont enregistrés dans les métadonnées associées à l'ID de la capture, sans modifier tes numéros nationaux. Un exemplaire peut être affecté à un emplacement HOME grâce à une notation \`B1:01@0\`, \`B1:02@1\` pour les doublons d'une même ligne. Les listes DLC, boîtes, sessions et paramètres sont enregistrés en JSON dans **14 App · Organisation** lorsque la synchronisation est activée.
+
+Les informations shiny-lock décrivent **une rencontre et un jeu**, pas une impossibilité globale de l'espèce. Les calculs de probabilité sont statistiques, non prédictifs.
+
 ## Dépannage
 
 - **« Mode local »** : token absent/incorrect, API non déployée, ou navigateur hors connexion.
