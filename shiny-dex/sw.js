@@ -1,8 +1,8 @@
 /* ShinyDex: offline app assets plus a bounded cache of public PokéAPI sprites; never cache authenticated API responses. */
-const CACHE='hawaryou-shinydex-v11';
+const CACHE='hawaryou-shinydex-v12';
 const SPRITES='hawaryou-shinydex-sprites-v1';
 const SPRITE_MAX=180;
-const ASSETS=['./','./index.html','./styles.css?v=11','./design-v9.css?v=11','./v10.css?v=11','./catalog.js?v=11','./snapshot.js?v=11','./core.js?v=11','./plus-core.js?v=11','./plus-home.js?v=11','./plus-hunt.js?v=11','./plus-insights.js?v=11','./plus-design.js?v=11','./plus-studio.js?v=11','./plus-backup.js?v=11','./plus-directory.js?v=11','./plus-games.js?v=11','./plus-forms.js?v=11','./plus-audit.js?v=11','./plus-expert.js?v=11','./plus-challenges.js?v=11','./plus-recap.js?v=11','./plus-sync.js?v=11','./plus-widget.js?v=11','./plus-video.js?v=11','./design-v9.js?v=11','./v10-collection.js?v=11','./v10-productivity.js?v=11','./v10-hunting.js?v=11','./v10-security.js?v=11','./v10-bootstrap.js?v=11','./app.js?v=11','./manifest.webmanifest','./icon.svg'];
+const ASSETS=['./','./index.html','./styles.css?v=12','./design-v9.css?v=12','./v10.css?v=12','./catalog.js?v=12','./snapshot.js?v=12','./core.js?v=12','./plus-core.js?v=12','./plus-home.js?v=12','./plus-hunt.js?v=12','./plus-insights.js?v=12','./plus-design.js?v=12','./plus-studio.js?v=12','./plus-backup.js?v=12','./plus-directory.js?v=12','./plus-games.js?v=12','./plus-forms.js?v=12','./plus-audit.js?v=12','./plus-expert.js?v=12','./plus-challenges.js?v=12','./plus-recap.js?v=12','./plus-sync.js?v=12','./plus-widget.js?v=12','./plus-video.js?v=12','./design-v9.js?v=12','./v10-collection.js?v=12','./v10-productivity.js?v=12','./v10-hunting.js?v=12','./v10-security.js?v=12','./v10-bootstrap.js?v=12','./app.js?v=12','./manifest.webmanifest','./icon.svg'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)));self.skipWaiting()});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE&&k!==SPRITES).map(k=>caches.delete(k)))));self.clients.claim()});
 self.addEventListener('fetch',event=>{
