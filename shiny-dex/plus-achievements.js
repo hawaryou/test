@@ -126,7 +126,7 @@ function recordList(f){
  const a=f.a,min=f.shortest,record=a.record,best=f.regionBest;
  return [
   {icon:'⏳',label:'Plus longue chasse documentée',value:record?F(record.attempts)+' tentatives':'Non renseigné',foot:record?D.speciesName(record.dex)+' · '+(record.game||'Jeu non indiqué'):'Ajoute des rencontres pour débloquer ce record'},
-  {icon:'⚡',label:'Plus courte chasse documentée',value:min?F(min.attempts)+' tentatives':'Non renseigné',foot:min?D.speciesName(min.dex)+' · '+(min.method||'Méthode non indiquée'):'Les zéros et compteurs absents ne sont pas pris pour une chasse courte'},
+  {icon:'⚡',label:'Plus courte chasse documentée',value:min?F(min.attempts)+' tentative'+(min.attempts>1?'s':''):'Non renseigné',foot:min?D.speciesName(min.dex)+' · '+(min.method||'Méthode non indiquée'):'Les zéros et compteurs absents ne sont pas pris pour une chasse courte'},
   {icon:'🎮',label:'Jeu le plus représenté',value:f.bestGame[1]?f.bestGame[0]:'Non renseigné',foot:F(f.bestGame[1])+' capture(s)'},
   {icon:'🎯',label:'Méthode la plus utilisée',value:f.bestMethod[1]?f.bestMethod[0]:'Non renseigné',foot:F(f.bestMethod[1])+' capture(s)'},
   {icon:'📅',label:'Année la plus productive',value:f.bestYear[1]?String(f.bestYear[0]):'Non renseigné',foot:F(f.bestYear[1])+' capture(s) datée(s)'},
