@@ -228,7 +228,7 @@ case'odds':{const rate=Math.max(2,Number($('#odds-rate').value)||4096),n=Math.ma
 case'export-csv':D.download('ShinyDex-hawaryou.csv',D.exportCaptureCSV(),'text/csv;charset=utf-8');break;
 case'export-element':D.download('ShinyDex-Element-SH.csv',D.exportElementCSV(),'text/csv;charset=utf-8');break;
 case'export-json':D.download('ShinyDex-sauvegarde-'+D.today()+'.json',JSON.stringify({captures:S.captures,meta:S.meta,hunts:S.hunts,goals:S.goals,wishlist:S.wishlist,events:S.events,exported:new Date().toISOString()},null,2),'application/json');break;
-case'import':$('#import-file').click();break;
+case'import':go('importreview');break;
 case'monthly-report':D.download('ShinyDex-bilan-'+D.today().slice(0,7)+'.txt',monthlyReport());break;
 case'share-card':shareCard();break;
 case'copy-link':navigator.clipboard?.writeText(location.href).then(()=>toast('Lien copié !')).catch(()=>toast('Copie non disponible.'));break;
@@ -246,7 +246,7 @@ $('#profile-button').addEventListener('click',()=>go('settings'));
 $('#theme-toggle').addEventListener('click',()=>D.settings({theme:S.settings.theme==='dark'?'light':S.settings.theme==='light'?'galaxy':'dark'}));
 $('#menu-toggle').addEventListener('click',()=>{$('#sidebar').classList.toggle('open');$('#overlay').hidden=!$('#sidebar').classList.contains('open')});
 $('#overlay').addEventListener('click',()=>{$('#sidebar').classList.remove('open');$('#overlay').hidden=true});
-$('#import-file').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{const content=await file.text();const n=D.importFile(content);toast(n+' capture(s) importée(s) localement. Pour éviter les doublons, l’import n’est pas envoyé automatiquement dans Google Sheets.');render()}catch(e){toast('Import impossible : '+e.message,true)}e.target.value=''});
+$('#import-file').addEventListener('change',e=>{if(e.target.files?.length){e.target.value='';toast('Utilise le nouvel assistant d’import pour vérifier les doublons avant validation.');go('importreview')}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){modalClose();$('#sidebar').classList.remove('open');$('#overlay').hidden=true}if(e.key==='n'&&!e.target.matches('input,textarea,select')&&(e.ctrlKey||e.metaKey)){e.preventDefault();captureForm()}});
 window.ShinyDexUI={go,render,modalOpen,modalClose,toast,captureForm,huntForm,setGeneration:n=>{ui.gen=Number(n);go('pokedex')},globalCard:shareCard,speciesDetail};
 D.subscribe(()=>render());
