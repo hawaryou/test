@@ -10,9 +10,7 @@ function count(id,step){
  const h=S.hunts.find(h=>h.id===id);if(!h)return;
  const before=Math.max(0,Number(h.count)||0);h.count=Math.max(0,before+step);
  P.trackCounter?.(h,before,h.count);
- D.persist();
- if(timers.has(id))clearTimeout(timers.get(id));
- timers.set(id,setTimeout(()=>{timers.delete(id);D.saveHunt(h)},1100));
+ D.saveHunt(h);
 }
 function card(h,i){
  if(!h)return'<div class="v10-hunt-empty"><span>◎</span><b>Compteur '+(i+1)+'</b><p>Aucune chasse assignée.</p>'+P.btn('Créer une chasse','multi-new','','btn-secondary')+'</div>';
