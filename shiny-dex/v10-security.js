@@ -107,8 +107,8 @@ let remindersTimer=null;
 const reminders=()=>P.get('activeReminders',[]);
 function clearTimers(){if(remindersTimer){clearInterval(remindersTimer);remindersTimer=null}}
 async function notify(title,text){
- if(typeof Notification==='undefined'||Notification.permission!=='granted')return;
- try{const reg=await navigator.serviceWorker?.ready;if(reg?.showNotification)await reg.showNotification(title,{body:text,tag:'shinydex-active-reminder',icon:'./icon.svg'});else if(typeof Notification==='function')new Notification(title,{body:text})}catch(e){console.warn('Reminder unavailable',e)}
+ if(typeof Notification==='undefined'||Notification.permission!=='granted'){P.toast(title+' — '+text);return;}
+ try{const reg=await navigator.serviceWorker?.ready;if(reg?.showNotification)await reg.showNotification(title,{body:text,tag:'shinydex-active-reminder',icon:'./icon.svg'});else if(typeof Notification==='function')new Notification(title,{body:text})}catch(e){console.warn('Reminder unavailable',e);P.toast(title+' — '+text)}
 }
 function checkReminders(){
  const all=reminders(),now=Date.now();let changed=false;
