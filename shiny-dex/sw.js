@@ -1,6 +1,6 @@
 /* ShinyDex: cache only public same-origin application assets; never cache authenticated API responses. */
-const CACHE='hawaryou-shinydex-v8';
-const ASSETS=['./','./index.html','./styles.css?v=8','./catalog.js?v=8','./snapshot.js?v=8','./core.js?v=8','./plus-core.js?v=8','./plus-home.js?v=8','./plus-hunt.js?v=8','./plus-insights.js?v=8','./plus-design.js?v=8','./plus-studio.js?v=8','./plus-backup.js?v=8','./plus-directory.js?v=8','./plus-games.js?v=8','./plus-forms.js?v=8','./plus-audit.js?v=8','./plus-expert.js?v=8','./plus-challenges.js?v=8','./plus-recap.js?v=8','./plus-sync.js?v=8','./plus-widget.js?v=8','./plus-video.js?v=8','./app.js?v=8','./manifest.webmanifest','./icon.svg'];
+const CACHE='hawaryou-shinydex-v9';
+const ASSETS=['./','./index.html','./styles.css?v=9','./design-v9.css?v=9','./catalog.js?v=9','./snapshot.js?v=9','./core.js?v=9','./plus-core.js?v=9','./plus-home.js?v=9','./plus-hunt.js?v=9','./plus-insights.js?v=9','./plus-design.js?v=9','./plus-studio.js?v=9','./plus-backup.js?v=9','./plus-directory.js?v=9','./plus-games.js?v=9','./plus-forms.js?v=9','./plus-audit.js?v=9','./plus-expert.js?v=9','./plus-challenges.js?v=9','./plus-recap.js?v=9','./plus-sync.js?v=9','./plus-widget.js?v=9','./plus-video.js?v=9','./design-v9.js?v=9','./app.js?v=9','./manifest.webmanifest','./icon.svg'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)));self.skipWaiting()});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});
 self.addEventListener('fetch',event=>{
