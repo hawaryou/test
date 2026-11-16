@@ -115,7 +115,7 @@ Ouvre le lien dans **Safari** → bouton **Partager** → **Sur l'écran d'accue
 - `manifest.webmanifest`, `sw.js`, `icon.svg` : installation PWA / service worker
 
 
-## Fonctions 49 à 88 — ShinyDex Plus v7
+## Fonctions 49 à 88 — ShinyDex Plus v8
 
 Depuis la version v7, l’onglet **Plus** de la barre de navigation iPhone ouvre une page d’accueil dédiée aux huit nouveaux outils. Les scripts sont préchargés pour que l’interface soit utilisable hors ligne après une première ouverture en ligne.
 
@@ -172,6 +172,50 @@ Les nouvelles pages sont disponibles dans le menu **Collection avancée** et **O
 Les champs Baron shiny, marques, rubans, taille, console et partie de jeu sont enregistrés dans les métadonnées associées à l'ID de la capture, sans modifier tes numéros nationaux. Un exemplaire peut être affecté à un emplacement HOME grâce à une notation \`B1:01@0\`, \`B1:02@1\` pour les doublons d'une même ligne. Les listes DLC, boîtes, sessions et paramètres sont enregistrés en JSON dans **14 App · Organisation** lorsque la synchronisation est activée.
 
 Les informations shiny-lock décrivent **une rencontre et un jeu**, pas une impossibilité globale de l'espèce. Les calculs de probabilité sont statistiques, non prédictifs.
+
+
+## ShinyDex v8 — Options sélectionnées (90 à 128)
+
+Cette livraison ajoute 24 options demandées. Elles apparaissent dans **Plus** sur iPhone et dans le menu latéral sur ordinateur. Le catalogue d'origine, les 285 captures historiques, les 347 exemplaires et les statistiques déjà enregistrées ne sont pas réécrits.
+
+| Option | Fonction | État v8 |
+|---:|---|---|
+| 90 | Assistant de chasse Légendes Pokémon : Z-A | ✅ compteurs de cycles, zones, méthodes et notes; pas de reconnaissance automatique |
+| 91 | Planificateur Écarlate/Violet | ✅ suivi KO 30/60, sandwich, charme et contrôles de rencontres |
+| 93 | Poké Radar | ✅ version, chaîne, record, resets; calcul des taux par patch laissé au guide de référence |
+| 94 | Safari des Amis | ✅ fiches type, ami, 3 emplacements, rencontres |
+| 95 | SOS Alola | ✅ chaîne et suivi indicatif des PP |
+| 96 | Expéditions Dynamax | ✅ compteur d’expéditions, prises, routes et probabilités d'au moins un shiny |
+| 97 | Shiny Living Form Dex | ◐ formes conservables du catalogue actuel et liens à des captures |
+| 102 | Différences mâle/femelle | ◐ sélection de familles, à compléter |
+| 103 | Détection de données incohérentes | ◐ règles prudentes, non exhaustives |
+| 105 | Statistiques Full Odds | ✅ pour les captures où le statut est renseigné |
+| 106 | Top chasses chanceuses/malchanceuses | ✅ uniquement si le taux personnel 1/N est saisi |
+| 107 | Statistiques Poké Balls | ✅ pour les captures renseignées |
+| 110 | Statistiques consoles | ✅ pour les captures renseignées |
+| 112 | Rendement chronométré par méthode | ◐ tentatives/h et chasses abouties à partir des sessions, non comparable aux données historiques |
+| 113 | Widget d’écran d’accueil | ◐ widget **dans la PWA**, pas widget natif iOS |
+| 117 | Compteur vidéo / détection expérimentale | ◐ caméra locale + variation d’image + validation manuelle; **aucune détection shiny fiable** |
+| 120 | Centre de synchronisation | ✅ file locale, erreurs, relance/export; serveur à installer |
+| 121 | Pokémon du jour | ✅ proposition stable du jour, modifiable |
+| 122 | Défis hebdomadaires | ✅ progression suivie lorsque l'information est disponible |
+| 123 | Niveau de dresseur virtuel | ✅ XP basé sur le journal et les objectifs |
+| 124 | Musée des shiny favoris | ✅ collection de captures mises en vitrine |
+| 125 | Frise chronologique | ✅ captures dont la date est renseignée |
+| 127 | Bingo shiny 3×3 / 5×5 | ✅ grille manquants, cases validées par la collection |
+| 128 | Rétrospective annuelle interactive | ✅ sélection d’année, statistiques et record |
+
+### Sécurité, limites et synchronisation de la v8
+
+- Les nouveaux écrans enregistrent leurs données dans le même mécanisme d'attente locale que la v7, puis dans le classeur via **14 App · Organisation** après installation et redéploiement du fichier **ShinyDexAPI.gs**.
+- Les métadonnées du journal ont été étendues dans **08 App · Métadonnées**, colonnes AA:AD : probabilité 1/N explicitement saisie, conditions, heure de capture et méthode précise.
+- **Ne remplace pas l'ancien Code.gs**. Le fichier ShinyDexAPI.gs actuel sur GitHub comprend ces nouveaux champs ; il doit être installé dans Apps Script depuis cette version avant de redéployer.
+- Le site public ne contient que l'instantané préchargé des données de chasse déjà publié ; les nouveaux champs individuels ne sont pas ajoutés au dépôt.
+- Les odds pour ZA, SV, SOS, Radar et Dynamax sont contextualisés. Les compteurs de cycles, apparitions et Pokémon capturés représentent des unités distinctes ; aucune conversion automatique abusive n'est appliquée.
+- Safari/iOS ne permet pas de produire un widget natif du système depuis une simple PWA. La version proposée est une carte de compteur **dans l'application** ouverte depuis son icône d'accueil.
+- L'atelier vidéo exige une permission de caméra ; le flux n'est pas envoyé à un serveur, et le compteur n'augmente que par appui manuel.
+- **Tests à effectuer** : validation du formulaire sur iPhone, écriture réelle vers Apps Script une fois connecté, restauration sur deuxième appareil et cohérence des compteurs en cas d'éditions simultanées.
+
 
 ## Dépannage
 
