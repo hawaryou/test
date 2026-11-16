@@ -27,7 +27,7 @@ return P.head('Tableau multi-chasse','Jusqu’à quatre compteurs en parallèle,
 P.actions['multi-count']=e=>count(e.dataset.id,Number(e.dataset.step)||1);
 P.actions['multi-new']=()=>window.ShinyDexUI?.huntForm();
 P.actions['multi-undo']=e=>P.actions['undo']?.(e);
-P.actions['multi-finish']=e=>{P.goto('hunts');P.toast('Termine la chasse depuis la fiche pour conserver son historique et la capture.')};
+P.actions['multi-finish']=e=>{const h=S.hunts.find(x=>x.id===e.dataset.id);if(!h)return P.toast('Chasse introuvable.',true);if(!confirm('Terminer cette chasse et ouvrir la fiche de capture ?'))return;h.status='Réussie';D.saveHunt(h);D.logEvent('Shiny obtenu',{refId:h.id,pokemon:D.speciesName(h.dex),value:h.count,game:h.game,method:h.method});window.ShinyDexUI?.captureForm(h.dex,null,h.count);P.toast('Chasse terminée. Enregistre la capture pour mettre à jour le Living Dex.')};
 P.changes['multi-select']=e=>{const slot=e.target.dataset.v10HuntSlot;if(slot==null)return false;const i=Number(slot),current=activeIds();selectedHunters=current;selectedHunters[i]=e.target.value;selectedHunters=[...new Set(selectedHunters)];P.render();return true};
 async function wake(){
  if(!('wakeLock' in navigator))return P.toast('Ton navigateur ne propose pas le verrouillage d’écran actif.',true);
