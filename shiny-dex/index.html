@@ -11,8 +11,9 @@
   <link rel="manifest" href="./manifest.webmanifest"/>
   <link rel="icon" href="./icon.svg" type="image/svg+xml"/>
   <link rel="apple-touch-icon" href="./icon.svg"/>
-  <link rel="stylesheet" href="./styles.css?v=9"/>
-  <link rel="stylesheet" href="./design-v9.css?v=9"/>
+  <link rel="stylesheet" href="./styles.css?v=10"/>
+  <link rel="stylesheet" href="./design-v9.css?v=10"/>
+  <link rel="stylesheet" href="./v10.css?v=10"/>
   <title>ShinyDex Hawaryou ✨</title>
 </head>
 <body data-theme="dark">
@@ -35,16 +36,23 @@
 <button class="nav-link" data-view="collectionplus"><span>✧</span> Collection enrichie</button>
 <button class="nav-link" data-view="regions"><span>🗺</span> Régions & DLC</button>
 <button class="nav-link" data-view="museum"><span>🏛️</span> Musée shiny</button>
+      <button class="nav-link" data-view="showroom"><span>✧</span> Galerie & comparateur</button>
+      <button class="nav-link" data-view="regionatlas"><span>🗺️</span> Atlas interactif</button>
+      <button class="nav-link" data-view="gamethemes"><span>🎨</span> Thèmes par jeu</button>
 <button class="nav-link" data-view="consistency"><span>✓</span> Contrôle des captures</button></div></details>
 <details class="nav-cluster"><summary>🎯 Shiny hunting</summary><div class="nav-cluster-content"><button class="nav-link" data-view="gameguides"><span>🎮</span> Assistants par jeu</button>
 <button class="nav-link" data-view="huntlab"><span>◉</span> Laboratoire de chasse</button>
 <button class="nav-link" data-view="quests"><span>⚑</span> Défis & niveaux</button>
 <button class="nav-link" data-view="bingo"><span>▦</span> Bingo shiny</button>
 <button class="nav-link" data-view="video"><span>📹</span> Atelier vidéo</button>
+      <button class="nav-link" data-view="multihunt"><span>◉</span> Tableau multi-chasse</button>
+      <button class="nav-link" data-view="sessionjournal"><span>📓</span> Journal de session</button>
+      <button class="nav-link" data-view="reminders"><span>🔔</span> Rappels de chasse</button>
 <button class="nav-link" data-view="goals"><span>⚑</span> Objectifs & souhaits</button></div></details>
 <details class="nav-cluster"><summary>📊 Mes statistiques</summary><div class="nav-cluster-content"><button class="nav-link" data-view="analytics"><span>▥</span> Statistiques</button>
 <button class="nav-link" data-view="expertstats"><span>📊</span> Statistiques expertes</button>
 <button class="nav-link" data-view="insights"><span>▥</span> Analyses approfondies</button>
+      <button class="nav-link" data-view="huntstatistics"><span>📈</span> Statistiques de chasse</button>
 <button class="nav-link" data-view="yearreview"><span>🏆</span> Rétrospective annuelle</button>
 <button class="nav-link" data-view="timeline"><span>🕰️</span> Chronologie</button>
 <button class="nav-link" data-view="achievements"><span>✧</span> Succès & records</button></div></details>
@@ -53,7 +61,16 @@
 <button class="nav-link" data-view="sync"><span>☁</span> Synchronisation</button>
 <button class="nav-link" data-view="restore"><span>↺</span> Sauvegardes & versions</button>
 <button class="nav-link" data-view="personalize"><span>◐</span> Design & accessibilité</button>
-<button class="nav-link" data-view="settings"><span>⚙</span> Paramètres</button></div></details>
+<button class="nav-link" data-view="settings"><span>⚙</span> Paramètres</button>
+      <button class="nav-link" data-view="searchhub"><span>⌕</span> Recherche universelle</button>
+      <button class="nav-link" data-view="quickcapture"><span>＋</span> Saisie rapide</button>
+      <button class="nav-link" data-view="tutorial"><span>❔</span> Tutoriel</button>
+      <button class="nav-link" data-view="dashboardlayout"><span>⊞</span> Accueil personnalisable</button>
+      <button class="nav-link" data-view="importreview"><span>📥</span> Import sécurisé</button>
+      <button class="nav-link" data-view="conflicts"><span>⇄</span> Conflits par champ</button>
+      <button class="nav-link" data-view="syncdiagnostics"><span>☁</span> Diagnostics</button>
+      <button class="nav-link" data-view="drivebackups"><span>💾</span> Sauvegardes Drive</button>
+      <button class="nav-link" data-view="posters"><span>🖼️</span> Posters collector</button></div></details>
 </nav>
     <div class="sidebar-bottom">
       <div class="sync-chip" id="sync-chip"><span class="sync-dot"></span><span id="sync-label">Connexion à configurer</span></div>
@@ -92,27 +109,32 @@
   <div class="modal-holder" id="modal-holder"></div>
   <div class="toast-host" id="toast-host" aria-live="polite"></div>
   <input id="import-file" type="file" accept=".csv,.json,application/json,text/csv" hidden/>
-  <script src="./catalog.js?v=9" defer></script>
-  <script src="./snapshot.js?v=9" defer></script>
-  <script src="./core.js?v=9" defer></script>
-  <script src="./plus-core.js?v=9" defer></script>
-  <script src="./plus-home.js?v=9" defer></script>
-  <script src="./plus-hunt.js?v=9" defer></script>
-  <script src="./plus-insights.js?v=9" defer></script>
-  <script src="./plus-design.js?v=9" defer></script>
-  <script src="./plus-studio.js?v=9" defer></script>
-  <script src="./plus-backup.js?v=9" defer></script>
-  <script src="./plus-directory.js?v=9" defer></script>
-  <script src="./plus-games.js?v=9" defer></script>
-  <script src="./plus-forms.js?v=9" defer></script>
-  <script src="./plus-audit.js?v=9" defer></script>
-  <script src="./plus-expert.js?v=9" defer></script>
-  <script src="./plus-challenges.js?v=9" defer></script>
-  <script src="./plus-recap.js?v=9" defer></script>
-  <script src="./plus-sync.js?v=9" defer></script>
-  <script src="./plus-widget.js?v=9" defer></script>
-  <script src="./plus-video.js?v=9" defer></script>
-  <script src="./design-v9.js?v=9" defer></script>
-  <script src="./app.js?v=9" defer></script>
+  <script src="./catalog.js?v=10" defer></script>
+  <script src="./snapshot.js?v=10" defer></script>
+  <script src="./core.js?v=10" defer></script>
+  <script src="./plus-core.js?v=10" defer></script>
+  <script src="./plus-home.js?v=10" defer></script>
+  <script src="./plus-hunt.js?v=10" defer></script>
+  <script src="./plus-insights.js?v=10" defer></script>
+  <script src="./plus-design.js?v=10" defer></script>
+  <script src="./plus-studio.js?v=10" defer></script>
+  <script src="./plus-backup.js?v=10" defer></script>
+  <script src="./plus-directory.js?v=10" defer></script>
+  <script src="./plus-games.js?v=10" defer></script>
+  <script src="./plus-forms.js?v=10" defer></script>
+  <script src="./plus-audit.js?v=10" defer></script>
+  <script src="./plus-expert.js?v=10" defer></script>
+  <script src="./plus-challenges.js?v=10" defer></script>
+  <script src="./plus-recap.js?v=10" defer></script>
+  <script src="./plus-sync.js?v=10" defer></script>
+  <script src="./plus-widget.js?v=10" defer></script>
+  <script src="./plus-video.js?v=10" defer></script>
+  <script src="./design-v9.js?v=10" defer></script>
+  <script src="./v10-collection.js?v=10" defer></script>
+  <script src="./v10-productivity.js?v=10" defer></script>
+  <script src="./v10-hunting.js?v=10" defer></script>
+  <script src="./v10-security.js?v=10" defer></script>
+  <script src="./v10-bootstrap.js?v=10" defer></script>
+  <script src="./app.js?v=10" defer></script>
 </body>
 </html>
