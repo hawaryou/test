@@ -86,10 +86,12 @@ async function connect(){if(!state.settings.token){state.connected=false;state.l
 try{const data=inGoogle()?await gasRun("dexBootstrap",state.settings.token):await jsonp("bootstrap");listFromServer(data);await flushQueue();return true}catch(e){state.connected=false;state.lastError=e.message;persist();return false}}
 async function refresh(force=false){if(!force&&Date.now()-lastFetch<25000)return;lastFetch=Date.now();return connect()}
 function recordLocal(type,data){let action=null;
-if(type==="hunt"){
+if(type==="hunt"||type==="extra"){
   for(let i=state.queue.length-1;i>=0;i--){const op=state.queue[i];
-    if(op.type==="hunt"&&String(op.data?.id)===String(data.id)&&!(inflight&&i===0)){
-      action=op;op.data={...data,revision:Number(op.data?.revision??data.revision)||0};op.created=Date.now();break;
+    const same=op.type===type&&(type==="hunt"?String(op.data?.id)===String(data.id):String(op.data?.key)===String(data.key));
+    if(same&&!(inflight&&i===0)){
+      action=op;op.data=type==="hunt"?{...data,revision:Number(op.data?.revision??data.revision)||0}:data;
+      op.created=Date.now();break;
     }
   }
 }
