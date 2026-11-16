@@ -40,7 +40,7 @@ P.actions['multi-wake']=()=>{if(wantWake)release().then(P.render);else wake().th
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&wantWake&&!activeWake)wake()});
 P.decorators.push((view)=>{if(!['hunts','huntlab','multihunt'].includes(view)&&wantWake)release()});
 P.register('sessionjournal',()=>{
- const log=P.get('sessionJournal',[]),current=hunts();
+ const log=Object.entries(S.extras||{}).filter(([k])=>k.startsWith('sessionJournal:')).map(([,v])=>v).sort((a,b)=>String(a.date||'').localeCompare(String(b.date||''))),current=hunts();
  return P.head('Journal de sessions','Note interruptions, changements de méthode, objectifs et événements particuliers pendant une chasse.')+
  P.card('Ajouter une note de session','<div class="form-grid"><div><label>Chasse</label><select id="v10-journal-hunt">'+P.opts(current.map(h=>[h.id,D.speciesName(h.dex)+' · '+h.method]))+'</select></div><div><label>Événement</label><select id="v10-journal-kind">'+P.opts(['Observation','Pause','Reprise','Changement de méthode','Interruption','Éclosions','Phase','Autre'])+'</select></div></div><label class="mt-12">Note</label><textarea id="v10-journal-note" rows="3" placeholder="Ex. 3 heures de reset, changement de zone, 150 œufs éclos..."></textarea><div class="mt-12">'+P.btn('＋ Ajouter au journal','session-add','','btn-primary')+'</div>')+
  P.card('Historique',log.length?log.slice().reverse().slice(0,100).map(x=>'<div class="goal-card"><div class="grow"><b>'+E(x.kind)+' · '+E(x.pokemon)+'</b><p>'+new Date(x.date).toLocaleString('fr-FR')+' · compteur '+F(x.count)+'</p><p>'+E(x.note)+'</p></div></div>').join(''):'<p class="tiny">Aucune note de session enregistrée.</p>');
@@ -50,7 +50,7 @@ const id=$('#v10-journal-hunt')?.value,h=S.hunts.find(h=>h.id===id);
 if(!h)return P.toast('Commence une chasse pour ajouter une note.',true);
 const note=String($('#v10-journal-note')?.value||'').trim(),kind=$('#v10-journal-kind')?.value||'Observation';
 if(!note)return P.toast('Ajoute une description.',true);
-const list=P.get('sessionJournal',[]);P.save('sessionJournal',[...list,{id:D.uid('entry'),huntId:id,pokemon:D.speciesName(h.dex),kind,note:note.slice(0,2000),date:new Date().toISOString(),count:Number(h.count)||0}].slice(-200));
+const entry={id:D.uid('entry'),huntId:id,pokemon:D.speciesName(h.dex),kind,note:note.slice(0,2000),date:new Date().toISOString(),count:Number(h.count)||0};P.save('sessionJournal:'+entry.id,entry);
 };
 const values=()=>D.aggregate().gen||[];
 function seasonal(){
