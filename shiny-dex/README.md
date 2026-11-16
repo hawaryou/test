@@ -217,6 +217,21 @@ Cette livraison ajoute 24 options demandées. Elles apparaissent dans **Plus** s
 - **Tests à effectuer** : validation du formulaire sur iPhone, écriture réelle vers Apps Script une fois connecté, restauration sur deuxième appareil et cohérence des compteurs en cas d'éditions simultanées.
 
 
+## Refonte graphique v9 — Observatoire chromatique
+
+La v9 est une refonte **présentationnelle** : aucune ligne de capture n'est réécrite, aucun identifiant de capture n'est changé et la connexion Apps Script reste optionnelle tant qu'elle n'a pas été installée.
+
+- **Accueil illustré** : vitrine de trois shinies du journal, grand titre, progression globale et raccourcis directs vers Pokédex, chasses, boîtes HOME et outils.
+- **Barre latérale restructurée** : 5 entrées principales et 4 groupes repliables pour retrouver les 30 vues sans défiler dans une liste unique.
+- **Répertoire d'outils** : 19 outils regroupés en 5 catégories, avec recherche instantanée et message quand aucun résultat ne correspond.
+- **Pokédex** : meilleure distinction visuelle entre obtenu et manquant, bordures associées à la génération, cartes plus lisibles et compteurs récapitulatifs.
+- **Journal sur téléphone** : tableau remplacé visuellement par des cartes avec libellés sur les petits écrans (les données et les boutons d'édition restent inchangés).
+- **Navigation mobile** : accès rapide à l'ajout d'un shiny, bouton de recherche dans la barre supérieure, éléments tactiles plus confortables.
+- **Modes sombre, clair et galaxie** : respectés et adaptés, avec prise en compte de la réduction des animations.
+- **Hors connexion** : fichiers `design-v9.css` et `design-v9.js` inclus dans la nouvelle version du service worker `hawaryou-shinydex-v9`.
+
+**Limites :** les contrôles de syntaxe et les références d'assets ont été validés à partir du dépôt GitHub, mais le rendu final n'a pas été inspecté visuellement sur un iPhone réel. Si la PWA conserve l'ancienne interface, l'ouvrir en ligne et actualiser après publication de GitHub Pages. L'API Apps Script et la synchronisation multi-appareils ne sont pas activées par la refonte graphique.
+
 ## Dépannage
 
 - **« Mode local »** : token absent/incorrect, API non déployée, ou navigateur hors connexion.
