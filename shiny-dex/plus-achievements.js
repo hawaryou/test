@@ -192,8 +192,28 @@ P.actions['badge-detail']=el=>{
  const b=catalogue(facts(D.aggregate())).find(x=>x.id===el.dataset.id);if(!b)return;
  const inner='<div class="sdx-badge-modal-preview">'+graphic(b)+'<div><span class="sdx-modal-rank">'+E(TIERS.find(t=>t[0]===b.tier)[1])+' · '+b.points+' points</span><h3>'+E(b.title)+'</h3><p>'+E(b.desc)+'</p><strong>'+(b.done?'✓ Succès débloqué':'🔒 Encore '+F(Math.max(0,b.target-b.current))+' à réaliser')+'</strong></div></div>'+
  '<div class="sdx-badge-modal-stats"><span>Progression <b>'+F(b.current)+' / '+F(b.target)+'</b></span><i><em style="width:'+(100*b.ratio)+'%"></em></i></div>';
- const footer=b.done?P.btn('🌟 Mettre cette médaille à la une','badge-feature','data-id="'+E(b.id)+'"','btn-primary'):'<span class="tiny">Continue tes chasses pour débloquer cette récompense.</span>';
+ const footer=b.done?P.btn('🌟 Mettre à la une','badge-feature','data-id="'+E(b.id)+'"','btn-primary')+P.btn('⬇ Télécharger le badge','badge-export','data-id="'+E(b.id)+'"','btn-secondary'):'<span class="tiny">Continue tes chasses pour débloquer cette récompense.</span>';
  window.ShinyDexUI?.modalOpen(b.title,inner,footer);
+};
+P.actions['badge-export']=el=>{
+ const b=catalogue(facts(D.aggregate())).find(x=>x.id===el.dataset.id&&x.done);
+ if(!b)return P.toast('Le badge doit être débloqué pour être téléchargé.',true);
+ const scheme={bronze:['#aa6c46','#f8d6a8'],silver:['#64889d','#f1f9ff'],gold:['#9c7027','#ffe5a0'],platinum:['#347e83','#d5f9f1'],diamond:['#6252af','#e5d9ff']}[b.tier];
+ const svg='<?xml version="1.0" encoding="UTF-8"?>'+
+ '<svg xmlns="http://www.w3.org/2000/svg" width="720" height="900" viewBox="0 0 720 900">'+
+ '<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#12273e"/><stop offset="1" stop-color="#282444"/></linearGradient>'+
+ '<linearGradient id="m" x1="0" y1="0" x2="1" y2="1"><stop stop-color="'+scheme[1]+'"/><stop offset="1" stop-color="'+scheme[0]+'"/></linearGradient></defs>'+
+ '<rect width="720" height="900" rx="35" fill="url(#bg)"/><rect x="20" y="20" width="680" height="860" rx="27" fill="none" stroke="'+scheme[1]+'" stroke-width="5" opacity=".8"/>'+
+ '<text x="360" y="105" font-size="23" letter-spacing="8" fill="#b9f5de" text-anchor="middle" font-weight="700">SHINYDEX</text>'+
+ '<text x="360" y="150" font-size="19" fill="#c4d9ea" text-anchor="middle">HAWARYOU · SUCCÈS CHROMATIQUE</text>'+
+ '<path d="M360 205 L493 250 L535 390 L490 530 L360 594 L230 530 L185 390 L225 250 Z" fill="url(#m)" stroke="#ffffff" stroke-width="6"/>'+
+ '<circle cx="360" cy="397" r="131" fill="'+scheme[0]+'" stroke="#ffffffaa" stroke-width="6"/>'+
+ '<text x="360" y="433" font-size="130" text-anchor="middle">'+E(b.icon)+'</text>'+
+ '<text x="360" y="663" font-size="24" fill="'+scheme[1]+'" text-anchor="middle" letter-spacing="5">'+E(TIERS.find(x=>x[0]===b.tier)[1].toUpperCase())+'</text>'+
+ '<text x="360" y="735" font-size="31" fill="#ffffff" text-anchor="middle" font-weight="800" textLength="600" lengthAdjust="spacingAndGlyphs">'+E(b.title)+'</text>'+
+ '<text x="360" y="805" font-size="22" fill="#c3d8e8" text-anchor="middle">BADGE DÉBLOQUÉ · +'+b.points+' POINTS</text>'+
+ '<text x="360" y="850" font-size="14" fill="#96b1c1" text-anchor="middle">Trophée virtuel calculé depuis la collection personnelle</text></svg>';
+ D.download('ShinyDex-badge-'+b.id+'.svg',svg,'image/svg+xml;charset=utf-8');
 };
 P.changes['badge-selects']=e=>{
  const id=e.target.id,val=e.target.value;
@@ -215,7 +235,7 @@ P.decorators.push((view,root)=>{
  const anchor=root.querySelector('.stat-grid');if(!anchor)return;
  const all=catalogue(facts(D.aggregate())),won=all.filter(b=>b.done),tops=won.slice().sort((x,y)=>y.points-x.points||y.target-x.target).slice(0,3);
  const section=document.createElement('section');section.className='panel sdx-home-awards';
- section.innerHTML='<div class="sdx-home-awards-head"><div><span class="eyebrow">✦ TON PALMARÈS</span><h3>🏆 Mes badges chromatiques</h3><p>'+won.length+' médailles débloquées sur '+all.length+' succès</p></div>'+P.btn('Voir mes 298 badges','achievements','','btn-small btn-primary')+'</div>'+
+ section.innerHTML='<div class="sdx-home-awards-head"><div><span class="eyebrow">✦ TON PALMARÈS</span><h3>🏆 Mes badges chromatiques</h3><p>'+won.length+' médailles débloquées sur '+all.length+' succès</p></div>'+P.btn('Voir mes '+all.length+' badges','achievements','','btn-small btn-primary')+'</div>'+
  '<div class="sdx-home-medals">'+tops.map(b=>'<button class="sdx-home-medal" data-action="xp-badge-detail" data-id="'+E(b.id)+'">'+graphic(b,true)+'<strong>'+E(b.title)+'</strong><small>'+E(TIERS.find(x=>x[0]===b.tier)[1])+'</small></button>').join('')+'</div>';
  anchor.insertAdjacentElement('afterend',section);
 });
