@@ -210,4 +210,14 @@ P.inputs['badge-search']=e=>{
  return true;
 };
 P.achievementData=()=>{const all=catalogue(facts(D.aggregate()));return {all,earned:all.filter(x=>x.done),records:recordList(facts(D.aggregate()))}};
+P.decorators.push((view,root)=>{
+ if(view!=='dashboard'||root.querySelector('.sdx-home-awards'))return;
+ const anchor=root.querySelector('.stat-grid');if(!anchor)return;
+ const all=catalogue(facts(D.aggregate())),won=all.filter(b=>b.done),tops=won.slice().sort((x,y)=>y.points-x.points||y.target-x.target).slice(0,3);
+ const section=document.createElement('section');section.className='panel sdx-home-awards';
+ section.innerHTML='<div class="sdx-home-awards-head"><div><span class="eyebrow">✦ TON PALMARÈS</span><h3>🏆 Mes badges chromatiques</h3><p>'+won.length+' médailles débloquées sur '+all.length+' succès</p></div>'+P.btn('Voir mes 298 badges','achievements','','btn-small btn-primary')+'</div>'+
+ '<div class="sdx-home-medals">'+tops.map(b=>'<button class="sdx-home-medal" data-action="xp-badge-detail" data-id="'+E(b.id)+'">'+graphic(b,true)+'<strong>'+E(b.title)+'</strong><small>'+E(TIERS.find(x=>x[0]===b.tier)[1])+'</small></button>').join('')+'</div>';
+ anchor.insertAdjacentElement('afterend',section);
+});
+
 })();
