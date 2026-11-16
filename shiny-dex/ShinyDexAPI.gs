@@ -86,10 +86,12 @@ function shinyDate_(value){
   if(/^\d{4}-\d{2}-\d{2}/.test(String(value)))return String(value).slice(0,10);
   return String(value);
 }
-function shinyRows_(sh,limit=3000){
+function shinyRows_(sh,limit=0){
   if(!sh)return [];
-  const last=Math.min(sh.getLastRow(),limit);if(last<2)return [];
-  return sh.getRange(2,1,last-1,sh.getLastColumn()).getValues().filter(r=>r[0]!==''&&r[0]!==null);
+  const last=sh.getLastRow();if(last<2)return [];
+  if(last>50000)throw new Error('Classeur volumineux : lecture segmentée nécessaire au-delà de 50 000 lignes.');
+  const end=limit>0?Math.min(last,limit):last;
+  return sh.getRange(2,1,end-1,sh.getLastColumn()).getValues().filter(r=>r[0]!==''&&r[0]!==null);
 }
 function shinyObjRows_(rows,keys,dates=[]){
   return rows.map(row=>Object.fromEntries(keys.map((k,i)=>[k,dates.includes(k)?shinyDate_(row[i]):(row[i]==null?'':row[i])])));
@@ -97,7 +99,7 @@ function shinyObjRows_(rows,keys,dates=[]){
 function dexBootstrap(token){
   shinyAuth_(token);
   const ss=shinySheet_();
-  const jr=shinyRows_(ss.getSheetByName(SHINY_API.journal),SHINY_API.maxRows);
+  const jr=shinyRows_(ss.getSheetByName(SHINY_API.journal));
   const captures=jr.map(r=>({
     id:String(r[0]),dex:Number(r[1]),name:String(r[2]||''),game:String(r[3]||''),
     method:String(r[4]||''),attempts:r[5]===''?'':(Number(r[5])||0),
@@ -110,7 +112,7 @@ function dexBootstrap(token){
     ['id','dex','game','method','count','multiplier','started','status','notes','updated','form','result','rate','chain','bestChain','revision','saveFile'],['started','updated']);
   const goals=shinyObjRows_(shinyRows_(ss.getSheetByName(SHINY_API.goals)),
     ['id','title','type','target','current','deadline','status','notes','updated'],['deadline','updated']);
-  const events=shinyObjRows_(shinyRows_(ss.getSheetByName(SHINY_API.events),700),
+  const events=shinyObjRows_(shinyRows_(ss.getSheetByName(SHINY_API.events)),
     ['id','date','category','refId','pokemon','value','description','game','method'],['date']);
   const wishlist=shinyObjRows_(shinyRows_(ss.getSheetByName(SHINY_API.wishes)),
     ['dex','priority','game','method','notes','date'],['date']);
@@ -128,11 +130,13 @@ function shinyStatus_(actionId){
   return {ok:r[3]==='ok',state:r[3]==='ok'?'ok':r[3]==='error'?'error':'pending',error:r[3]==='error'?String(r[4]):'',result:String(r[5]||'')};
 }
 function shinyFirstFree_(sh,col=1){
-  const last=Math.max(2,Math.min(SHINY_API.maxRows,sh.getMaxRows()));
-  const rows=sh.getRange(2,col,last-1,1).getValues();
-  for(let i=0;i<rows.length;i++)if(rows[i][0]===''||rows[i][0]===null)return i+2;
-  if(sh.getMaxRows()<=SHINY_API.maxRows)sh.insertRowsAfter(sh.getMaxRows(),200);
-  return last+1;
+  const last=Math.max(1,sh.getLastRow());
+  if(last>=2){const rows=sh.getRange(2,col,last-1,1).getValues();
+    for(let i=0;i<rows.length;i++)if(rows[i][0]===''||rows[i][0]===null)return i+2;
+  }
+  const next=last+1;
+  if(next>sh.getMaxRows())sh.insertRowsAfter(sh.getMaxRows(),Math.max(200,next-sh.getMaxRows()));
+  return next;
 }
 function shinyWrite_(sheetName,key,value,rowData){
   const sh=shinySheet_().getSheetByName(sheetName);
