@@ -31,6 +31,7 @@ const groups=[
 ]},
 {icon:'🎲',title:'Mes défis',sub:'Progresser autrement chaque semaine',tools:[
 ['quests','⚑','Défis & niveaux','Cible du jour, missions et XP'],
+['achievements','🏆','Succès & records','298 badges, paliers, vitrines et livre des records'],
 ['bingo','▦','Bingo shiny','Grilles de 3 × 3 ou 5 × 5']
 ]},
 {icon:'⚙️',title:'Mes outils',sub:'Personnaliser et protéger les données',tools:[
