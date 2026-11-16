@@ -11,5 +11,5 @@ P.card("🕒 Historique des versions",rows||'<p class="tiny">Tu n’as pas encor
 P.actions["restore-create"]=()=>{const name=prompt("Nom de la sauvegarde","Avant modifications");if(!name)return;D.createBackup(name);P.toast("Sauvegarde locale créée.");P.render()};
 P.actions["restore-export"]=el=>{const b=D.listBackups().find(x=>x.id===el.dataset.id);if(b)D.download("ShinyDex-"+b.date.slice(0,10)+".json",JSON.stringify(b.data,null,2),"application/json")};
 P.actions["restore-current"]=()=>D.download("ShinyDex-"+D.today()+"-complete.json",JSON.stringify(D.rawBackup(),null,2),"application/json");
-P.actions["restore-do"]=el=>{if(!confirm("Restaurer cette version LOCALEMENT ? Le contenu du Google Sheets restera inchangé, et les opérations en attente locales seront remplacées. Pense à exporter l'état actuel."))return;D.restoreBackup(el.dataset.id);P.toast("Version restaurée sur cet appareil.");P.render()};
+P.actions["restore-do"]=el=>{if(!confirm("Restaurer cette version LOCALEMENT ? Le contenu du Google Sheets restera inchangé, et les opérations en attente locales seront remplacées. Pense à exporter l'état actuel."))return;try{D.restoreBackup(el.dataset.id);P.toast("Version restaurée sur cet appareil.");P.render()}catch(err){P.toast(err.message||"Restauration impossible.",true)}};
 })();
