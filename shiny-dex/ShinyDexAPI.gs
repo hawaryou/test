@@ -271,3 +271,70 @@ function diagnosticShinyDex(){
   Logger.log('ShinyDex OK : '+d.captures.length+' lignes de capture, '+d.hunts.length+' chasses.');
   return {captures:d.captures.length,hunts:d.hunts.length,goals:d.goals.length};
 }
+
+/**
+ * V10 — Sauvegardes quotidiennes privées du classeur dans Google Drive.
+ * Installation volontaire par le propriétaire : exécuter
+ * installerSauvegardesShinyDex() UNE FOIS depuis l'éditeur Apps Script.
+ * Ne crée aucun déclencheur automatiquement lors du déploiement Web App.
+ *
+ * L'accès Drive requiert le consentement aux autorisations Apps Script.
+ * Seules les copies préfixées SHINYDEX_AUTO_ dans le dossier dédié sont
+ * concernées par la rétention. Les fichiers originaux ne sont jamais touchés.
+ */
+function installerSauvegardesShinyDex(){
+  const properties=PropertiesService.getScriptProperties();
+  const key='SHINYDEX_BACKUP_FOLDER_ID';
+  let folderId=properties.getProperty(key);
+  let folder;
+  if(folderId){
+    folder=DriveApp.getFolderById(folderId);
+  }else{
+    folder=DriveApp.createFolder('ShinyDex Hawaryou · Sauvegardes automatiques');
+    folderId=folder.getId();
+    properties.setProperty(key,folderId);
+  }
+  ScriptApp.getProjectTriggers().forEach(function(trigger){
+    if(trigger.getHandlerFunction()==='sauvegarderShinyDexDrive'){
+      ScriptApp.deleteTrigger(trigger);
+    }
+  });
+  ScriptApp.newTrigger('sauvegarderShinyDexDrive')
+    .timeBased().everyDays(1).atHour(4).inTimezone('Europe/Paris').create();
+  Logger.log('Sauvegardes ShinyDex activées. Dossier privé : '+folder.getUrl());
+  return {folderId:folderId,folderUrl:folder.getUrl(),frequency:'quotidienne'};
+}
+/** Crée une copie du classeur COMPLET avec les onglets de données et formules. */
+function sauvegarderShinyDexDrive(){
+  const lock=LockService.getScriptLock();
+  lock.waitLock(30000);
+  try{
+    const properties=PropertiesService.getScriptProperties();
+    const folderId=properties.getProperty('SHINYDEX_BACKUP_FOLDER_ID');
+    if(!folderId)throw new Error('Sauvegarde non installée : exécute installerSauvegardesShinyDex().');
+    const folder=DriveApp.getFolderById(folderId);
+    const source=DriveApp.getFileById(SHINY_API.spreadsheetId);
+    const stamp=Utilities.formatDate(new Date(),'Europe/Paris','yyyy-MM-dd_HH-mm-ss');
+    const copy=source.makeCopy('SHINYDEX_AUTO_'+stamp,folder);
+    const files=folder.getFiles(),archive=[];
+    while(files.hasNext()){
+      const file=files.next();
+      if(/^SHINYDEX_AUTO_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}$/.test(file.getName()))
+        archive.push(file);
+    }
+    archive.sort(function(a,b){return b.getDateCreated().getTime()-a.getDateCreated().getTime()});
+    archive.slice(30).forEach(function(file){file.setTrashed(true)});
+    Logger.log('Sauvegarde créée : '+copy.getUrl()+' ; archives conservées : '+Math.min(30,archive.length));
+    return {id:copy.getId(),url:copy.getUrl(),retained:Math.min(30,archive.length)};
+  }finally{lock.releaseLock()}
+}
+/** Désactive le déclencheur automatique sans supprimer les sauvegardes. */
+function desactiverSauvegardesShinyDex(){
+  let removed=0;
+  ScriptApp.getProjectTriggers().forEach(function(trigger){
+    if(trigger.getHandlerFunction()==='sauvegarderShinyDexDrive'){
+      ScriptApp.deleteTrigger(trigger);removed++;
+    }
+  });
+  return {disabled:true,triggersRemoved:removed};
+}
