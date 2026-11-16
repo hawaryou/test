@@ -25,6 +25,6 @@ watcher=setInterval(()=>{const v=$('#xp-video-player');if(!v||v.readyState<2)ret
 if(previous){let diff=0;for(let i=0;i<next.length;i++)diff+=Math.abs(next[i]-previous[i]);const percent=Math.round(diff/next.length/255*100);const s=$('#xp-video-status');if(s)s.textContent='Changement visuel : '+percent+' % — '+(percent>=12?'mouvement important (pas nécessairement shiny)':'image relativement stable')}
 previous=next},1700)
 };
-P.actions['video-plus']=()=>{const h=S.hunts.find(x=>x.id===$('#xp-video-hunt')?.value);if(!h)return P.toast('Sélectionne une chasse.',true);const before=Number(h.count)||0;h.count=before+1;P.trackCounter?.(h,before,h.count);D.persist();clearTimeout(delayed);delayed=setTimeout(()=>D.saveHunt(h),1200)};
+P.actions['video-plus']=()=>{const h=S.hunts.find(x=>x.id===$('#xp-video-hunt')?.value);if(!h)return P.toast('Sélectionne une chasse.',true);const before=Number(h.count)||0;h.count=before+1;P.trackCounter?.(h,before,h.count);D.saveHunt(h)};
 P.decorators.push((view)=>{if(view!=='video'&&stream)stop();if(view==='video'&&stream){const v=$('#xp-video-player');if(v&&v.srcObject!==stream){v.srcObject=stream;v.play().catch(()=>{})}}});
 })();
