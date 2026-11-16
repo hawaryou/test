@@ -116,3 +116,11 @@ body[data-game-skin="lumiose"]{--accent:#69c7e4;--accent2:#dfba79}
  #v10-print-poster>footer{text-align:center;margin-top:22px}
  @page{size:A4;margin:13mm}
 }
+
+/* User-selected holographic collector frames */
+.v10-viewer-actions select{width:auto;max-width:185px;background:#182a45;color:white;border-color:#ffffff46}
+.v10-full-card.frame-holo{background:linear-gradient(138deg,rgba(103,218,246,.23),transparent 35%,rgba(219,138,243,.24) 61%,transparent 88%),repeating-linear-gradient(60deg,#162a45,#263c60 13px,#18334b 25px);border-color:#bcefe8;box-shadow:0 0 0 4px #acd9ff16,0 25px 70px #0009}
+.v10-full-card.frame-gold{background:radial-gradient(ellipse at 50% 28%,#9b763e80,transparent 65%),linear-gradient(155deg,#3e2c20,#1c2440 65%);border-color:#e9c681;box-shadow:0 0 0 4px #e5bd6618,0 25px 70px #0009}
+.v10-full-card.frame-neon{background:radial-gradient(ellipse at 50% 32%,#1d997f5c,transparent 65%),linear-gradient(155deg,#081f28,#131b3a);border-color:#4affce;box-shadow:0 0 22px #47f8b638,0 25px 70px #0009}
+.v10-full-card.frame-classic{background:linear-gradient(150deg,#193a52,#202a40);border-color:#8aabc1;box-shadow:0 25px 70px #0009}
+body.sdx-no-motion .v10-full-card,body.sdx-no-motion .v10-poke-tile{animation:none!important;transition:none!important}
