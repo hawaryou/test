@@ -125,3 +125,16 @@
 }
 @media(max-width:360px){.sdx-badge-card{min-height:255px}.sdx-badge-rank{letter-spacing:0}.sdx-badge-count{font-size:9px}.sdx-awards-hero h2{font-size:38px}}
 @media(prefers-reduced-motion:reduce){.sdx-badge-card,.sdx-award-category{transition:none!important}}
+
+/* A compact showcase of the highest-tier medals on the home dashboard */
+.sdx-home-awards{margin:17px 0;padding:19px 22px}
+.sdx-home-awards-head{display:flex;align-items:center;justify-content:space-between;gap:13px;flex-wrap:wrap}
+.sdx-home-awards-head h3{font-size:19px;letter-spacing:-.02em;margin:6px 0}
+.sdx-home-awards-head p{color:var(--muted);font-size:11px}
+.sdx-home-medals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:15px}
+.sdx-home-medal{min-width:0;display:flex;align-items:center;flex-direction:column;gap:5px;min-height:138px;padding:12px 6px 10px;background:linear-gradient(145deg,color-mix(in srgb,var(--accent) 8%,var(--panel-hi)),var(--panel));border:1px solid var(--border);border-radius:15px;color:var(--text)}
+.sdx-home-medal:hover{border-color:var(--accent)}
+.sdx-home-medal .sdx-medal{margin:-5px 0}
+.sdx-home-medal strong{font-size:11px;line-height:1.35;overflow-wrap:anywhere}
+.sdx-home-medal small{font-size:10px;color:var(--muted)}
+@media(max-width:600px){.sdx-home-awards{padding:15px 13px}.sdx-home-awards-head h3{font-size:16px}.sdx-home-medals{gap:7px}.sdx-home-medal{padding:7px 4px;min-height:123px}.sdx-home-medal .sdx-medal{transform:scale(.7);margin:-12px 0}.sdx-home-medal strong{font-size:10px}}
