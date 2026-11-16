@@ -9,5 +9,5 @@ const html=P.card('📱 Widget de chasse intégré',body+'<p class="tiny mt-18">
 const anchor=root.querySelector('.stat-grid');if(anchor)anchor.insertAdjacentHTML('afterend',html);
 });
 P.actions['quick-sync']=()=>P.goto('sync');
-P.actions['quick-inc']=e=>{const h=S.hunts.find(x=>x.id===e.dataset.id);if(!h)return;const before=Number(h.count)||0;h.count=before+(Number(e.dataset.step)||1);P.trackCounter?.(h,before,h.count);D.persist();clearTimeout(timer);timer=setTimeout(()=>D.saveHunt(h),1200)};
+P.actions['quick-inc']=e=>{const h=S.hunts.find(x=>x.id===e.dataset.id);if(!h)return;const before=Number(h.count)||0;h.count=before+(Number(e.dataset.step)||1);P.trackCounter?.(h,before,h.count);D.saveHunt(h)};
 })();
