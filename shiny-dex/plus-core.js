@@ -18,7 +18,7 @@ const P={
  capture:id=>S.captures.find(x=>String(x.id)===String(id)),
  change(e){const t=e.target;if(t.dataset.xpSetting){const obj={...P.get("display",{}),[t.dataset.xpSetting]:!!t.checked};P.save("display",obj);return true}if(t.dataset.xpPublic){P.save("public",{...P.get("public",{}),[t.dataset.xpPublic]:!!t.checked});return true}for(const fn of Object.values(P.changes)){if(fn(e))return true}return false},
  input(e){for(const fn of Object.values(P.inputs)){if(fn(e))return true}return false},
- action(name,el){const action=name.replace(/^xp-/,"");const fn=P.actions[action];if(fn){fn(el);return true}return false},
+ action(name,el){const action=name.replace(/^xp-/,"");const fn=P.actions[action];if(fn){fn(el);return true}if(P.views[action]){P.goto(action);return true}return false},
  enhance(view,root){P.applyPrefs();for(const fn of P.decorators)try{fn(view,root)}catch(e){console.error("ShinyDex Plus",e)}},
  applyPrefs(){const p=P.get("display",{});const b=document.body;b.style.setProperty("--accent",p.color||"#45dbba");b.classList.toggle("sdx-high-contrast",!!p.highContrast);b.classList.toggle("sdx-large-text",!!p.largeFont);b.classList.toggle("sdx-no-motion",!!p.noMotion);b.dataset.cardSize=p.cardSize||"normal"},
  toast:(txt,bad=false)=>{if(window.ShinyDexUI?.toast)window.ShinyDexUI.toast(txt,bad);else alert(txt)},
