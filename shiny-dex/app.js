@@ -205,7 +205,7 @@ if(action==='modal-close'){modalClose();return}
 if(action&&action.startsWith('xp-')){window.ShinyPlus.action(action,el);return}
 if(views[action]){go(action);return}
 switch(action){
-case'add':{const found=S.captures.find(x=>x.id===id);captureForm(id?Number(id):0,found||null);break}
+case'add':{if(!id){go('quickcapture');break}const found=S.captures.find(x=>x.id===id);captureForm(Number(id)||0,found||null);break}
 case'edit-capture':captureForm(0,S.captures.find(x=>x.id===id));break;
 case'detail':speciesDetail(id);break;
 case'family':family(id);break;
@@ -239,9 +239,9 @@ document.addEventListener('change',e=>{if(window.ShinyPlus.change(e))return;cons
 let qTimer=null;
 document.addEventListener('input',e=>{if(window.ShinyPlus.input(e))return;const id=e.target.id;if(!['dex-search','capture-search','forms-search'].includes(id))return;const el=e.target,position=el.selectionStart;clearTimeout(qTimer);qTimer=setTimeout(()=>{ui.search=el.value;ui.page=1;ui.capturePage=1;render();const x=document.getElementById(id);if(x){x.focus();try{x.setSelectionRange(position,position)}catch(e){}}},165)});
 document.querySelectorAll('[data-view]').forEach(x=>x.addEventListener('click',()=>go(x.dataset.view)));
-$('#quick-add').addEventListener('click',()=>captureForm());
-$('#mobile-add')?.addEventListener('click',()=>captureForm());
-$('#global-search')?.addEventListener('click',()=>{ui.search='';ui.page=1;go('pokedex');const field=$('#dex-search');field?.focus();field?.scrollIntoView({block:'center',behavior:'smooth'});});
+$('#quick-add').addEventListener('click',()=>go('quickcapture'));
+$('#mobile-add')?.addEventListener('click',()=>go('quickcapture'));
+$('#global-search')?.addEventListener('click',()=>{go('searchhub');$('#v10-global-search')?.focus();});
 $('#profile-button').addEventListener('click',()=>go('settings'));
 $('#theme-toggle').addEventListener('click',()=>D.settings({theme:S.settings.theme==='dark'?'light':S.settings.theme==='light'?'galaxy':'dark'}));
 $('#menu-toggle').addEventListener('click',()=>{$('#sidebar').classList.toggle('open');$('#overlay').hidden=!$('#sidebar').classList.contains('open')});
