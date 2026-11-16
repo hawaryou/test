@@ -227,11 +227,11 @@ case'save-settings':D.settings({username:$('#user-name')?.value?.trim()||'hawary
 case'odds':{const rate=Math.max(2,Number($('#odds-rate').value)||4096),n=Math.max(0,Number($('#odds-n').value)||0),pct=(1-Math.pow(1-1/rate,n))*100;$('#odds-result').textContent=pct.toFixed(2).replace('.',',')+' %';break}
 case'export-csv':D.download('ShinyDex-hawaryou.csv',D.exportCaptureCSV(),'text/csv;charset=utf-8');break;
 case'export-element':D.download('ShinyDex-Element-SH.csv',D.exportElementCSV(),'text/csv;charset=utf-8');break;
-case'export-json':D.download('ShinyDex-sauvegarde-'+D.today()+'.json',JSON.stringify({captures:S.captures,meta:S.meta,hunts:S.hunts,goals:S.goals,wishlist:S.wishlist,events:S.events,exported:new Date().toISOString()},null,2),'application/json');break;
+case'export-json':D.download('ShinyDex-sauvegarde-'+D.today()+'.json',JSON.stringify(D.rawBackup(),null,2),'application/json');break;
 case'import':go('importreview');break;
 case'monthly-report':D.download('ShinyDex-bilan-'+D.today().slice(0,7)+'.txt',monthlyReport());break;
 case'share-card':shareCard();break;
-case'copy-link':navigator.clipboard?.writeText(location.href).then(()=>toast('Lien copié !')).catch(()=>toast('Copie non disponible.'));break;
+case'copy-link':{if(navigator.clipboard?.writeText){navigator.clipboard.writeText(location.href).then(()=>toast('Lien copié !')).catch(()=>prompt('Copie ce lien pour le partager :',location.href))}else prompt('Copie ce lien pour le partager :',location.href);break}
 }}
 document.addEventListener('click',e=>{const a=e.target.closest('[data-action]');if(a){e.preventDefault();handleAction(a)}});
 document.addEventListener('submit',onSubmit);
