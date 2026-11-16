@@ -278,6 +278,41 @@ L'option 158 n'inclut pas de notification Web Push en arrière-plan : sur iPhone
 
 Contrôles de syntaxe et rendu des 16 nouveaux écrans effectués à partir des données préchargées. La compatibilité visuelle sur iPhone réel et les nouveaux envois Apps Script restent à tester après redéploiement.
 
+## Version v13 — Succès & records : 298 badges
+
+La page **Succès & records** est devenue une salle des trophées à part entière. Elle est également accessible depuis **Plus → Mes défis**, et trois médailles prestigieuses sont affichées sur l'accueil.
+
+Les **298 badges** se répartissent en huit familles :
+
+| Famille | Badges |
+|---|---:|
+| Collection : espèces, exemplaires et doublons | 34 |
+| Générations : Kanto à Paldea, de la première capture aux 100 % | 54 |
+| Méthodes : Masuda, SOS, Hordes, Safari, resets, Dynamax, etc. | 56 |
+| Jeux représentés et collection dans un même jeu | 14 |
+| Endurance : rencontres cumulées, longues chasses et saisie documentée | 34 |
+| Chronologie : années, mois et jours de capture renseignés | 26 |
+| Formes : variantes distinctes et captures non standard | 10 |
+| Personnalisation : HOME, photos, rubans, favoris, surnoms et autres | 70 |
+| **Total** | **298** |
+
+**Sur la copie préchargée du 16 novembre 2026 : 143 badges sur 298 déjà débloqués.**
+
+Fonctions de la nouvelle interface :
+
+- 5 degrés de médaille **Bronze / Argent / Or / Platine / Diamant**, avec des effets métalliques différents et des points de prestige virtuels.
+- Tableau de progression global et **niveau de collectionneur**, calculés à partir des succès obtenus.
+- Cartes des 8 familles, recherche par texte, filtres *débloqués, verrouillés, presque obtenus*, raretés et ordre d'affichage.
+- Progression exacte sur chaque badge (par exemple, espèces documentées / palier).
+- Fiche de badge ouverte au toucher, avec possibilité de **le mettre à la une** après son obtention.
+- **Export SVG** individuel de chaque médaille débloquée, sans serveur ni inscription à une plateforme.
+- **10 records** dérivés des vraies données : longue et courte chasse documentée, jeu, méthode, année, mois, génération, espèce en plus grand nombre, formes et progression.
+- Prévisualisation de 3 médailles débloquées sur l'accueil et disposition adaptée à l'iPhone.
+
+Les badges ne sont **pas** des récompenses officielles Pokémon et ne donnent pas d'avantage dans les jeux. Ils sont recalculés à chaque ouverture de l'écran ; si une capture est modifiée ou supprimée, les succès concernés peuvent changer. Les informations absentes (dates, compteur de rencontres, formes, détails, etc.) ne sont jamais devinées. Aucune date historique de déblocage n'est inventée.
+
+Le choix de la **médaille à la une** se mémorise dans les données complémentaires ShinyDex, et suit le fonctionnement habituel de la file de synchronisation Google Sheets quand celle-ci est configurée. Les badges restent calculables hors ligne à partir des captures enregistrées localement.
+
 ## Dépannage
 
 - **« Mode local »** : token absent/incorrect, API non déployée, ou navigateur hors connexion.
