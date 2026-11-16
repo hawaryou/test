@@ -57,7 +57,7 @@ const selectedTheme=()=>P.get('gameSkin','auto');
 P.register('gamethemes',()=>P.head('Thèmes par jeu','Choisis une ambiance graphique inspirée de tes générations préférées, sans modifier les données ou les couleurs enregistrées des Pokémon.')+
 '<div class="v10-theme-grid">'+THEMES.map(x=>'<button class="v10-theme-card '+(selectedTheme()===x.id?'active':'')+'" data-action="xp-game-theme" data-theme="'+x.id+'" style="--theme-swatch:'+x.color+'"><span>'+x.icon+'</span><strong>'+E(x.label)+'</strong><small>'+(selectedTheme()===x.id?'✓ Thème actif':'Appliquer')+'</small></button>').join('')+'</div>');
 P.actions['game-theme']=e=>P.save('gameSkin',e.dataset.theme);
-P.decorators.push(()=>{document.body.dataset.gameSkin=selectedTheme()});
+P.decorators.push(()=>{const id=selectedTheme(),theme=THEMES.find(x=>x.id===id);document.body.dataset.gameSkin=id;if(theme&&id!=='auto')document.body.style.setProperty('--accent',theme.color)});
 P.register('posters',()=>{
 const chosen=posterIds.length?posterIds:all().slice(0,12).map(c=>c.id);
 return P.head('Studio posters collector','Compose une affiche A4 de tes shiny préférés, puis utilise Imprimer → Enregistrer en PDF.',P.btn('🖨️ Générer mon poster','poster-print','','btn-primary'))+
