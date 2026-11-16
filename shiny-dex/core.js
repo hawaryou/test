@@ -85,7 +85,15 @@ function gasRun(functionName,...params){return new Promise((resolve,reject)=>{go
 async function connect(){if(!state.settings.token){state.connected=false;state.lastError="Code d’accès requis.";persist();return false}
 try{const data=inGoogle()?await gasRun("dexBootstrap",state.settings.token):await jsonp("bootstrap");listFromServer(data);await flushQueue();return true}catch(e){state.connected=false;state.lastError=e.message;persist();return false}}
 async function refresh(force=false){if(!force&&Date.now()-lastFetch<25000)return;lastFetch=Date.now();return connect()}
-function recordLocal(type,data){const action={actionId:uid("op"),type,data,created:Date.now(),attempted:0};state.queue.push(action);
+function recordLocal(type,data){let action=null;
+if(type==="hunt"){
+  for(let i=state.queue.length-1;i>=0;i--){const op=state.queue[i];
+    if(op.type==="hunt"&&String(op.data?.id)===String(data.id)&&!(inflight&&i===0)){
+      action=op;op.data={...data,revision:Number(op.data?.revision??data.revision)||0};op.created=Date.now();break;
+    }
+  }
+}
+if(!action){action={actionId:uid("op"),type,data,created:Date.now(),attempted:0};state.queue.push(action)}
 if(type==="capture"){const index=state.captures.findIndex(x=>x.id===data.id);if(index<0)state.captures.unshift({...data,unsynced:true});else state.captures[index]={...state.captures[index],...data,unsynced:true}}
 else if(type==="meta"){const i=state.meta.findIndex(x=>x.id===data.id);i>=0?state.meta[i]={...state.meta[i],...data}:state.meta.push(data)}
 else if(type==="hunt"){const i=state.hunts.findIndex(x=>x.id===data.id);i>=0?state.hunts[i]={...state.hunts[i],...data}:state.hunts.push(data)}
