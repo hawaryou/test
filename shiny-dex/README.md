@@ -232,6 +232,52 @@ La v9 est une refonte **présentationnelle** : aucune ligne de capture n'est ré
 
 **Limites :** les contrôles de syntaxe et les références d'assets ont été validés à partir du dépôt GitHub, mais le rendu final n'a pas été inspecté visuellement sur un iPhone réel. Si la PWA conserve l'ancienne interface, l'ouvrir en ligne et actualiser après publication de GitHub Pages. L'API Apps Script et la synchronisation multi-appareils ne sont pas activées par la refonte graphique.
 
+## ShinyDex v10 — 25 améliorations choisies
+
+Cette version ajoute 16 vues. Elle conserve les captures historiques et le fonctionnement hors connexion. Les nouvelles notes de session sont stockées séparément dans les données avancées.
+
+| Option | Fonction | État |
+|---:|---|---|
+| 129 | Comparateur normal/shiny | ✅ Curseur |
+| 130 | Galerie immersive | ✅ Plein écran et navigation |
+| 131 | Atlas interactif des régions | ◐ Schéma non géographique |
+| 132 | Thèmes par jeu | ✅ Couleurs personnalisables |
+| 133 | Tableau de bord libre | ◐ Ordre et largeur réglables, pas de glisser-déposer libre |
+| 134 | Cadres collector | ✅ 5 finitions par capture |
+| 135 | Recherche universelle | ✅ Pokédex, captures, chasses, notes et boîtes |
+| 136 | Filtres enregistrables | ✅ Texte, méthode et jeu |
+| 137 | Saisie à une main | ✅ Champs essentiels |
+| 138 | Tutoriel interactif | ✅ Six étapes |
+| 140 | Favoris épinglés | ✅ Galerie et accueil |
+| 142 | Quatre compteurs | ✅ Multi-chasse |
+| 144 | Écran toujours actif | ◐ API Screen Wake Lock compatible uniquement |
+| 145 | Journal de session | ✅ Notes, pauses, changements de méthode |
+| 146 | Statistiques par génération | ✅ Barres de progression |
+| 147 | Courbe probabiliste | ✅ Taux 1/N à renseigner |
+| 148 | Périodes sans shiny | ✅ Intervalles entre captures datées |
+| 149 | Heures de capture | ✅ Uniquement les heures renseignées |
+| 150 | Records saisonniers | ✅ Trimestres et années |
+| 151 | Import sécurisé | ✅ Aperçu CSV/JSON, détection des doublons, 25 lignes max par validation |
+| 152 | Conflits par champ | ◐ Comparaison locale/serveur ; risque de changement concurrent restant |
+| 153 | Sauvegarde Google Drive quotidienne | ◐ Fonctions serveur disponibles, activation manuelle requise |
+| 154 | Diagnostics de synchronisation | ✅ File, tentatives, statut et export |
+| 155 | Posters collector | ✅ Impression PDF depuis le navigateur |
+| 158 | Rappels de chasse | ◐ Fonctionnent pendant que l'application reste ouverte, sans Web Push serveur |
+
+### Installation Apps Script pour les sauvegardes Drive
+
+1. Conserver Code.gs dans le projet existant et ajouter ou remplacer ShinyDexAPI.gs par la version la plus récente de GitHub.
+2. Exécuter installerShinyDex() si nécessaire et redéployer une nouvelle version /exec pour activer les champs avancés.
+3. Pour lancer les sauvegardes, exécuter volontairement installerSauvegardesShinyDex() depuis l'éditeur Apps Script et accepter les autorisations Google Drive.
+4. Le script crée un dossier de copies privées du classeur et un déclencheur quotidien (vers 4 h, heure de Paris). Il conserve les 30 copies automatiques les plus récentes dans ce dossier.
+5. Pour arrêter les sauvegardes sans supprimer les fichiers existants : desactiverSauvegardesShinyDex().
+
+La sauvegarde automatique et la synchronisation n'ont **pas** été activées par la seule publication des fichiers GitHub. Ne jamais vider le stockage local lorsqu'une file d'envoi contient des modifications non confirmées.
+
+L'option 158 n'inclut pas de notification Web Push en arrière-plan : sur iPhone, elle exige l'installation de la PWA sur l'écran d'accueil, un serveur Push et l'autorisation de l'utilisateur. L'option 144 dépend également des capacités et du comportement du navigateur.
+
+Contrôles de syntaxe et rendu des 16 nouveaux écrans effectués à partir des données préchargées. La compatibilité visuelle sur iPhone réel et les nouveaux envois Apps Script restent à tester après redéploiement.
+
 ## Dépannage
 
 - **« Mode local »** : token absent/incorrect, API non déployée, ou navigateur hors connexion.
