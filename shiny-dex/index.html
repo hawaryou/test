@@ -11,7 +11,8 @@
   <link rel="manifest" href="./manifest.webmanifest"/>
   <link rel="icon" href="./icon.svg" type="image/svg+xml"/>
   <link rel="apple-touch-icon" href="./icon.svg"/>
-  <link rel="stylesheet" href="./styles.css?v=8"/>
+  <link rel="stylesheet" href="./styles.css?v=9"/>
+  <link rel="stylesheet" href="./design-v9.css?v=9"/>
   <title>ShinyDex Hawaryou ✨</title>
 </head>
 <body data-theme="dark">
@@ -22,43 +23,38 @@
       <span class="brand-copy"><strong>SHINY<span>DEX</span></strong><small>HAWARYOU COLLECTION</small></span>
     </a>
     <p class="nav-group-label">COLLECTION</p>
-    <nav class="nav" id="side-nav" aria-label="Navigation principale">
-      <button class="nav-link active" data-view="dashboard"><span>◫</span> Vue d'ensemble</button>
-      <button class="nav-link" data-view="pokedex"><span>◈</span> Pokédex national</button>
-      <button class="nav-link" data-view="captures"><span>✦</span> Mes shinies</button>
-      <button class="nav-link" data-view="forms"><span>◇</span> Formes & variantes</button>
-      <p class="nav-group-label sub">SHINY HUNTING</p>
-      <button class="nav-link" data-view="hunts"><span>◎</span> Chasses actives</button>
-      <button class="nav-link" data-view="analytics"><span>▥</span> Statistiques</button>
-      <button class="nav-link" data-view="goals"><span>⚑</span> Objectifs & souhaits</button>
-      <button class="nav-link" data-view="achievements"><span>✧</span> Succès & records</button>
-      <p class="nav-group-label sub">OUTILS</p>
-      <button class="nav-link" data-view="share"><span>↗</span> Partager & exporter</button>
-      <p class="nav-group-label sub">COLLECTION AVANCÉE</p>
-      <button class="nav-link" data-view="plus"><span>✦</span> Tous les outils</button>
-      <button class="nav-link" data-view="boxes"><span>▦</span> Boîtes Pokémon HOME</button>
-      <button class="nav-link" data-view="regions"><span>🗺</span> Régions & DLC</button>
-      <button class="nav-link" data-view="collectionplus"><span>✧</span> Collection enrichie</button>
-      <p class="nav-group-label sub">NOUVEAUX OUTILS · V8</p>
-      <button class="nav-link" data-view="gameguides"><span>🎮</span> Assistants par jeu</button>
-      <button class="nav-link" data-view="livingforms"><span>🧬</span> Living Form Dex</button>
-      <button class="nav-link" data-view="consistency"><span>✓</span> Contrôle des captures</button>
-      <button class="nav-link" data-view="expertstats"><span>📊</span> Statistiques expertes</button>
-      <button class="nav-link" data-view="quests"><span>⚑</span> Défis & niveaux</button>
-      <button class="nav-link" data-view="museum"><span>🏛️</span> Musée shiny</button>
-      <button class="nav-link" data-view="timeline"><span>🕰️</span> Chronologie</button>
-      <button class="nav-link" data-view="bingo"><span>▦</span> Bingo shiny</button>
-      <button class="nav-link" data-view="yearreview"><span>🏆</span> Rétrospective annuelle</button>
-      <button class="nav-link" data-view="sync"><span>☁</span> Synchronisation</button>
-      <button class="nav-link" data-view="video"><span>📹</span> Atelier vidéo</button>
-      <p class="nav-group-label sub">OUTILS AVANCÉS</p>
-      <button class="nav-link" data-view="huntlab"><span>◉</span> Laboratoire de chasse</button>
-      <button class="nav-link" data-view="insights"><span>▥</span> Analyses approfondies</button>
-      <button class="nav-link" data-view="studio"><span>▣</span> Studio & partage</button>
-      <button class="nav-link" data-view="restore"><span>↺</span> Sauvegardes & versions</button>
-      <button class="nav-link" data-view="personalize"><span>◐</span> Design & accessibilité</button>
-      <button class="nav-link" data-view="settings"><span>⚙</span> Paramètres</button>
-    </nav>
+    <nav class="nav nav-v9" id="side-nav" aria-label="Navigation principale">
+<div class="nav-primary"><button class="nav-link active" data-view="dashboard"><span>◫</span> Vue d'ensemble</button>
+<button class="nav-link" data-view="pokedex"><span>◈</span> Pokédex national</button>
+<button class="nav-link" data-view="captures"><span>✦</span> Mes shinies</button>
+<button class="nav-link" data-view="hunts"><span>◎</span> Chasses actives</button>
+<button class="nav-link" data-view="plus"><span>✦</span> Tous les outils</button></div>
+<details class="nav-cluster" open><summary>✨ Ma collection</summary><div class="nav-cluster-content"><button class="nav-link" data-view="forms"><span>◇</span> Formes & variantes</button>
+<button class="nav-link" data-view="livingforms"><span>🧬</span> Living Form Dex</button>
+<button class="nav-link" data-view="boxes"><span>▦</span> Boîtes Pokémon HOME</button>
+<button class="nav-link" data-view="collectionplus"><span>✧</span> Collection enrichie</button>
+<button class="nav-link" data-view="regions"><span>🗺</span> Régions & DLC</button>
+<button class="nav-link" data-view="museum"><span>🏛️</span> Musée shiny</button>
+<button class="nav-link" data-view="consistency"><span>✓</span> Contrôle des captures</button></div></details>
+<details class="nav-cluster"><summary>🎯 Shiny hunting</summary><div class="nav-cluster-content"><button class="nav-link" data-view="gameguides"><span>🎮</span> Assistants par jeu</button>
+<button class="nav-link" data-view="huntlab"><span>◉</span> Laboratoire de chasse</button>
+<button class="nav-link" data-view="quests"><span>⚑</span> Défis & niveaux</button>
+<button class="nav-link" data-view="bingo"><span>▦</span> Bingo shiny</button>
+<button class="nav-link" data-view="video"><span>📹</span> Atelier vidéo</button>
+<button class="nav-link" data-view="goals"><span>⚑</span> Objectifs & souhaits</button></div></details>
+<details class="nav-cluster"><summary>📊 Mes statistiques</summary><div class="nav-cluster-content"><button class="nav-link" data-view="analytics"><span>▥</span> Statistiques</button>
+<button class="nav-link" data-view="expertstats"><span>📊</span> Statistiques expertes</button>
+<button class="nav-link" data-view="insights"><span>▥</span> Analyses approfondies</button>
+<button class="nav-link" data-view="yearreview"><span>🏆</span> Rétrospective annuelle</button>
+<button class="nav-link" data-view="timeline"><span>🕰️</span> Chronologie</button>
+<button class="nav-link" data-view="achievements"><span>✧</span> Succès & records</button></div></details>
+<details class="nav-cluster"><summary>⚙️ Outils & sauvegardes</summary><div class="nav-cluster-content"><button class="nav-link" data-view="studio"><span>▣</span> Studio & partage</button>
+<button class="nav-link" data-view="share"><span>↗</span> Partager & exporter</button>
+<button class="nav-link" data-view="sync"><span>☁</span> Synchronisation</button>
+<button class="nav-link" data-view="restore"><span>↺</span> Sauvegardes & versions</button>
+<button class="nav-link" data-view="personalize"><span>◐</span> Design & accessibilité</button>
+<button class="nav-link" data-view="settings"><span>⚙</span> Paramètres</button></div></details>
+</nav>
     <div class="sidebar-bottom">
       <div class="sync-chip" id="sync-chip"><span class="sync-dot"></span><span id="sync-label">Connexion à configurer</span></div>
       <div class="sidebar-meta">Google Sheets comme sauvegarde<br/><small>Édition personnelle · G1—G9</small></div>
@@ -71,6 +67,7 @@
         <div class="breadcrumbs"><span>HAWARYOU</span><span class="sep">/</span><span id="breadcrumb-title">Tableau de bord</span></div>
       </div>
       <div class="top-actions">
+        <button class="icon-btn top-search-btn" id="global-search" title="Rechercher un Pokémon" aria-label="Rechercher un Pokémon">⌕</button>
         <div class="connection-pill" id="connection-pill"><span class="sync-dot"></span><span id="conn-text">Mode local</span></div>
         <button class="icon-btn" id="theme-toggle" title="Changer le thème" aria-label="Changer le thème">☾</button>
         <button class="btn btn-primary add-trigger" id="quick-add">✦ <span>Ajouter un shiny</span></button>
@@ -83,6 +80,7 @@
       <footer class="footer">✨ ShinyDex Hawaryou <span>•</span> Données synchronisées avec ton Google Sheets dès que la connexion est activée. <span>•</span> <a href="https://github.com/PokeAPI/sprites" target="_blank" rel="noopener noreferrer">Sprites PokéAPI</a></footer>
     </main>
   </div>
+  <button type="button" class="v9-fab" id="mobile-add" aria-label="Ajouter une capture shiny" title="Ajouter un shiny">＋</button>
   <nav class="mobile-nav" aria-label="Navigation mobile">
     <button data-view="dashboard" class="mobile-link active"><span>◫</span><small>Accueil</small></button>
     <button data-view="pokedex" class="mobile-link"><span>◈</span><small>Pokédex</small></button>
@@ -94,26 +92,27 @@
   <div class="modal-holder" id="modal-holder"></div>
   <div class="toast-host" id="toast-host" aria-live="polite"></div>
   <input id="import-file" type="file" accept=".csv,.json,application/json,text/csv" hidden/>
-  <script src="./catalog.js?v=8" defer></script>
-  <script src="./snapshot.js?v=8" defer></script>
-  <script src="./core.js?v=8" defer></script>
-  <script src="./plus-core.js?v=8" defer></script>
-  <script src="./plus-home.js?v=8" defer></script>
-  <script src="./plus-hunt.js?v=8" defer></script>
-  <script src="./plus-insights.js?v=8" defer></script>
-  <script src="./plus-design.js?v=8" defer></script>
-  <script src="./plus-studio.js?v=8" defer></script>
-  <script src="./plus-backup.js?v=8" defer></script>
-  <script src="./plus-directory.js?v=8" defer></script>
-  <script src="./plus-games.js?v=8" defer></script>
-  <script src="./plus-forms.js?v=8" defer></script>
-  <script src="./plus-audit.js?v=8" defer></script>
-  <script src="./plus-expert.js?v=8" defer></script>
-  <script src="./plus-challenges.js?v=8" defer></script>
-  <script src="./plus-recap.js?v=8" defer></script>
-  <script src="./plus-sync.js?v=8" defer></script>
-  <script src="./plus-widget.js?v=8" defer></script>
-  <script src="./plus-video.js?v=8" defer></script>
-  <script src="./app.js?v=8" defer></script>
+  <script src="./catalog.js?v=9" defer></script>
+  <script src="./snapshot.js?v=9" defer></script>
+  <script src="./core.js?v=9" defer></script>
+  <script src="./plus-core.js?v=9" defer></script>
+  <script src="./plus-home.js?v=9" defer></script>
+  <script src="./plus-hunt.js?v=9" defer></script>
+  <script src="./plus-insights.js?v=9" defer></script>
+  <script src="./plus-design.js?v=9" defer></script>
+  <script src="./plus-studio.js?v=9" defer></script>
+  <script src="./plus-backup.js?v=9" defer></script>
+  <script src="./plus-directory.js?v=9" defer></script>
+  <script src="./plus-games.js?v=9" defer></script>
+  <script src="./plus-forms.js?v=9" defer></script>
+  <script src="./plus-audit.js?v=9" defer></script>
+  <script src="./plus-expert.js?v=9" defer></script>
+  <script src="./plus-challenges.js?v=9" defer></script>
+  <script src="./plus-recap.js?v=9" defer></script>
+  <script src="./plus-sync.js?v=9" defer></script>
+  <script src="./plus-widget.js?v=9" defer></script>
+  <script src="./plus-video.js?v=9" defer></script>
+  <script src="./design-v9.js?v=9" defer></script>
+  <script src="./app.js?v=9" defer></script>
 </body>
 </html>
